@@ -97,15 +97,12 @@ Releases، وليس ملف `AirType.exe` المنفرد؛ التثبيت عبر 
 
 ### إنشاء إصدار جديد
 
-أنشئ tag بصيغة Semantic Versioning وادفعه إلى GitHub، مثل:
-
-```powershell
-git tag v1.0.1
-git push origin v1.0.1
-```
-
-Workflow `Windows Desktop CI and Release` سيقوم تلقائيًا بالبناء والاختبارات وإنشاء
-Velopack Setup EXE وحزم التحديث ثم إنشاء GitHub Release ورفع الملفات إليه.
+لا حاجة لإنشاء tag يدويًا ولا لتشغيل بناء ثانٍ. عند كل push ناجح إلى `main` يقوم
+Workflow `Windows Desktop CI and Release` بقراءة الإصدار الأساسي، وإضافة رقم تشغيل
+تلقائي، ثم ينفذ restore وbuild والاختبارات وpublish وVelopack وGitHub Release من
+**نفس ناتج البناء**. لذلك يكون `Setup.exe` والإصدار المنشور مطابقين تمامًا للنسخة
+التي اجتازت الاختبارات في ذلك التشغيل. طلبات Pull Request تُبنى وتُختبر فقط ولا تنشئ
+إصدارًا عامًا.
 
 ### ملاحظة مهمة عن مستودع GitHub الخاص
 
