@@ -1,8 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    <sys:String x:Key="AppTitle">LiveType Bridge</sys:String>
-    <sys:String x:Key="AppSubtitle">Live typing from your phone into the focused field</sys:String>
+    <sys:String x:Key="AppTitle">AirType</sys:String>
+    <sys:String x:Key="AppSubtitle">Live typing from your phone into any active field</sys:String>
+    <sys:String x:Key="PrivacyTagline">Local. Private. Instant.</sys:String>
 
     <sys:String x:Key="NavHome">Home</sys:String>
     <sys:String x:Key="NavSettings">Settings</sys:String>
@@ -49,19 +50,19 @@
     <sys:String x:Key="ProtectTitle">Streaming paused to protect your text</sys:String>
     <sys:String x:Key="ProtectMsg">We detected local keystrokes or mouse movement while streaming, so it was paused to avoid typing into an uncertain position. Make sure the caret is where you want it, then press “Resume stream”. We never guess.</sys:String>
     <sys:String x:Key="ElevatedTitle">Cannot type into the current program</sys:String>
-    <sys:String x:Key="ElevatedMsg">The target app appears to run elevated (as Administrator) above LiveType Bridge, so Windows (UIPI) blocks injected input. We do not bypass this protection; run LiveType Bridge at the same level if you need to type there.</sys:String>
+    <sys:String x:Key="ElevatedMsg">The target app appears to run elevated (as Administrator) above AirType, so Windows (UIPI) blocks injected input. We do not bypass this protection; run AirType at the same level if you need to type there.</sys:String>
 
     <sys:String x:Key="ErrPortRange">Could not bind any port in the configured range — try another port in Settings</sys:String>
     <sys:String x:Key="ErrNoNetwork">No valid LAN IPv4 address found — make sure Wi-Fi is connected</sys:String>
     <sys:String x:Key="HotkeyRegFail">Failed to register a hotkey (it may be used by another app): {0}</sys:String>
-    <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="MsgTitle">AirType</sys:String>
     <sys:String x:Key="UpdateTitle">Update available</sys:String>
     <sys:String x:Key="UpdateAvailable">A new version ({0}) is available. Download and install it now? The app will restart automatically after the update.</sys:String>
     <sys:String x:Key="UpdateInstall">Install now</sys:String>
     <sys:String x:Key="UpdateLater">Later</sys:String>
     <sys:String x:Key="UpdateDownloading">Downloading the update… The app will restart when it is ready.</sys:String>
     <sys:String x:Key="UpdateFailed">The update could not be installed. You can try again later.</sys:String>
-    <sys:String x:Key="ErrAlreadyRunning">LiveType Bridge is already running. Check the taskbar.</sys:String>
+    <sys:String x:Key="ErrAlreadyRunning">AirType is already running. Check the taskbar.</sys:String>
     <sys:String x:Key="AgoFmt">{0} s ago</sys:String>
     <sys:String x:Key="ErrBadPin">Wrong PIN from the phone — rescan and enter the code shown on screen</sys:String>
     <sys:String x:Key="ErrBadToken">Invalid session token from the phone — pair again with a new session</sys:String>
@@ -115,7 +116,7 @@
     <sys:String x:Key="DiagFw">Firewall</sys:String>
     <sys:String x:Key="WsRunning">Running — accepting phone connections</sys:String>
     <sys:String x:Key="WsStopped">Stopped — starts when you click “Pair phone”</sys:String>
-    <sys:String x:Key="FwAllowed">Allowed — a rule exists for LiveType Bridge</sys:String>
+    <sys:String x:Key="FwAllowed">Allowed — a rule exists for AirType</sys:String>
     <sys:String x:Key="FwNoRule">No rule yet — Windows will ask to allow on first server start; choose Allow for private networks</sys:String>
     <sys:String x:Key="FwUnknown">Could not query the firewall state (not critical)</sys:String>
     <sys:String x:Key="DiagSelfTest">Self test</sys:String>

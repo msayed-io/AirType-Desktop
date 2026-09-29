@@ -7,13 +7,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>LiveTypeBridge</AssemblyName>
+    <AssemblyName>AirType</AssemblyName>
     <RootNamespace>LiveTypeBridge.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <StartupObject>LiveTypeBridge.App.Program</StartupObject>
-    <Version>1.0.0</Version>
-    <Product>LiveType Bridge</Product>
-    <Authors>LiveType Bridge</Authors>
+    <Version>2.0.0</Version>
+    <Product>AirType</Product>
+    <Authors>AirType</Authors>
     <SatelliteResourceLanguages>ar;en</SatelliteResourceLanguages>
   </PropertyGroup>
 

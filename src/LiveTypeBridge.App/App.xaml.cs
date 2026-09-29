@@ -12,7 +12,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        _singleInstance = new Mutex(initiallyOwned: true, "LiveTypeBridge_SingleInstance", out var isFirst);
+        _singleInstance = new Mutex(initiallyOwned: true, "AirType_SingleInstance", out var isFirst);
         if (!isFirst)
         {
             MessageBox.Show(Loc.Get("ErrAlreadyRunning"), Loc.Get("MsgTitle"),

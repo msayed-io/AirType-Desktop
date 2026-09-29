@@ -77,7 +77,7 @@ jobs:
           --runtime $env:RUNTIME_IDENTIFIER
           --self-contained true
           --no-restore
-          --output publish/LiveTypeBridge-win-x64
+          --output publish/AirType-win-x64
           -p:Version=${{ steps.version.outputs.version }}
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
@@ -88,17 +88,17 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          $zip = "artifacts/LiveTypeBridge-portable-win-x64-${{ steps.version.outputs.version }}-${{ github.run_number }}.zip"
-          Compress-Archive -Path "publish/LiveTypeBridge-win-x64/*" -DestinationPath $zip -CompressionLevel Optimal
+          $zip = "artifacts/AirType-portable-win-x64-${{ steps.version.outputs.version }}-${{ github.run_number }}.zip"
+          Compress-Archive -Path "publish/AirType-win-x64/*" -DestinationPath $zip -CompressionLevel Optimal
           Get-FileHash $zip -Algorithm SHA256 | Format-List
 
       - name: Upload CI artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: LiveTypeBridge-ci-win-x64-${{ github.run_number }}
+          name: AirType-ci-win-x64-${{ github.run_number }}
           path: |
             artifacts/*.zip
-            publish/LiveTypeBridge-win-x64/LiveTypeBridge.exe
+            publish/AirType-win-x64/AirType.exe
           if-no-files-found: error
           retention-days: 14
 
@@ -139,7 +139,7 @@ jobs:
           --runtime $env:RUNTIME_IDENTIFIER
           --self-contained true
           --no-restore
-          --output publish/LiveTypeBridge-win-x64
+          --output publish/AirType-win-x64
           -p:Version=$env:VERSION
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
@@ -153,5 +153,5 @@ jobs:
         run: |
           dotnet tool install --global vpk --version 1.2.161
           vpk download github --repoUrl "https://github.com/${{ github.repository }}" --token $env:GITHUB_TOKEN
-          vpk pack -u LiveTypeBridge -v $env:VERSION -p publish/LiveTypeBridge-win-x64 --mainExe LiveTypeBridge.exe
-          vpk upload github --repoUrl "https://github.com/${{ github.repository }}" --publish --releaseName "LiveType Bridge $env:VERSION" --tag "${{ github.ref_name }}" --token $env:GITHUB_TOKEN
+          vpk pack -u AirType -v $env:VERSION -p publish/AirType-win-x64 --mainExe AirType.exe
+          vpk upload github --repoUrl "https://github.com/${{ github.repository }}" --publish --releaseName "AirType $env:VERSION" --tag "${{ github.ref_name }}" --token $env:GITHUB_TOKEN

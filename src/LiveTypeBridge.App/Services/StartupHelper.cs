@@ -6,7 +6,7 @@ namespace LiveTypeBridge.App.Services;
 public static class StartupHelper
 {
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string ValueName = "LiveTypeBridge";
+    private const string ValueName = "AirType";
 
     public static void Set(bool enable)
     {

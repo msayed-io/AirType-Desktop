@@ -1,8 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    <sys:String x:Key="AppTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="AppTitle">AirType</sys:String>
     <sys:String x:Key="AppSubtitle">كتابة حيّة من هاتفك إلى أي خانة نشطة</sys:String>
+    <sys:String x:Key="PrivacyTagline">محلي. خاص. فوري.</sys:String>
 
     <sys:String x:Key="NavHome">الرئيسية</sys:String>
     <sys:String x:Key="NavSettings">الإعدادات</sys:String>
@@ -51,12 +52,12 @@
     <sys:String x:Key="ProtectTitle">تم إيقاف البث لحماية النص</sys:String>
     <sys:String x:Key="ProtectMsg">اكتشفنا ضغط مفاتيح محليًا أو حركة للمؤشر أثناء البث، فأوقفناه لتفادي الكتابة في موضع غير مؤكد. تأكد أن المؤشر في المكان الصحيح ثم اضغط «استئناف البث». لن نحاول التخمين أبدًا.</sys:String>
     <sys:String x:Key="ElevatedTitle">تعذّر الإدخال في البرنامج الحالي</sys:String>
-    <sys:String x:Key="ElevatedMsg">يبدو أن البرنامج الهدف يعمل بصلاحيات مسؤول أعلى من LiveType Bridge، لذا يمنع ويندوز (UIPI) تمرير الإدخال إليه. لا نتجاوز هذه الحماية؛ شغّل LiveType Bridge بالمستوى نفسه إن أردت الكتابة فيه.</sys:String>
+    <sys:String x:Key="ElevatedMsg">يبدو أن البرنامج الهدف يعمل بصلاحيات مسؤول أعلى من AirType، لذا يمنع ويندوز (UIPI) تمرير الإدخال إليه. لا نتجاوز هذه الحماية؛ شغّل AirType بالمستوى نفسه إن أردت الكتابة فيه.</sys:String>
 
     <sys:String x:Key="ErrPortRange">تعذّر حجز منفذ في النطاق المحدد — جرّب منفذًا آخر من الإعدادات</sys:String>
     <sys:String x:Key="ErrNoNetwork">لم يُعثر على عنوان IP صالح لشبكة محلية — تأكد من الاتصال بشبكة Wi-Fi</sys:String>
     <sys:String x:Key="HotkeyRegFail">تعذّر تسجيل اختصار (قد يكون مستخدمًا من برنامج آخر): {0}</sys:String>
-    <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="MsgTitle">AirType</sys:String>
     <sys:String x:Key="UpdateTitle">تحديث متاح</sys:String>
     <sys:String x:Key="UpdateAvailable">يتوفر إصدار جديد ({0}). هل تريد تنزيله وتثبيته الآن؟ سيُعاد تشغيل التطبيق تلقائيًا بعد التحديث.</sys:String>
     <sys:String x:Key="UpdateInstall">تثبيت الآن</sys:String>
@@ -120,7 +121,7 @@
     <sys:String x:Key="DiagFw">جدار الحماية</sys:String>
     <sys:String x:Key="WsRunning">يعمل — يستقبل اتصالات الهاتف</sys:String>
     <sys:String x:Key="WsStopped">متوقف — يبدأ عند «ربط هاتف»</sys:String>
-    <sys:String x:Key="FwAllowed">مسموح — توجد قاعدة لبرنامج LiveType Bridge</sys:String>
+    <sys:String x:Key="FwAllowed">مسموح — توجد قاعدة لبرنامج AirType</sys:String>
     <sys:String x:Key="FwNoRule">لا توجد قاعدة بعد — سيظهر سؤال «السماح» من ويندوز عند أول تشغيل للخادم، اختر السماح للشبكات الخاصة</sys:String>
     <sys:String x:Key="FwUnknown">تعذّر الاستعلام عن حالة جدار الحماية (غير حرج)</sys:String>
     <sys:String x:Key="DiagSelfTest">الفحص الذاتي</sys:String>

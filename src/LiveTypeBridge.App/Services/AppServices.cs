@@ -38,7 +38,7 @@ public sealed class AppServices : IDisposable
         var services = new AppServices();
         services.Settings = AppSettings.Load();
         services.Log = new Log(services.Settings.EnableLogging);
-        services.Log.Info($"LiveType Bridge starting (headless={headless})");
+        services.Log.Info($"AirType starting (headless={headless})");
 
         services.Connections = new PhoneConnectionManager(services.Sessions, session =>
         {
@@ -69,6 +69,6 @@ public sealed class AppServices : IDisposable
         try { Connections.Dispose(); } catch { }
         try { Monitor?.Dispose(); } catch { }
         try { Server.DisposeAsync().AsTask().Wait(TimeSpan.FromSeconds(3)); } catch { }
-        try { Log.Info("LiveType Bridge stopped."); Log.Dispose(); } catch { }
+        try { Log.Info("AirType stopped."); Log.Dispose(); } catch { }
     }
 }
