@@ -1,19 +1,14 @@
 <Window x:Class="LiveTypeBridge.App.Views.FloatingIndicatorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         Width="92" Height="92" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" ShowActivated="False"
         WindowStartupLocation="Manual" UseLayoutRounding="True">
-    <Grid x:Name="OrbRoot" MouseLeftButtonDown="OrbRoot_MouseLeftButtonDown" ToolTip="AirType">
-        <Ellipse x:Name="Halo" Fill="{DynamicResource OrbGradient}" Opacity="0.18">
-            <Ellipse.Effect><BlurEffect Radius="12"/></Ellipse.Effect>
-        </Ellipse>
-        <Border Margin="10" CornerRadius="40" Background="{DynamicResource GlassBrush}" BorderBrush="#99FFFFFF" BorderThickness="1">
-            <Grid>
-                <Ellipse x:Name="Orb" Margin="5" Fill="{DynamicResource OrbGradient}"/>
-                <Ellipse Margin="14" Fill="#32FFFFFF"/>
-                <TextBlock Text="A" FontSize="22" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="LeftToRight"/>
-            </Grid>
+    <Grid x:Name="OrbRoot" Background="Transparent" ToolTip="AirType">
+        <wv2:WebView2 x:Name="OrbWebView"/>
+        <Border x:Name="FallbackOrb" Visibility="Collapsed" CornerRadius="46" Margin="10" Background="{DynamicResource OrbGradient}" BorderBrush="#99FFFFFF" BorderThickness="1">
+            <TextBlock Text="A" FontSize="22" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
     </Grid>
 </Window>

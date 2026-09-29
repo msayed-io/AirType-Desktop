@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const engine = require("./index-Rl6_4MTr.cjs");
+exports.MODE_DRAWS = engine.MODE_DRAWS;
+exports.MODE_FRAMES = engine.MODE_FRAMES;
+exports.STATE_TO_MODE = engine.STATE_TO_MODE;
+exports.finalizeFrame = engine.finalizeFrame;
+exports.makeProj = engine.makeProj;
+exports.paint = engine.paint;
+exports.paintFrame = engine.paintFrame;
+exports.paintLines = engine.paintLines;
+exports.radiusScale = engine.radiusScale;
+exports.resolvePreset = engine.resolvePreset;

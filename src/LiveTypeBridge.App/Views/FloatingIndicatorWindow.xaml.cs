@@ -1,6 +1,9 @@
+using System.Drawing;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
+using Microsoft.Web.WebView2.Core;
 using LiveTypeBridge.App.ViewModels;
 
 namespace LiveTypeBridge.App.Views;
@@ -9,12 +12,20 @@ public partial class FloatingIndicatorWindow : Window
 {
     public event Action? Clicked;
     private bool _working;
+    private bool _webReady;
 
     public FloatingIndicatorWindow()
     {
         InitializeComponent();
         PositionBottomRight();
-        SetWorking(false);
+        Loaded += async (_, _) => await InitializeOrbAsync();
+        OrbWebView.WebMessageReceived += OrbWebView_WebMessageReceived;
+        OrbWebView.PreviewMouseLeftButtonDown += OrbWebView_PreviewMouseLeftButtonDown;
+        OrbWebView.NavigationCompleted += (_, _) =>
+        {
+            _webReady = true;
+            _ = OrbWebView.ExecuteScriptAsync($"window.setOrbState && window.setOrbState('{(_working ? "working" : "breathing")}')");
+        };
     }
 
     public void PositionBottomRight()
@@ -23,28 +34,49 @@ public partial class FloatingIndicatorWindow : Window
         Top = SystemParameters.WorkArea.Bottom - Height - 26;
     }
 
-    public void SetState(UiState state) => SetWorking(state is UiState.Streaming or UiState.Resync);
-
-    private void SetWorking(bool working)
+    public void SetState(UiState state)
     {
-        if (_working == working && IsLoaded) return;
+        var working = state is UiState.Streaming or UiState.Resync;
         _working = working;
-        var animation = new DoubleAnimation
-        {
-            From = working ? 0.16 : 0.10,
-            To = working ? 0.42 : 0.20,
-            Duration = TimeSpan.FromSeconds(working ? 0.8 : 1.8),
-            AutoReverse = true,
-            RepeatBehavior = RepeatBehavior.Forever
-        };
-        Halo.BeginAnimation(OpacityProperty, animation);
+        if (!_webReady) return;
+        var name = working ? "working" : "breathing";
+        _ = OrbWebView.ExecuteScriptAsync($"window.setOrbState && window.setOrbState('{name}')");
     }
 
-    private void OrbRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private async Task InitializeOrbAsync()
     {
-        var before = new Point(Left, Top);
+        try
+        {
+            await OrbWebView.EnsureCoreWebView2Async();
+            OrbWebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+            OrbWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+            OrbWebView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            OrbWebView.DefaultBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+            var dist = Path.Combine(AppContext.BaseDirectory, "web", "orb", "dist", "index.html");
+            if (!File.Exists(dist)) throw new FileNotFoundException("Orb WebView2 assets were not packaged.", dist);
+            OrbWebView.Source = new Uri(dist);
+        }
+        catch
+        {
+            OrbWebView.Visibility = Visibility.Collapsed;
+            FallbackOrb.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OrbWebView_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+    {
+        try
+        {
+            using var json = JsonDocument.Parse(e.WebMessageAsJson);
+            if (json.RootElement.TryGetProperty("type", out var type) && type.GetString() == "click")
+                Clicked?.Invoke();
+        }
+        catch { }
+    }
+
+    private void OrbWebView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
         try { DragMove(); } catch { }
-        if (Math.Abs(Left - before.X) < 4 && Math.Abs(Top - before.Y) < 4)
-            Clicked?.Invoke();
+        e.Handled = true;
     }
 }
