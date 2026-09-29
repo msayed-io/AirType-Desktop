@@ -1,9 +1,11 @@
-name: Windows Desktop Build
+name: Windows Desktop CI and Release
 
 on:
   push:
     branches:
       - main
+    tags:
+      - 'v*.*.*'
   pull_request:
     branches:
       - main
@@ -27,7 +29,6 @@ concurrency:
 
 env:
   DOTNET_VERSION: 8.0.x
-  BUILD_CONFIGURATION: ${{ inputs.configuration || 'Release' }}
   RUNTIME_IDENTIFIER: win-x64
 
 jobs:
@@ -45,11 +46,26 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore solution
+      - name: Resolve build version
+        id: version
+        shell: pwsh
+        run: |
+          if ('${{ github.ref_type }}' -eq 'tag') {
+            $version = '${{ github.ref_name }}'.TrimStart('v')
+            if ($version -notmatch '^\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') {
+              throw "Tag must use semantic version format vX.Y.Z"
+            }
+          } else {
+            $version = '1.0.0'
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "BUILD_CONFIGURATION=${{ inputs.configuration || 'Release' }}" >> $env:GITHUB_ENV
+
+      - name: Restore solution for Windows x64
         run: dotnet restore LiveTypeBridge.sln --runtime $env:RUNTIME_IDENTIFIER
 
       - name: Build solution
-        run: dotnet build LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-restore --nologo
+        run: dotnet build LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-restore --nologo -p:Version=${{ steps.version.outputs.version }}
 
       - name: Run tests
         run: dotnet test LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-build --no-restore --logger "trx;LogFileName=test-results.trx" --results-directory TestResults --nologo
@@ -62,23 +78,80 @@ jobs:
           --self-contained true
           --no-restore
           --output publish/LiveTypeBridge-win-x64
+          -p:Version=${{ steps.version.outputs.version }}
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
           -p:DebugType=None
           -p:DebugSymbols=false
 
-      - name: Create distributable ZIP
+      - name: Create portable ZIP
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          $zip = "artifacts/LiveTypeBridge-win-x64-${{ github.run_number }}.zip"
+          $zip = "artifacts/LiveTypeBridge-portable-win-x64-${{ steps.version.outputs.version }}-${{ github.run_number }}.zip"
           Compress-Archive -Path "publish/LiveTypeBridge-win-x64/*" -DestinationPath $zip -CompressionLevel Optimal
           Get-FileHash $zip -Algorithm SHA256 | Format-List
 
-      - name: Upload Windows artifact
+      - name: Upload CI artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: LiveTypeBridge-windows-x64-${{ github.run_number }}
-          path: artifacts/LiveTypeBridge-win-x64-${{ github.run_number }}.zip
+          name: LiveTypeBridge-ci-win-x64-${{ github.run_number }}
+          path: |
+            artifacts/*.zip
+            publish/LiveTypeBridge-win-x64/LiveTypeBridge.exe
           if-no-files-found: error
           retention-days: 14
+
+  github-release:
+    name: Create GitHub Release with EXE installer
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
+    needs: build-test-package
+    runs-on: windows-2022
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Resolve release version
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}'.TrimStart('v')
+          if ($version -notmatch '^\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') {
+            throw "Tag must use semantic version format vX.Y.Z"
+          }
+          "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Restore tagged solution
+        run: dotnet restore LiveTypeBridge.sln --runtime $env:RUNTIME_IDENTIFIER
+
+      - name: Publish release payload
+        run: >-
+          dotnet publish src/LiveTypeBridge.App/LiveTypeBridge.App.csproj
+          --configuration Release
+          --runtime $env:RUNTIME_IDENTIFIER
+          --self-contained true
+          --no-restore
+          --output publish/LiveTypeBridge-win-x64
+          -p:Version=$env:VERSION
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=None
+          -p:DebugSymbols=false
+
+      - name: Create and upload Velopack Release
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet tool install --global vpk --version 1.2.161
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" --token $env:GITHUB_TOKEN
+          vpk pack -u LiveTypeBridge -v $env:VERSION -p publish/LiveTypeBridge-win-x64 --mainExe LiveTypeBridge.exe
+          vpk upload github --repoUrl "https://github.com/${{ github.repository }}" --publish --releaseName "LiveType Bridge $env:VERSION" --tag "${{ github.ref_name }}" --token $env:GITHUB_TOKEN

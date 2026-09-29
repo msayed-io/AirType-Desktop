@@ -55,6 +55,7 @@
     <sys:String x:Key="ErrNoNetwork">No valid LAN IPv4 address found — make sure Wi-Fi is connected</sys:String>
     <sys:String x:Key="HotkeyRegFail">Failed to register a hotkey (it may be used by another app): {0}</sys:String>
     <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="UpdateAvailable">A new version ({0}) is available. Download and install it now? The app will restart automatically after the update.</sys:String>
     <sys:String x:Key="ErrAlreadyRunning">LiveType Bridge is already running. Check the taskbar.</sys:String>
     <sys:String x:Key="AgoFmt">{0} s ago</sys:String>
     <sys:String x:Key="ErrBadPin">Wrong PIN from the phone — rescan and enter the code shown on screen</sys:String>

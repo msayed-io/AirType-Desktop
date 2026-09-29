@@ -44,6 +44,15 @@ public partial class App : Application
         var window = new MainWindow(_services);
         MainWindow = window;
         window.Show();
+        _ = CheckForUpdatesAsync(window);
+    }
+
+    private async Task CheckForUpdatesAsync(Window owner)
+    {
+        // Give the main window and local services time to initialise before network I/O.
+        await Task.Delay(TimeSpan.FromSeconds(3));
+        var updater = new UpdateService(message => _services?.Log.Info(message));
+        await updater.CheckAndPromptAsync(owner);
     }
 
     /// <summary>

@@ -57,6 +57,7 @@
     <sys:String x:Key="ErrNoNetwork">لم يُعثر على عنوان IP صالح لشبكة محلية — تأكد من الاتصال بشبكة Wi-Fi</sys:String>
     <sys:String x:Key="HotkeyRegFail">تعذّر تسجيل اختصار (قد يكون مستخدمًا من برنامج آخر): {0}</sys:String>
     <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="UpdateAvailable">يتوفر إصدار جديد ({0}). هل تريد تنزيله وتثبيته الآن؟ سيُعاد تشغيل التطبيق تلقائيًا بعد التحديث.</sys:String>
     <sys:String x:Key="ErrAlreadyRunning">البرنامج يعمل بالفعل. تحقق من أيقونته في شريط المهام.</sys:String>
     <sys:String x:Key="AgoFmt">منذ {0} ث</sys:String>
     <sys:String x:Key="ErrBadPin">رمز PIN غير صحيح من الهاتف — أعد المسح وأدخل الرمز الظاهر على الشاشة</sys:String>
