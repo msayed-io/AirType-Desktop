@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   return <main aria-label="AirType floating indicator" onClick={() => post({ type: 'click' })}>
-    <ThinkingOrb state={state} size={64} speed={state === 'working' ? 1.08 : 0.76} dark />
+    <ThinkingOrb state={state} size={64} speed={state === 'working' ? 1.08 : 0.9} dark={false} />
   </main>;
 }
 

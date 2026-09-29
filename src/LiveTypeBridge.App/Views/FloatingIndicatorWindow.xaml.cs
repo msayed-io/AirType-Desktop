@@ -20,7 +20,6 @@ public partial class FloatingIndicatorWindow : Window
         PositionBottomRight();
         Loaded += async (_, _) => await InitializeOrbAsync();
         OrbWebView.WebMessageReceived += OrbWebView_WebMessageReceived;
-        OrbWebView.PreviewMouseLeftButtonDown += OrbWebView_PreviewMouseLeftButtonDown;
         OrbWebView.NavigationCompleted += (_, args) =>
         {
             if (!args.IsSuccess)
@@ -81,9 +80,4 @@ public partial class FloatingIndicatorWindow : Window
         catch { }
     }
 
-    private void OrbWebView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        try { DragMove(); } catch { }
-        e.Handled = true;
-    }
 }
