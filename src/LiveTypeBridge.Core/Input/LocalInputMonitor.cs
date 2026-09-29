@@ -15,8 +15,6 @@ public sealed class LocalInputMonitor : IDisposable
     private const int WM_LBUTTONDOWN = 0x0201;
     private const int WM_RBUTTONDOWN = 0x0204;
     private const int WM_MBUTTONDOWN = 0x0207;
-    private const int WM_MOUSEMOVE = 0x0200;
-    private const int MouseTravelThresholdPx = 150;
 
     private readonly Thread _hookThread;
     private readonly ManualResetEventSlim _installed = new(false);
@@ -25,7 +23,6 @@ public sealed class LocalInputMonitor : IDisposable
     private uint _threadId;
     private volatile bool _disposed;
     private volatile bool _armed;
-    private NativeMethods.POINT? _anchor;
 
     /// <summary>Raised once per arming when genuine local input is detected (hook thread).</summary>
     public event Action? LocalInputDetected;
@@ -41,11 +38,10 @@ public sealed class LocalInputMonitor : IDisposable
         _installed.Wait(TimeSpan.FromSeconds(3));
     }
 
-    /// <summary>Arm/disarm protection. Disarming also resets the mouse anchor.</summary>
+    /// <summary>Arm/disarm protection. Pointer movement is intentionally ignored.</summary>
     public void SetArmed(bool armed)
     {
         _armed = armed;
-        if (armed) _anchor = null;
     }
 
     private void RunHookThread()
@@ -94,15 +90,6 @@ public sealed class LocalInputMonitor : IDisposable
                 {
                     _armed = false;
                     LocalInputDetected?.Invoke();
-                }
-                else if (msg == WM_MOUSEMOVE)
-                {
-                    _anchor ??= data.pt;
-                    if (Math.Abs(data.pt.x - _anchor.Value.x) + Math.Abs(data.pt.y - _anchor.Value.y) > MouseTravelThresholdPx)
-                    {
-                        _armed = false;
-                        LocalInputDetected?.Invoke();
-                    }
                 }
             }
         }

@@ -30,23 +30,27 @@
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="1" Margin="22,0,22,22">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Margin="0,8,22,0">
-                    <TextBlock Text="{DynamicResource AppSubtitle}" Style="{StaticResource Caption}" Margin="8,0,8,18"/>
-                    <RadioButton Style="{StaticResource NavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
-                    <RadioButton Style="{StaticResource NavItem}" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
-                    <RadioButton Style="{StaticResource NavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
-                    <Border Style="{StaticResource GlassCapsule}" Margin="0,24,0,0" Padding="12">
-                        <StackPanel>
-                            <TextBlock Text="AIR / TYPE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource CyanBrush}" FlowDirection="LeftToRight"/>
-                            <TextBlock Text="{DynamicResource PrivacyTagline}" Style="{StaticResource Caption}" Margin="0,5,0,0"/>
-                        </StackPanel>
-                    </Border>
-                    <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Margin="8,14,6,0" Foreground="{DynamicResource WarnBrush}" Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}"/>
-                </StackPanel>
+            <Grid Grid.Row="1" Margin="22,0,22,22" FlowDirection="LeftToRight">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="224"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Margin="0,8,18,0" Padding="16" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="20" FlowDirection="RightToLeft">
+                    <StackPanel>
+                        <TextBlock Text="AirType" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="{DynamicResource AppSubtitle}" Style="{StaticResource Caption}" Margin="0,3,0,18"/>
+                        <Separator Background="{DynamicResource BorderBrushKey}" Margin="0,0,0,12"/>
+                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
+                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
+                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
+                        <Border Style="{StaticResource GlassCapsule}" Margin="0,24,0,0" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="AIR / TYPE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource CyanBrush}" FlowDirection="LeftToRight"/>
+                                <TextBlock Text="{DynamicResource PrivacyTagline}" Style="{StaticResource Caption}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Margin="2,14,2,0" Foreground="{DynamicResource WarnBrush}" Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
+                </Border>
 
-                <Border Grid.Column="1" Background="Transparent">
+                <Border Grid.Column="1" Margin="0,8,0,0" Background="Transparent" FlowDirection="RightToLeft">
                     <ContentControl Content="{Binding CurrentPage}"/>
                 </Border>
             </Grid>
