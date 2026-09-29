@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiveType Bridge â€” ط¹ظ…ظٹظ„ ط§ط®طھط¨ط§ط±</title>
+<style>
+  :root { --accent:#4F46E5; --bg:#F4F6FB; --card:#fff; --text:#1E2433; --muted:#667085; --ok:#16A34A; --err:#DC2626; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,sans-serif; background:var(--bg); color:var(--text); }
+  .wrap { max-width:520px; margin:0 auto; padding:18px; }
+  h1 { font-size:18px; margin:0 0 2px; }
+  .sub { color:var(--muted); font-size:12.5px; margin-bottom:16px; }
+  .card { background:var(--card); border:1px solid #E3E6F0; border-radius:12px; padding:14px; margin-bottom:12px; }
+  label { display:block; font-size:12px; color:var(--muted); margin:8px 0 4px; }
+  input { width:100%; padding:9px 10px; border:1px solid #E3E6F0; border-radius:8px; font-size:14px; font-family:Consolas,monospace; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 16px; font-size:14px; cursor:pointer; margin-top:10px; width:100%; }
+  button.ghost { background:#fff; color:var(--text); border:1px solid #E3E6F0; }
+  button.danger { background:#fff; color:var(--err); border:1px solid #F0B0B0; }
+  button:disabled { opacity:.5; cursor:default; }
+  .status { font-size:13px; font-weight:600; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#98A2B3; margin-inline-end:6px; }
+  .dot.ok { background:var(--ok); }
+  .dot.err { background:var(--err); }
+  textarea { width:100%; min-height:130px; padding:10px; border:1px solid #E3E6F0; border-radius:8px; font-size:15px; resize:vertical; }
+  .log { background:#0B1020; color:#C9F5D2; font-family:Consolas,monospace; font-size:11.5px; padding:10px; border-radius:8px; max-height:180px; overflow:auto; white-space:pre-wrap; }
+  .row { display:flex; gap:8px; }
+  .row > * { flex:1; }
+  .hint { font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>LiveType Bridge</h1>
+  <div class="sub">ط¹ظ…ظٹظ„ ط§ط®طھط¨ط§ط± ظٹط¹ظ…ظ„ ظ…ظ† ط§ظ„ظ…طھطµظپط­ â€” ظٹط­ط§ظƒظٹ ظ‡ط§طھظپ Android ظ„ظ„طھط¬ط±ط¨ط© ط§ظ„ط³ط±ظٹط¹ط©</div>
+
+  <div class="card">
+    <div class="status"><span class="dot" id="dot"></span><span id="state">ط؛ظٹط± ظ…ظˆطµظˆظ„</span></div>
+    <label>ط¹ظ†ظˆط§ظ† ط§ظ„ط®ط§ط¯ظ… (ظ…ظ† ظ†ط§ظپط°ط© QR ط£ظˆ ط§ظ„ط´ط§ط´ط© ط§ظ„ظٹط¯ظˆظٹط©)</label>
+    <input id="addr" placeholder="ws://192.168.1.50:53017/livetype">
+    <label>ظ…ط¹ط±ظ‘ظپ ط§ظ„ط¬ظ„ط³ط© (Session ID)</label>
+    <input id="sid" placeholder="ظ…ظ† ظ†ط§ظپط°ط© ط§ظ„ط§ظ‚طھط±ط§ظ†">
+    <label>ط±ظ…ط² PIN (6 ط£ط±ظ‚ط§ظ…)</label>
+    <input id="pin" maxlength="6" inputmode="numeric" placeholder="000000">
+    <button id="btnConnect">ط§ظ‚طھط±ط§ظ† ظˆط¨ط¯ط، ط§ظ„ط¨ط«</button>
+    <button id="btnDisconnect" class="ghost" disabled>ظ‚ط·ط¹ ط§ظ„ط§طھطµط§ظ„</button>
+  </div>
+
+  <div class="card">
+    <label>ط§ظƒطھط¨ ظ‡ظ†ط§ â€” ظƒظ„ ط­ط±ظپ ظٹظڈط¨ط« ط­ظٹظ‹ط§ ط¥ظ„ظ‰ ط§ظ„ط®ط§ظ†ط© ط§ظ„ظ†ط´ط·ط© ط¹ظ„ظ‰ ط§ظ„ظƒظ…ط¨ظٹظˆطھط±</label>
+    <textarea id="editor" placeholder="ط§ط¨ط¯ط£ ط§ظ„ظƒطھط§ط¨ط©â€¦" disabled></textarea>
+    <div class="row">
+      <button id="btnReset" class="ghost" disabled>ط¥ط¹ط§ط¯ط© ظ…ط²ط§ظ…ظ†ط© ظƒط§ظ…ظ„ط© (ط¥ط¹ط§ط¯ط© ظƒطھط§ط¨ط© ط§ظ„ظ†طµ)</button>
+      <button id="btnClear" class="ghost" disabled>طھظپط±ظٹط؛ ظ…ط±ط¨ط¹ ط§ظ„ظƒطھط§ط¨ط©</button>
+    </div>
+    <div class="hint">ط¹ط¯ظ‘ط§ط¯ ط§ظ„طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ظٹ: <b id="rev">0</b> آ· ط¢ط®ط± طھط£ط®ظٹط± ظ…ظ‚ط§ط³: <b id="rtt">â€”</b></div>
+  </div>
+
+  <div class="card">
+    <div class="log" id="log">â€” ط³ط¬ظ„ ط§ظ„ط£ط­ط¯ط§ط« â€”</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const logEl = $("log"), dot = $("dot"), stateEl = $("state");
+let ws = null, token = null, revision = 0, hbTimer = null, lastPingSent = 0;
+let rttShown = "â€”";
+
+function log(msg) {
+  const t = new Date().toLocaleTimeString();
+  logEl.textContent = `[${t}] ${msg}\n` + logEl.textContent;
+}
+function setState(text, cls) { stateEl.textContent = text; dot.className = "dot" + (cls ? " " + cls : ""); }
+
+$("btnConnect").onclick = () => connect();
+$("btnDisconnect").onclick = disconnect;
+$("btnClear").onclick = () => { $("editor").value = ""; };
+$("btnReset").onclick = () => {
+  if (!ws || ws.readyState !== 1) return;
+  revision = 0;
+  send({ type: "reset_stream", baselineRevision: 0, appliedLength: 0 });
+  log("ط£ط±ط³ظ„ظ†ط§ reset_stream â€” ط³طھظڈط¹ط§ط¯ ظƒطھط§ط¨ط© ط§ظ„ظ†طµ ظƒط§ظ…ظ„ظ‹ط§");
+};
+$("editor").addEventListener("input", () => {
+  if (!ws || ws.readyState !== 1) return;
+  const ta = $("editor");
+  const before = ta.value.slice(0, ta.selectionStart);
+  const after = ta.value.slice(ta.selectionStart);
+  const lastCaret = ta._caret ?? 0;
+  const caret = ta.selectionStart;
+  let deletes = 0, insert = "";
+  if (caret >= lastCaret) {
+    // insertion or replacement ending at caret
+    const common = commonPrefix(before, ta._textBefore ?? "");
+    deletes = (ta._textBefore ?? "").length - common.length;
+    insert = before.slice(common.length) + (before.length === caret ? "" : "");
+    insert = ta.value.slice(common.length, caret) === before.slice(common.length)
+      ? before.slice(common.length)
+      : before.slice(common.length);
+    insert = before.slice(common.length);
+  } else {
+    deletes = lastCaret - caret;
+  }
+  ta._caret = caret;
+  ta._textBefore = ta.value;
+  revision++;
+  $("rev").textContent = revision;
+  send({
+    type: "text_edit",
+    revision,
+    deleteCount: deletes,
+    insertText: insert,
+    timestamp: Date.now(),
+  });
+  if (deletes || insert.length) {
+    // log ظ…ط­ط¯ظˆط¯ ط§ظ„ط®طµظˆطµظٹط©: ظ†ط¹ط±ط¶ ط§ظ„ط£ط·ظˆط§ظ„ ظپظ‚ط·
+    log(`text_edit r${revision} -${deletes} +${insert.length} chars`);
+  }
+});
+
+function commonPrefix(a, b) {
+  let i = 0;
+  const n = Math.min(a.length, b.length);
+  while (i < n && a[i] === b[i]) i++;
+  return i;
+}
+
+function send(obj) {
+  if (!ws || ws.readyState !== 1) return;
+  if (obj.type !== "heartbeat") obj.token = token;
+  ws.send(JSON.stringify(obj));
+}
+
+function connect() {
+  const addr = $("addr").value.trim();
+  const sid = $("sid").value.trim();
+  const pin = $("pin").value.trim();
+  if (!addr || !sid || pin.length !== 6) { log("âڑ  ط£ظƒظ…ظ„ ط§ظ„ط¹ظ†ظˆط§ظ† ظˆط§ظ„ط¬ظ„ط³ط© ظˆPIN ط£ظˆظ„ظ‹ط§"); return; }
+  log(`ط§طھطµط§ظ„ ط¨ظ€ ${addr} â€¦`);
+  try { ws = new WebSocket(addr); } catch (e) { log("â‌Œ ط¹ظ†ظˆط§ظ† ط؛ظٹط± طµط§ظ„ط­: " + e.message); return; }
+
+  ws.onopen = () => {
+    log("ط§ظ„ط³ظƒظگطھ ظ…ظپطھظˆط­ â€” ط¥ط±ط³ط§ظ„ pair_request");
+    send({ type: "pair_request", sessionId: sid, pin, deviceName: "BrowserTest" });
+  };
+  ws.onmessage = ev => {
+    let m;
+    try { m = JSON.parse(ev.data); } catch { return; }
+    switch (m.type) {
+      case "session_ready":
+        token = m.token;
+        revision = 0;
+        $("editor").disabled = false; $("btnReset").disabled = false; $("btnClear").disabled = false;
+        $("btnConnect").disabled = true; $("btnDisconnect").disabled = false;
+        setState("ظ…طھطµظ„ â€” ط§ظ„ط¨ط« ط¬ط§ط±ظچ", "ok");
+        log("âœ… طھظ… ط§ظ„ط§ظ‚طھط±ط§ظ†! ط§ظƒطھط¨ ظپظٹ ط§ظ„ظ…ط±ط¨ط¹ ط£ط¯ظ†ط§ظ‡");
+        startHb(m.heartbeatIntervalMs || 2000);
+        break;
+      case "ack":
+        log(`ack r${m.revision}: ${m.applied ? "ظ…ظ‚ط¨ظˆظ„ âœ“" : "ظ…ط±ظپظˆط¶ (" + (m.reason || "?") + ")"}`);
+        break;
+      case "reset_stream":
+        log(`ط§ظ„ط®ط§ط¯ظ… ط·ظ„ط¨ ط¥ط¹ط§ط¯ط© ظ…ط²ط§ظ…ظ†ط©: baseline=${m.baselineRevision} applied=${m.appliedLength}`);
+        revision = m.baselineRevision ?? 0;
+        $("rev").textContent = revision;
+        // ظ†ط¹ظٹط¯ ط¥ط±ط³ط§ظ„ ط§ظ„ظ†طµ ط§ظ„ط­ط§ظ„ظٹ ظƒط¹ظ…ظ„ظٹط© ظˆط§ط­ط¯ط©
+        const text = $("editor").value;
+        revision++;
+        send({ type: "reset_stream", baselineRevision: revision - 1, appliedLength: m.appliedLength ?? 0 });
+        send({ type: "text_edit", revision, deleteCount: (m.appliedLength ?? 0), insertText: text, timestamp: Date.now() });
+        $("rev").textContent = revision;
+        break;
+      case "heartbeat_ack":
+        const rtt = Date.now() - lastPingSent;
+        rttShown = rtt + " ms";
+        $("rtt").textContent = rttShown;
+        break;
+      case "disconnect":
+        log("ط§ظ„ط®ط§ط¯ظ… ظ‚ظپظ„ ط§ظ„ط§طھطµط§ظ„: " + (m.reason || ""));
+        cleanup();
+        break;
+      case "error":
+        log(`â‌Œ ط®ط·ط£ ظ…ظ† ط§ظ„ط®ط§ط¯ظ…: ${m.errorCode} â€” ${m.errorMessage || ""}`);
+        if (m.errorCode === "bad_pin") setState("PIN ط®ط§ط·ط¦ â€” ط£ط¹ط¯ ط§ظ„ظ…ط­ط§ظˆظ„ط©", "err");
+        cleanup();
+        break;
+    }
+  };
+  ws.onclose = () => { log("ط§ظ†ظ‚ط·ط¹ ط§ظ„ط§طھطµط§ظ„ ط¨ط§ظ„ط®ط§ط¯ظ…"); cleanup(); };
+  ws.onerror = () => log("ط®ط·ط£ ط´ط¨ظƒط© â€” طھط£ظƒط¯ ظ…ظ† ط§ظ„ط¹ظ†ظˆط§ظ† ظˆط§ظ„ط´ط¨ظƒط© ظˆط¬ط¯ط§ط± ط§ظ„ط­ظ…ط§ظٹط©");
+}
+
+function startHb(interval) {
+  stopHb();
+  hbTimer = setInterval(() => {
+    lastPingSent = Date.now();
+    send({ type: "heartbeat", timestamp: Date.now(), lastRttMs: parseInt(rttShown) || null });
+  }, interval);
+}
+function stopHb() { if (hbTimer) { clearInterval(hbTimer); hbTimer = null; } }
+
+function cleanup() {
+  stopHb();
+  token = null; ws = null;
+  $("editor").disabled = true; $("btnReset").disabled = true; $("btnClear").disabled = true;
+  $("btnConnect").disabled = false; $("btnDisconnect").disabled = true;
+  setState("ط؛ظٹط± ظ…ظˆطµظˆظ„");
+}
+function disconnect() {
+  if (ws && ws.readyState === 1) { send({ type: "disconnect", reason: "user" }); }
+  cleanup(); log("ظ‚ط·ط¹ظ†ط§ ط§ظ„ط§طھطµط§ظ„ ظٹط¯ظˆظٹظ‹ط§");
+}
+
+// ظ…ظ„ط، طھظ„ظ‚ط§ط¦ظٹ ظ…ظ† ظ…ط¹ط§ظ…ظ„ط§طھ ط§ظ„ط±ط§ط¨ط· (ظ…ط³ط­ QR ظٹظ†طھظ‡ظٹ ط¨طµظپط­ط© ظƒظ‡ط°ظ‡ ظ…ط³طھظ‚ط¨ظ„ظ‹ط§)
+const q = new URLSearchParams(location.search);
+if (q.get("addr")) $("addr").value = q.get("addr");
+if (q.get("sid")) $("sid").value = q.get("sid");
+</script>
+</body>
+</html>

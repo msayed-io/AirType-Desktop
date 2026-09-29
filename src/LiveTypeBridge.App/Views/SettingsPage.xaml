@@ -1,0 +1,94 @@
+<UserControl x:Class="LiveTypeBridge.App.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:LiveTypeBridge.App.Controls">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="4,8,4,12">
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetPort}" Style="{StaticResource H2}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding PortText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0"
+                                Content="{DynamicResource SetApply}"
+                                Command="{Binding SaveCommand}" HorizontalAlignment="Left" Padding="18,7"/>
+                    </Grid>
+                    <TextBlock Text="{DynamicResource SetPortHint}" Style="{StaticResource Caption}" Margin="0,6,0,0"/>
+                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" Margin="0,8,0,0"
+                               Foreground="{DynamicResource AccentBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetHotkeys}" Style="{StaticResource H2}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource SetHkToggle}" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="0,0,10,6"/>
+                        <controls:HotkeyCaptureBox Grid.Row="0" Grid.Column="1" Text="{Binding HkToggle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,6"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource SetHkQr}" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="0,0,10,6"/>
+                        <controls:HotkeyCaptureBox Grid.Row="1" Grid.Column="1" Text="{Binding HkQr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,6"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource SetHkEmergency}" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <controls:HotkeyCaptureBox Grid.Row="2" Grid.Column="1" Text="{Binding HkEmergency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <TextBlock Text="{DynamicResource SetHotkeyHint}" Style="{StaticResource Caption}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetStartup}" Style="{StaticResource H2}"/>
+                    <CheckBox IsChecked="{Binding RunAtStartup}" Content="{DynamicResource SetStartup}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetLanguage}" Style="{StaticResource H2}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="{DynamicResource LangArabic}" IsChecked="{Binding LangIsAr, Mode=OneWay}"
+                                     Command="{Binding SetLangArCommand}" Margin="0,0,18,0"/>
+                        <RadioButton Content="{DynamicResource LangEnglish}" IsChecked="{Binding LangIsEn, Mode=OneWay}"
+                                     Command="{Binding SetLangEnCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetLogging}" Style="{StaticResource H2}"/>
+                    <CheckBox IsChecked="{Binding EnableLogging}" Content="{DynamicResource SetLoggingOn}"/>
+                    <CheckBox IsChecked="{Binding LogTextContent}" Content="{DynamicResource SetLogContent}"
+                              Foreground="{DynamicResource WarnBrush}"/>
+                    <Button Content="{DynamicResource SetOpenLogs}" Command="{Binding OpenLogsCommand}"
+                            HorizontalAlignment="Left" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SetNetwork}" Style="{StaticResource H2}"/>
+                    <TextBlock Text="{Binding NetworkText}" Style="{StaticResource Caption}"
+                               FontFamily="Cascadia Mono, Consolas" FontSize="11.5"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

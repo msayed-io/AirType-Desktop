@@ -1,0 +1,120 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="AppSubtitle">Live typing from your phone into the focused field</sys:String>
+
+    <sys:String x:Key="NavHome">Home</sys:String>
+    <sys:String x:Key="NavSettings">Settings</sys:String>
+    <sys:String x:Key="NavDiagnostics">Diagnostics</sys:String>
+    <sys:String x:Key="WinMin">Minimize</sys:String>
+    <sys:String x:Key="WinClose">Close</sys:String>
+    <sys:String x:Key="LangToggle">العربية</sys:String>
+
+    <sys:String x:Key="StatusNotConnected">Not connected</sys:String>
+    <sys:String x:Key="StatusReadyToScan">Ready to scan</sys:String>
+    <sys:String x:Key="StatusStreaming">Connected — streaming</sys:String>
+    <sys:String x:Key="StatusPausedManual">Stream paused</sys:String>
+    <sys:String x:Key="StatusPausedProtect">Stream paused to protect your text</sys:String>
+    <sys:String x:Key="StatusResync">Resynchronizing…</sys:String>
+    <sys:String x:Key="StatusEmergency">Emergency input stop</sys:String>
+    <sys:String x:Key="StatusError">Error</sys:String>
+
+    <sys:String x:Key="SubNotConnected">Click “Pair phone” to start a new pairing session</sys:String>
+    <sys:String x:Key="SubReadyToScan">Scan the QR from your phone, then enter the PIN</sys:String>
+    <sys:String x:Key="SubStreaming">Text is typed live into the currently focused field — no window handle is ever stored</sys:String>
+    <sys:String x:Key="SubPausedManual">Stream is paused — resume from the button or the hotkey</sys:String>
+    <sys:String x:Key="SubPausedProtect">Local input from you was detected; streaming paused so we never type into an uncertain position</sys:String>
+    <sys:String x:Key="SubResync">A message was lost; we asked the phone to resend a consistent stream instead of typing wrong text</sys:String>
+    <sys:String x:Key="SubEmergency">All input was stopped by the emergency hotkey — resume from the button or hotkey</sys:String>
+    <sys:String x:Key="SubError">Something went wrong — see the Diagnostics page for details and a fix</sys:String>
+
+    <sys:String x:Key="LabelPhone">Paired phone</sys:String>
+    <sys:String x:Key="PhoneEmpty">No phone paired yet</sys:String>
+    <sys:String x:Key="LabelLastReceive">Last received</sys:String>
+    <sys:String x:Key="LastReceiveNever">Nothing received yet</sys:String>
+    <sys:String x:Key="LabelLatency">Measured latency (actual)</sys:String>
+    <sys:String x:Key="LatencyNone">No measurement yet</sys:String>
+    <sys:String x:Key="LatencyLastMs">Last message: {0} ms</sys:String>
+    <sys:String x:Key="LatencyRttMs"> · heartbeat RTT: {0} ms</sys:String>
+    <sys:String x:Key="LabelStats">Session stats</sys:String>
+    <sys:String x:Key="StatsFmt">{0} ops applied · {1} chars · {2} backspaces · inject time {3:0.#} ms</sys:String>
+    <sys:String x:Key="StatsEmpty">—</sys:String>
+
+    <sys:String x:Key="BtnPairPhone">Pair phone</sys:String>
+    <sys:String x:Key="BtnStopStream">Stop stream</sys:String>
+    <sys:String x:Key="BtnResumeStream">Resume stream</sys:String>
+    <sys:String x:Key="BtnDisconnect">Disconnect</sys:String>
+
+    <sys:String x:Key="ProtectTitle">Streaming paused to protect your text</sys:String>
+    <sys:String x:Key="ProtectMsg">We detected local keystrokes or mouse movement while streaming, so it was paused to avoid typing into an uncertain position. Make sure the caret is where you want it, then press “Resume stream”. We never guess.</sys:String>
+    <sys:String x:Key="ElevatedTitle">Cannot type into the current program</sys:String>
+    <sys:String x:Key="ElevatedMsg">The target app appears to run elevated (as Administrator) above LiveType Bridge, so Windows (UIPI) blocks injected input. We do not bypass this protection; run LiveType Bridge at the same level if you need to type there.</sys:String>
+
+    <sys:String x:Key="ErrPortRange">Could not bind any port in the configured range — try another port in Settings</sys:String>
+    <sys:String x:Key="ErrNoNetwork">No valid LAN IPv4 address found — make sure Wi-Fi is connected</sys:String>
+    <sys:String x:Key="HotkeyRegFail">Failed to register a hotkey (it may be used by another app): {0}</sys:String>
+    <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="ErrAlreadyRunning">LiveType Bridge is already running. Check the taskbar.</sys:String>
+    <sys:String x:Key="AgoFmt">{0} s ago</sys:String>
+    <sys:String x:Key="ErrBadPin">Wrong PIN from the phone — rescan and enter the code shown on screen</sys:String>
+    <sys:String x:Key="ErrBadToken">Invalid session token from the phone — pair again with a new session</sys:String>
+    <sys:String x:Key="ErrSessionGone">Session expired or unknown — create a new one with “Pair phone”</sys:String>
+    <sys:String x:Key="ErrAlreadyPaired">Another phone holds this session — disconnect first</sys:String>
+    <sys:String x:Key="ErrMalformedMsg">Malformed message from the phone — pair again</sys:String>
+    <sys:String x:Key="ErrUnexpectedMsg">Unexpected message type from the phone — update the phone app</sys:String>
+
+    <sys:String x:Key="QrTitle">Pair a phone</sys:String>
+    <sys:String x:Key="QrScanHint">Scan this code from the phone app — the phone must be on the same Wi-Fi / hotspot</sys:String>
+    <sys:String x:Key="QrPinLabel">PIN</sys:String>
+    <sys:String x:Key="QrExpiresIn">Session expires in</sys:String>
+    <sys:String x:Key="QrManual">Manual entry (if the camera fails)</sys:String>
+    <sys:String x:Key="QrAddrLabel">Address</sys:String>
+    <sys:String x:Key="QrSidLabel">Session ID</sys:String>
+    <sys:String x:Key="QrFirewallNote">Firewall note: on first server start Windows may ask to allow the connection — choose “Allow” for private networks. The connection is fully local between your phone and this PC; no Internet is used.</sys:String>
+    <sys:String x:Key="QrClose">Close</sys:String>
+    <sys:String x:Key="QrSec">s</sys:String>
+
+    <sys:String x:Key="SetTitle">Settings</sys:String>
+    <sys:String x:Key="SetPort">Port</sys:String>
+    <sys:String x:Key="SetPortHint">If busy, the next free port is picked automatically. Changing this restarts the server.</sys:String>
+    <sys:String x:Key="SetApply">Apply &amp; save</sys:String>
+    <sys:String x:Key="SetHotkeys">Global hotkeys</sys:String>
+    <sys:String x:Key="SetHkToggle">Toggle streaming</sys:String>
+    <sys:String x:Key="SetHkQr">Open QR window</sys:String>
+    <sys:String x:Key="SetHkEmergency">Emergency input stop</sys:String>
+    <sys:String x:Key="SetHotkeyHint">Click a box then press the desired combination (at least one of Ctrl/Alt/Shift is required). Press Esc to clear. Duplicates and common Windows shortcuts are rejected.</sys:String>
+    <sys:String x:Key="SetStartup">Start with Windows</sys:String>
+    <sys:String x:Key="SetLanguage">Language</sys:String>
+    <sys:String x:Key="LangArabic">العربية</sys:String>
+    <sys:String x:Key="LangEnglish">English</sys:String>
+    <sys:String x:Key="SetLogging">Local log</sys:String>
+    <sys:String x:Key="SetLoggingOn">Enable logging (typed content is always hidden by default)</sys:String>
+    <sys:String x:Key="SetLogContent">Also log streamed text content (not recommended — privacy)</sys:String>
+    <sys:String x:Key="SetOpenLogs">Open log folder</sys:String>
+    <sys:String x:Key="SetNetwork">Network details</sys:String>
+    <sys:String x:Key="SetSaved">Settings saved</sys:String>
+    <sys:String x:Key="SetPortInvalid">Invalid port — enter a number between 1024 and 65535</sys:String>
+    <sys:String x:Key="SetHotkeyDup">Duplicate hotkeys — fix them before saving</sys:String>
+    <sys:String x:Key="SetHotkeyBad">Invalid hotkey format: {0}</sys:String>
+    <sys:String x:Key="SetRestartDone">Server restarted on port {0}</sys:String>
+
+    <sys:String x:Key="DiagTitle">Diagnostics</sys:String>
+    <sys:String x:Key="DiagIp">This PC's IP address</sys:String>
+    <sys:String x:Key="DiagPort">Port</sys:String>
+    <sys:String x:Key="DiagWs">Server status</sys:String>
+    <sys:String x:Key="DiagUptime">Uptime</sys:String>
+    <sys:String x:Key="DiagErr">Last error</sys:String>
+    <sys:String x:Key="DiagNoErr">No errors recorded</sys:String>
+    <sys:String x:Key="DiagFw">Firewall</sys:String>
+    <sys:String x:Key="WsRunning">Running — accepting phone connections</sys:String>
+    <sys:String x:Key="WsStopped">Stopped — starts when you click “Pair phone”</sys:String>
+    <sys:String x:Key="FwAllowed">Allowed — a rule exists for LiveType Bridge</sys:String>
+    <sys:String x:Key="FwNoRule">No rule yet — Windows will ask to allow on first server start; choose Allow for private networks</sys:String>
+    <sys:String x:Key="FwUnknown">Could not query the firewall state (not critical)</sys:String>
+    <sys:String x:Key="DiagSelfTest">Self test</sys:String>
+    <sys:String x:Key="DiagTestHint">Checks the server, pairing and message ordering over a real local connection, without typing into your apps. Make sure no phone is paired while it runs.</sys:String>
+    <sys:String x:Key="DiagRunTest">Run self test</sys:String>
+    <sys:String x:Key="DiagRunning">Testing…</sys:String>
+    <sys:String x:Key="DiagRefresh">Refresh</sys:String>
+</ResourceDictionary>

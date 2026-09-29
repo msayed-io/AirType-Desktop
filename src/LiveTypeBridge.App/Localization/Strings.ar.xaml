@@ -1,0 +1,125 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="AppSubtitle">كتابة حيّة من هاتفك إلى أي خانة نشطة</sys:String>
+
+    <sys:String x:Key="NavHome">الرئيسية</sys:String>
+    <sys:String x:Key="NavSettings">الإعدادات</sys:String>
+    <sys:String x:Key="NavDiagnostics">التشخيص</sys:String>
+    <sys:String x:Key="WinMin">تصغير</sys:String>
+    <sys:String x:Key="WinClose">إغلاق</sys:String>
+    <sys:String x:Key="LangToggle">English</sys:String>
+
+    <!-- Status states -->
+    <sys:String x:Key="StatusNotConnected">غير موصول</sys:String>
+    <sys:String x:Key="StatusReadyToScan">جاهز للمسح</sys:String>
+    <sys:String x:Key="StatusStreaming">متصل — البث جارٍ</sys:String>
+    <sys:String x:Key="StatusPausedManual">البث متوقف</sys:String>
+    <sys:String x:Key="StatusPausedProtect">تم إيقاف البث لحماية النص</sys:String>
+    <sys:String x:Key="StatusResync">إعادة مزامنة…</sys:String>
+    <sys:String x:Key="StatusEmergency">إيقاف طارئ للإدخال</sys:String>
+    <sys:String x:Key="StatusError">خطأ</sys:String>
+
+    <sys:String x:Key="SubNotConnected">اضغط «ربط هاتف» لبدء جلسة اقتران جديدة</sys:String>
+    <sys:String x:Key="SubReadyToScan">امسح رمز QR من الهاتف ثم أدخل رمز PIN</sys:String>
+    <sys:String x:Key="SubStreaming">النص يُكتب لحظيًا في الخانة النشطة — لا يُحفظ تركيز أي برنامج</sys:String>
+    <sys:String x:Key="SubPausedManual">البث متوقف مؤقتًا — استئنفه من الزر أو من الاختصار</sys:String>
+    <sys:String x:Key="SubPausedProtect">اكتُشف إدخال محلي منك؛ أوقفنا البث حتى لا نكتب في موضع غير مؤكد</sys:String>
+    <sys:String x:Key="SubResync">فُقدت رسالة أثناء البث؛ طلبنا من الهاتف إعادة إرسال متزامنة بدل كتابة نص خاطئ</sys:String>
+    <sys:String x:Key="SubEmergency">أُوقف كل إدخال فورًا بأمر طارئ — استئنف من الزر أو الاختصار</sys:String>
+    <sys:String x:Key="SubError">حدث خطأ — راجع صفحة التشخيص للتفاصيل والحل</sys:String>
+
+    <!-- Home -->
+    <sys:String x:Key="LabelPhone">الهاتف المقترن</sys:String>
+    <sys:String x:Key="PhoneEmpty">لا يوجد هاتف مقترن بعد</sys:String>
+    <sys:String x:Key="LabelLastReceive">آخر استقبال</sys:String>
+    <sys:String x:Key="LastReceiveNever">لم يُستقبل شيء بعد</sys:String>
+    <sys:String x:Key="LabelLatency">التأخير المقاس (فعلي)</sys:String>
+    <sys:String x:Key="LatencyNone">لا يوجد قياس بعد</sys:String>
+    <sys:String x:Key="LatencyLastMs">آخر رسالة: {0} م.ث</sys:String>
+    <sys:String x:Key="LatencyRttMs"> · نبضة RTT: {0} م.ث</sys:String>
+    <sys:String x:Key="LabelStats">إحصائيات الجلسة</sys:String>
+    <sys:String x:Key="StatsFmt">{0} عملية مُطبّقة · {1} حرف · {2} مسح · زمن الإدخال {3:0.#} م.ث</sys:String>
+    <sys:String x:Key="StatsEmpty">—</sys:String>
+
+    <sys:String x:Key="BtnPairPhone">ربط هاتف</sys:String>
+    <sys:String x:Key="BtnStopStream">إيقاف البث</sys:String>
+    <sys:String x:Key="BtnResumeStream">استئناف البث</sys:String>
+    <sys:String x:Key="BtnDisconnect">قطع الاتصال</sys:String>
+
+    <sys:String x:Key="ProtectTitle">تم إيقاف البث لحماية النص</sys:String>
+    <sys:String x:Key="ProtectMsg">اكتشفنا ضغط مفاتيح محليًا أو حركة للمؤشر أثناء البث، فأوقفناه لتفادي الكتابة في موضع غير مؤكد. تأكد أن المؤشر في المكان الصحيح ثم اضغط «استئناف البث». لن نحاول التخمين أبدًا.</sys:String>
+    <sys:String x:Key="ElevatedTitle">تعذّر الإدخال في البرنامج الحالي</sys:String>
+    <sys:String x:Key="ElevatedMsg">يبدو أن البرنامج الهدف يعمل بصلاحيات مسؤول أعلى من LiveType Bridge، لذا يمنع ويندوز (UIPI) تمرير الإدخال إليه. لا نتجاوز هذه الحماية؛ شغّل LiveType Bridge بالمستوى نفسه إن أردت الكتابة فيه.</sys:String>
+
+    <sys:String x:Key="ErrPortRange">تعذّر حجز منفذ في النطاق المحدد — جرّب منفذًا آخر من الإعدادات</sys:String>
+    <sys:String x:Key="ErrNoNetwork">لم يُعثر على عنوان IP صالح لشبكة محلية — تأكد من الاتصال بشبكة Wi-Fi</sys:String>
+    <sys:String x:Key="HotkeyRegFail">تعذّر تسجيل اختصار (قد يكون مستخدمًا من برنامج آخر): {0}</sys:String>
+    <sys:String x:Key="MsgTitle">LiveType Bridge</sys:String>
+    <sys:String x:Key="ErrAlreadyRunning">البرنامج يعمل بالفعل. تحقق من أيقونته في شريط المهام.</sys:String>
+    <sys:String x:Key="AgoFmt">منذ {0} ث</sys:String>
+    <sys:String x:Key="ErrBadPin">رمز PIN غير صحيح من الهاتف — أعد المسح وأدخل الرمز الظاهر على الشاشة</sys:String>
+    <sys:String x:Key="ErrBadToken">رمز جلسة غير صالح من الهاتف — أعد الاقتران بجلسة جديدة</sys:String>
+    <sys:String x:Key="ErrSessionGone">الجلسة منتهية أو غير موجودة — أنشئ جلسة جديدة بزر «ربط هاتف»</sys:String>
+    <sys:String x:Key="ErrAlreadyPaired">هاتف آخر مرتبط بهذه الجلسة — اقطع الاتصال أولًا</sys:String>
+    <sys:String x:Key="ErrMalformedMsg">رسالة غير صالحة من الهاتف — أعد الاقتران</sys:String>
+    <sys:String x:Key="ErrUnexpectedMsg">نوع رسالة غير متوقع من الهاتف — أحدث تطبيق الهاتف</sys:String>
+
+    <!-- QR window -->
+    <sys:String x:Key="QrTitle">اقتران هاتف</sys:String>
+    <sys:String x:Key="QrScanHint">امسح الرمز من تطبيق الهاتف — تأكد أن الهاتف على نفس شبكة Wi-Fi أو نقطة الاتصال</sys:String>
+    <sys:String x:Key="QrPinLabel">رمز PIN</sys:String>
+    <sys:String x:Key="QrExpiresIn">تنتهي الجلسة خلال</sys:String>
+    <sys:String x:Key="QrManual">إدخال يدوي (إن تعذّرت الكاميرا)</sys:String>
+    <sys:String x:Key="QrAddrLabel">العنوان</sys:String>
+    <sys:String x:Key="QrSidLabel">معرّف الجلسة</sys:String>
+    <sys:String x:Key="QrFirewallNote">ملاحظة جدار الحماية: عند أول تشغيل للخادم قد يطلب ويندوز السماح بمرور الاتصال — اختر «السماح» للشبكات الخاصة. الاتصال محلي بالكامل بين هاتفك وهذا الجهاز ولا يستخدم الإنترنت.</sys:String>
+    <sys:String x:Key="QrClose">إغلاق</sys:String>
+    <sys:String x:Key="QrSec">ثانية</sys:String>
+
+    <!-- Settings -->
+    <sys:String x:Key="SetTitle">الإعدادات</sys:String>
+    <sys:String x:Key="SetPort">المنفذ</sys:String>
+    <sys:String x:Key="SetPortHint">إذا كان المنفذ مشغولًا يُختار التالي تلقائيًا. تغييره يعيد تشغيل الخادم.</sys:String>
+    <sys:String x:Key="SetApply">تطبيق وحفظ</sys:String>
+    <sys:String x:Key="SetHotkeys">الاختصارات العامة</sys:String>
+    <sys:String x:Key="SetHkToggle">تشغيل / إيقاف البث</sys:String>
+    <sys:String x:Key="SetHkQr">فتح نافذة رمز QR</sys:String>
+    <sys:String x:Key="SetHkEmergency">إيقاف طارئ للإدخال</sys:String>
+    <sys:String x:Key="SetHotkeyHint">انقر داخل الخانة ثم اضغط التركيبة المطلوبة (يلزم مُعدِّل Ctrl أو Alt أو Shift على الأقل). اضغط Esc للمسح. لا تُقبل التركيبات المتكررة أو المتعارضة مع اختصارات ويندوز الشائعة.</sys:String>
+    <sys:String x:Key="SetStartup">بدء التشغيل مع ويندوز</sys:String>
+    <sys:String x:Key="SetLanguage">اللغة</sys:String>
+    <sys:String x:Key="LangArabic">العربية</sys:String>
+    <sys:String x:Key="LangEnglish">English</sys:String>
+    <sys:String x:Key="SetLogging">السجل المحلي</sys:String>
+    <sys:String x:Key="SetLoggingOn">تفعيل السجل (يُخفى محتوى النص دائمًا افتراضيًا)</sys:String>
+    <sys:String x:Key="SetLogContent">تسجيل محتوى النص المُبث أيضًا (غير موصى به للخصوصية)</sys:String>
+    <sys:String x:Key="SetOpenLogs">فتح مجلد السجل</sys:String>
+    <sys:String x:Key="SetNetwork">تفاصيل الشبكة</sys:String>
+    <sys:String x:Key="SetSaved">تم حفظ الإعدادات</sys:String>
+    <sys:String x:Key="SetPortInvalid">منفذ غير صالح — أدخل رقمًا بين 1024 و65535</sys:String>
+    <sys:String x:Key="SetHotkeyDup">توجد اختصارات متكررة — عدّلها قبل الحفظ</sys:String>
+    <sys:String x:Key="SetHotkeyBad">صيغة اختصار غير صالحة: {0}</sys:String>
+    <sys:String x:Key="SetRestartDone">أُعيد تشغيل الخادم على المنفذ {0}</sys:String>
+
+    <!-- Diagnostics -->
+    <sys:String x:Key="DiagTitle">التشخيص</sys:String>
+    <sys:String x:Key="DiagIp">عنوان IP لهذا الجهاز</sys:String>
+    <sys:String x:Key="DiagPort">المنفذ</sys:String>
+    <sys:String x:Key="DiagWs">حالة الخادم</sys:String>
+    <sys:String x:Key="DiagUptime">مدة التشغيل</sys:String>
+    <sys:String x:Key="DiagErr">آخر خطأ</sys:String>
+    <sys:String x:Key="DiagNoErr">لا أخطاء مسجلة</sys:String>
+    <sys:String x:Key="DiagFw">جدار الحماية</sys:String>
+    <sys:String x:Key="WsRunning">يعمل — يستقبل اتصالات الهاتف</sys:String>
+    <sys:String x:Key="WsStopped">متوقف — يبدأ عند «ربط هاتف»</sys:String>
+    <sys:String x:Key="FwAllowed">مسموح — توجد قاعدة لبرنامج LiveType Bridge</sys:String>
+    <sys:String x:Key="FwNoRule">لا توجد قاعدة بعد — سيظهر سؤال «السماح» من ويندوز عند أول تشغيل للخادم، اختر السماح للشبكات الخاصة</sys:String>
+    <sys:String x:Key="FwUnknown">تعذّر الاستعلام عن حالة جدار الحماية (غير حرج)</sys:String>
+    <sys:String x:Key="DiagSelfTest">الفحص الذاتي</sys:String>
+    <sys:String x:Key="DiagTestHint">يفحص الخادم والاقتران وتسلسل الرسائل عبر اتصال محلي حقيقي، دون كتابة أي حرف في تطبيقاتك. تأكد ألا يكون هاتف مقترن أثناء الفحص.</sys:String>
+    <sys:String x:Key="DiagRunTest">تشغيل الفحص الذاتي</sys:String>
+    <sys:String x:Key="DiagRunning">جاري الفحص…</sys:String>
+    <sys:String x:Key="DiagRefresh">تحديث</sys:String>
+</ResourceDictionary>
