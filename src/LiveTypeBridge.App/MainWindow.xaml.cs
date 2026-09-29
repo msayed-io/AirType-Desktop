@@ -1,5 +1,7 @@
 using System.Windows;
 using System.Windows.Interop;
+using Velopack;
+using LiveTypeBridge.App.Localization;
 using LiveTypeBridge.App.Services;
 using LiveTypeBridge.App.ViewModels;
 using LiveTypeBridge.App.Views;
@@ -11,6 +13,8 @@ public partial class MainWindow : Window
     private readonly MainViewModel _vm;
     private readonly AppServices _services;
     private QrWindow? _qrWindow;
+    private UpdateInfo? _availableUpdate;
+    private UpdateService? _updateService;
 
     public MainWindow(AppServices services)
     {
@@ -21,6 +25,7 @@ public partial class MainWindow : Window
 
         _vm.QrRequested += ShowQr;
         _vm.QrDismissed += CloseQr;
+        Loc.LanguageChanged += RefreshUpdateBanner;
 
         SourceInitialized += (_, _) =>
         {
@@ -31,8 +36,46 @@ public partial class MainWindow : Window
         Closed += (_, _) =>
         {
             CloseQr();
+            Loc.LanguageChanged -= RefreshUpdateBanner;
             _vm.Dispose();
         };
+    }
+
+    public void ShowUpdateNotification(UpdateInfo update, UpdateService service)
+    {
+        _availableUpdate = update;
+        _updateService = service;
+        RefreshUpdateBanner();
+        UpdateBanner.Visibility = Visibility.Visible;
+    }
+
+    private void RefreshUpdateBanner()
+    {
+        if (_availableUpdate is null) return;
+        UpdateMessage.Text = Loc.Format("UpdateAvailable", _availableUpdate.TargetFullRelease.Version);
+    }
+
+    private void UpdateLater_Click(object sender, RoutedEventArgs e)
+    {
+        UpdateBanner.Visibility = Visibility.Collapsed;
+    }
+
+    private async void UpdateInstall_Click(object sender, RoutedEventArgs e)
+    {
+        if (_availableUpdate is null || _updateService is null) return;
+
+        UpdateInstallButton.IsEnabled = false;
+        UpdateMessage.Text = Loc.Get("UpdateDownloading");
+        try
+        {
+            await _updateService.DownloadAndRestartAsync(_availableUpdate);
+        }
+        catch (Exception ex)
+        {
+            _services.Log.Error($"Update installation failed: {ex}");
+            UpdateMessage.Text = Loc.Get("UpdateFailed");
+            UpdateInstallButton.IsEnabled = true;
+        }
     }
 
     private void ShowQr(QrViewModel qrVm)

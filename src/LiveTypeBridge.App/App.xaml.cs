@@ -52,7 +52,9 @@ public partial class App : Application
         // Give the main window and local services time to initialise before network I/O.
         await Task.Delay(TimeSpan.FromSeconds(3));
         var updater = new UpdateService(message => _services?.Log.Info(message));
-        await updater.CheckAndPromptAsync(owner);
+        var update = await updater.CheckAsync();
+        if (update is not null && owner.IsVisible)
+            ((MainWindow)owner).ShowUpdateNotification(update, updater);
     }
 
     /// <summary>

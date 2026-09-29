@@ -1,12 +1,10 @@
-using System.Windows;
 using Velopack;
 using Velopack.Sources;
-using LiveTypeBridge.App.Localization;
 
 namespace LiveTypeBridge.App.Services;
 
 /// <summary>
-/// Checks GitHub Releases through Velopack and applies updates only after the user accepts.
+/// Checks GitHub Releases through Velopack and installs an accepted update.
 /// The application must be installed through the Velopack Setup.exe for update hooks to work.
 /// </summary>
 public sealed class UpdateService
@@ -14,46 +12,41 @@ public sealed class UpdateService
     public const string RepositoryUrl = "https://github.com/msayed-io/LiveTypeBridge";
 
     private readonly Action<string> _log;
+    private UpdateManager? _manager;
 
     public UpdateService(Action<string> log) => _log = log;
 
-    public async Task CheckAndPromptAsync(Window owner, CancellationToken cancellationToken = default)
+    public async Task<UpdateInfo?> CheckAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            var source = new GithubSource(RepositoryUrl, accessToken: null, prerelease: false);
-            var manager = new UpdateManager(source);
-            var update = await manager.CheckForUpdatesAsync();
-            if (update is null) return;
-
-            var version = update.TargetFullRelease.Version.ToString();
-            var answer = MessageBox.Show(
-                owner,
-                Loc.Format("UpdateAvailable", version),
-                Loc.Get("MsgTitle"),
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Information,
-                MessageBoxResult.Yes,
-                MessageBoxOptions.DefaultDesktopOnly);
-
-            if (answer != MessageBoxResult.Yes) return;
-
-            await manager.DownloadUpdatesAsync(update, cancelToken: cancellationToken);
-            manager.ApplyUpdatesAndRestart(update.TargetFullRelease);
+            _manager = new UpdateManager(new GithubSource(RepositoryUrl, accessToken: null, prerelease: false));
+            return await _manager.CheckForUpdatesAsync();
         }
         catch (Velopack.Exceptions.NotInstalledException)
         {
-            // Running from bin/Debug or bin/Release is expected during development.
             _log("Update check skipped: the app is not installed through Velopack.");
+            return null;
         }
         catch (OperationCanceledException)
         {
             _log("Update check cancelled.");
+            return null;
         }
         catch (Exception ex)
         {
             // Update failures must never prevent the application from starting.
             _log($"Update check failed: {ex.Message}");
+            return null;
         }
+    }
+
+    public async Task DownloadAndRestartAsync(UpdateInfo update, CancellationToken cancellationToken = default)
+    {
+        if (_manager is null)
+            throw new InvalidOperationException("Update check must complete before installation.");
+
+        await _manager.DownloadUpdatesAsync(update, cancelToken: cancellationToken);
+        _manager.ApplyUpdatesAndRestart(update.TargetFullRelease);
     }
 }

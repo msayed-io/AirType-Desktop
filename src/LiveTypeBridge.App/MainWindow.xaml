@@ -84,6 +84,28 @@
                     <ContentControl Content="{Binding CurrentPage}"/>
                 </Border>
             </Grid>
+
+            <!-- In-app update notification; never blocks the main window. -->
+            <Border x:Name="UpdateBanner" Grid.Row="1" Margin="14,10,14,0"
+                    VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                    Style="{StaticResource WarnCard}" Visibility="Collapsed"
+                    Panel.ZIndex="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="{DynamicResource UpdateTitle}" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="UpdateMessage" Style="{StaticResource Caption}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="UpdateInstallButton" Style="{StaticResource PrimaryButton}"
+                                Content="{DynamicResource UpdateInstall}" Click="UpdateInstall_Click" Margin="0,0,6,0"/>
+                        <Button Content="{DynamicResource UpdateLater}" Click="UpdateLater_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>
