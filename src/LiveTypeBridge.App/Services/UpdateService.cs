@@ -38,7 +38,7 @@ public sealed class UpdateService
 
             if (answer != MessageBoxResult.Yes) return;
 
-            await manager.DownloadUpdatesAsync(update, cancellationToken: cancellationToken);
+            await manager.DownloadUpdatesAsync(update, cancelToken: cancellationToken);
             manager.ApplyUpdatesAndRestart(update.TargetFullRelease);
         }
         catch (Velopack.Exceptions.NotInstalledException)
