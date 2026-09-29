@@ -46,7 +46,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore solution
-        run: dotnet restore LiveTypeBridge.sln
+        run: dotnet restore LiveTypeBridge.sln --runtime $env:RUNTIME_IDENTIFIER
 
       - name: Build solution
         run: dotnet build LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-restore --nologo
