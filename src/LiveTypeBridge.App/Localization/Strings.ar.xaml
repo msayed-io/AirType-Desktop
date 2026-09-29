@@ -10,6 +10,8 @@
     <sys:String x:Key="NavDiagnostics">التشخيص</sys:String>
     <sys:String x:Key="WinMin">تصغير</sys:String>
     <sys:String x:Key="WinClose">إغلاق</sys:String>
+    <sys:String x:Key="FloatingToggle">◉</sys:String>
+    <sys:String x:Key="FloatingToggleHint">إخفاء النافذة وإظهار العلامة العائمة</sys:String>
     <sys:String x:Key="LangToggle">English</sys:String>
 
     <!-- Status states -->
@@ -50,7 +52,7 @@
     <sys:String x:Key="BtnDisconnect">قطع الاتصال</sys:String>
 
     <sys:String x:Key="ProtectTitle">تم إيقاف البث لحماية النص</sys:String>
-    <sys:String x:Key="ProtectMsg">اكتشفنا ضغط مفاتيح محليًا أو حركة للمؤشر أثناء البث، فأوقفناه لتفادي الكتابة في موضع غير مؤكد. تأكد أن المؤشر في المكان الصحيح ثم اضغط «استئناف البث». لن نحاول التخمين أبدًا.</sys:String>
+    <sys:String x:Key="ProtectMsg">اكتشفنا ضغط مفاتيح أو نقرة محلية أثناء البث، فأوقفناه لتفادي الكتابة في موضع غير مؤكد. تحريك المؤشر وحده لا يوقف الاتصال. تأكد أن المؤشر في المكان الصحيح ثم اضغط «استئناف البث».</sys:String>
     <sys:String x:Key="ElevatedTitle">تعذّر الإدخال في البرنامج الحالي</sys:String>
     <sys:String x:Key="ElevatedMsg">يبدو أن البرنامج الهدف يعمل بصلاحيات مسؤول أعلى من AirType، لذا يمنع ويندوز (UIPI) تمرير الإدخال إليه. لا نتجاوز هذه الحماية؛ شغّل AirType بالمستوى نفسه إن أردت الكتابة فيه.</sys:String>
 

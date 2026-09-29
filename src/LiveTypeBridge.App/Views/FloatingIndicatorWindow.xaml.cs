@@ -21,8 +21,15 @@ public partial class FloatingIndicatorWindow : Window
         Loaded += async (_, _) => await InitializeOrbAsync();
         OrbWebView.WebMessageReceived += OrbWebView_WebMessageReceived;
         OrbWebView.PreviewMouseLeftButtonDown += OrbWebView_PreviewMouseLeftButtonDown;
-        OrbWebView.NavigationCompleted += (_, _) =>
+        OrbWebView.NavigationCompleted += (_, args) =>
         {
+            if (!args.IsSuccess)
+            {
+                _webReady = false;
+                OrbWebView.Visibility = Visibility.Collapsed;
+                FallbackOrb.Visibility = Visibility.Visible;
+                return;
+            }
             _webReady = true;
             _ = OrbWebView.ExecuteScriptAsync($"window.setOrbState && window.setOrbState('{(_working ? "working" : "breathing")}')");
         };

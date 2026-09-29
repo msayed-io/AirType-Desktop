@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 namespace LiveTypeBridge.Core.Input;
 
 /// <summary>
-/// Watches for REAL local input (keyboard strokes / significant mouse movement or any
-/// click) while streaming is armed. When the human types or grabs the mouse, we pause
+/// Watches for REAL local input (keyboard strokes or any click) while streaming is armed. When the human types or clicks, we pause
 /// the stream to protect the text — never guess where the cursor should be.
 /// Our own injected events carry <see cref="NativeInput.StreamMarker"/> and are ignored.
 /// </summary>

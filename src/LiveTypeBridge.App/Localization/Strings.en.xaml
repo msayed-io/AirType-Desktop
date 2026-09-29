@@ -10,6 +10,8 @@
     <sys:String x:Key="NavDiagnostics">Diagnostics</sys:String>
     <sys:String x:Key="WinMin">Minimize</sys:String>
     <sys:String x:Key="WinClose">Close</sys:String>
+    <sys:String x:Key="FloatingToggle">◉</sys:String>
+    <sys:String x:Key="FloatingToggleHint">Hide the window and show the floating indicator</sys:String>
     <sys:String x:Key="LangToggle">العربية</sys:String>
 
     <sys:String x:Key="StatusNotConnected">Not connected</sys:String>
@@ -48,7 +50,7 @@
     <sys:String x:Key="BtnDisconnect">Disconnect</sys:String>
 
     <sys:String x:Key="ProtectTitle">Streaming paused to protect your text</sys:String>
-    <sys:String x:Key="ProtectMsg">We detected local keystrokes or mouse movement while streaming, so it was paused to avoid typing into an uncertain position. Make sure the caret is where you want it, then press “Resume stream”. We never guess.</sys:String>
+    <sys:String x:Key="ProtectMsg">We detected a local keystroke or click while streaming, so it was paused to avoid typing into an uncertain position. Pointer movement alone no longer stops the connection. Make sure the caret is where you want it, then press “Resume stream”.</sys:String>
     <sys:String x:Key="ElevatedTitle">Cannot type into the current program</sys:String>
     <sys:String x:Key="ElevatedMsg">The target app appears to run elevated (as Administrator) above AirType, so Windows (UIPI) blocks injected input. We do not bypass this protection; run AirType at the same level if you need to type there.</sys:String>
 

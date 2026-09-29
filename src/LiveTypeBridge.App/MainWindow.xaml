@@ -23,6 +23,7 @@
                 </Border>
                 <Border Style="{StaticResource GlassCapsule}" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4">
                     <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource TitleBarButton}" Content="{DynamicResource FloatingToggle}" Width="38" Click="FloatingToggle_Click" ToolTip="{DynamicResource FloatingToggleHint}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="{DynamicResource LangToggle}" Width="66" Command="{Binding ToggleLanguageCommand}" ToolTip="عربي / English"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="—" Click="Minimize_Click" ToolTip="{DynamicResource WinMin}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" ToolTip="{DynamicResource WinClose}"/>

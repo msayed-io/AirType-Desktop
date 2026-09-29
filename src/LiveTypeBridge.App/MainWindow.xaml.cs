@@ -135,6 +135,7 @@ public partial class MainWindow : Window
         }
     }
 
+    private void FloatingToggle_Click(object sender, RoutedEventArgs e) => HideToIndicator();
     private void Minimize_Click(object sender, RoutedEventArgs e) => HideToIndicator();
     private void Close_Click(object sender, RoutedEventArgs e) => HideToIndicator();
 }
