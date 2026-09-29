@@ -1,0 +1,84 @@
+name: Windows Desktop Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: Build configuration
+        required: true
+        default: Release
+        type: choice
+        options:
+          - Release
+          - Debug
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: 8.0.x
+  BUILD_CONFIGURATION: ${{ inputs.configuration || 'Release' }}
+  RUNTIME_IDENTIFIER: win-x64
+
+jobs:
+  build-test-package:
+    name: Build, test, and package Windows x64
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore solution
+        run: dotnet restore LiveTypeBridge.sln
+
+      - name: Build solution
+        run: dotnet build LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-restore --nologo
+
+      - name: Run tests
+        run: dotnet test LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-build --no-restore --logger "trx;LogFileName=test-results.trx" --results-directory TestResults --nologo
+
+      - name: Publish self-contained Windows application
+        run: >-
+          dotnet publish src/LiveTypeBridge.App/LiveTypeBridge.App.csproj
+          --configuration $env:BUILD_CONFIGURATION
+          --runtime $env:RUNTIME_IDENTIFIER
+          --self-contained true
+          --no-restore
+          --output publish/LiveTypeBridge-win-x64
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=None
+          -p:DebugSymbols=false
+
+      - name: Create distributable ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          $zip = "artifacts/LiveTypeBridge-win-x64-${{ github.run_number }}.zip"
+          Compress-Archive -Path "publish/LiveTypeBridge-win-x64/*" -DestinationPath $zip -CompressionLevel Optimal
+          Get-FileHash $zip -Algorithm SHA256 | Format-List
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: LiveTypeBridge-windows-x64-${{ github.run_number }}
+          path: artifacts/LiveTypeBridge-win-x64-${{ github.run_number }}.zip
+          if-no-files-found: error
+          retention-days: 14
