@@ -81,13 +81,11 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(ShowElevatedCard));
             QrDismissed?.Invoke();
             SetState(UiState.Streaming);
-            _s.Monitor?.SetArmed(true);
             _s.Log.Info($"Phone paired: {name}");
         });
 
         _s.Connections.PhoneDisconnected += reason => RunOnUi(() =>
         {
-            _s.Monitor?.SetArmed(false);
             _activePump = null;
             PhoneName = "";
             SetState(UiState.NotConnected);
@@ -124,17 +122,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         });
         _s.Hub.ResetNeeded += (applied, next) => RunOnUi(() =>
             _s.Log.Info($"Resync requested (applied={applied}, expectedNext={next})"));
-
-        if (_s.Monitor is not null)
-        {
-            _s.Monitor.LocalInputDetected += () => RunOnUi(() =>
-            {
-                _s.Monitor.SetArmed(false);
-                _activePump?.PauseProtect();
-                SetState(UiState.PausedProtect);
-                _s.Log.Info("Local input detected — streaming paused to protect the text");
-            });
-        }
 
         Loc.LanguageChanged += OnLanguageChanged;
 
@@ -184,7 +171,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(StatusSub));
             Raise(nameof(StateBrush));
             Raise(nameof(PulseOn));
-            Raise(nameof(ShowProtectCard));
             Raise(nameof(ShowElevatedCard));
             Raise(nameof(StreamButtonLabel));
             Raise(nameof(StreamButtonEnabled));
@@ -287,7 +273,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     public bool HasHotkeyWarning => !string.IsNullOrEmpty(HotkeyWarning);
 
-    public bool ShowProtectCard => State == UiState.PausedProtect;
     public bool ShowElevatedCard => _elevatedWarning;
     public bool IsBusy => _busy;
 
@@ -378,7 +363,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         if (IsStreamActive)
         {
             _activePump.PauseManual();
-            _s.Monitor?.SetArmed(false);
             SetState(UiState.PausedManual);
         }
         else
@@ -394,14 +378,12 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         _elevatedWarning = false;
         Raise(nameof(ShowElevatedCard));
         SetState(UiState.Streaming);
-        _s.Monitor?.SetArmed(true);
     }
 
     private void EmergencyStop()
     {
         if (_activePump is null) return;
         _activePump.EmergencyStop();
-        _s.Monitor?.SetArmed(false);
         SetState(UiState.EmergencyStopped);
         _s.Log.Info("EMERGENCY STOP — all input suspended");
     }
@@ -468,19 +450,16 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         switch (mode)
         {
             case PumpMode.Active:
-                if (_activePump is not null) { SetState(UiState.Streaming); _s.Monitor?.SetArmed(true); }
+                if (_activePump is not null) SetState(UiState.Streaming);
                 break;
             case PumpMode.PausedManual:
                 SetState(UiState.PausedManual);
-                _s.Monitor?.SetArmed(false);
                 break;
             case PumpMode.PausedProtect:
                 SetState(UiState.PausedProtect);
-                _s.Monitor?.SetArmed(false);
                 break;
             case PumpMode.EmergencyStopped:
                 SetState(UiState.EmergencyStopped);
-                _s.Monitor?.SetArmed(false);
                 break;
             case PumpMode.Resync:
                 SetState(UiState.Resync);

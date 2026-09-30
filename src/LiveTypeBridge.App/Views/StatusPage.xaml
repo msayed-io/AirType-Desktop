@@ -25,7 +25,6 @@
                 </StackPanel>
             </Border>
 
-            <Border Style="{StaticResource WarnCard}" Margin="0,12,0,0" Visibility="{Binding ShowProtectCard, Converter={StaticResource BoolToVis}}"><StackPanel><TextBlock Text="{DynamicResource ProtectTitle}" FontWeight="SemiBold" Foreground="{DynamicResource WarnBrush}"/><TextBlock Text="{DynamicResource ProtectMsg}" Style="{StaticResource Caption}" Margin="0,6"/><Button Style="{StaticResource PrimaryButton}" Content="{DynamicResource BtnResumeStream}" Command="{Binding ResumeStreamCommand}" HorizontalAlignment="Left" Margin="0,4,0,0"/></StackPanel></Border>
             <Border Style="{StaticResource DangerCard}" Margin="0,12,0,0" Visibility="{Binding ShowElevatedCard, Converter={StaticResource BoolToVis}}"><StackPanel><TextBlock Text="{DynamicResource ElevatedTitle}" FontWeight="SemiBold" Foreground="{DynamicResource DangerBrush}"/><TextBlock Text="{DynamicResource ElevatedMsg}" Style="{StaticResource Caption}" Margin="0,6"/></StackPanel></Border>
 
             <Grid Margin="0,14,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="10"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Button Grid.Column="0" Style="{StaticResource PrimaryButton}" Content="{DynamicResource BtnPairPhone}" Command="{Binding PairPhoneCommand}"/><Button Grid.Column="2" Content="{Binding StreamButtonLabel}" Command="{Binding ToggleStreamCommand}" IsEnabled="{Binding StreamButtonEnabled}"/></Grid>

@@ -50,9 +50,6 @@
     <sys:String x:Key="BtnStopStream">إيقاف البث</sys:String>
     <sys:String x:Key="BtnResumeStream">استئناف البث</sys:String>
     <sys:String x:Key="BtnDisconnect">قطع الاتصال</sys:String>
-
-    <sys:String x:Key="ProtectTitle">تم إيقاف البث لحماية النص</sys:String>
-    <sys:String x:Key="ProtectMsg">اكتشفنا ضغط مفاتيح أو نقرة محلية أثناء البث، فأوقفناه لتفادي الكتابة في موضع غير مؤكد. تحريك المؤشر وحده لا يوقف الاتصال. تأكد أن المؤشر في المكان الصحيح ثم اضغط «استئناف البث».</sys:String>
     <sys:String x:Key="ElevatedTitle">تعذّر الإدخال في البرنامج الحالي</sys:String>
     <sys:String x:Key="ElevatedMsg">يبدو أن البرنامج الهدف يعمل بصلاحيات مسؤول أعلى من AirType، لذا يمنع ويندوز (UIPI) تمرير الإدخال إليه. لا نتجاوز هذه الحماية؛ شغّل AirType بالمستوى نفسه إن أردت الكتابة فيه.</sys:String>
 

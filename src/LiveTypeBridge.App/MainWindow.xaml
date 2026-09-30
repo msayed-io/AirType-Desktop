@@ -10,20 +10,24 @@
 
     <Border Background="{DynamicResource BgBrush}" CornerRadius="22">
         <Grid>
-            <Grid.RowDefinitions><RowDefinition Height="76"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="68"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="78"/>
+            </Grid.RowDefinitions>
 
-            <!-- Floating functional layer: independent capsules, never a full-width toolbar. -->
-            <Grid Grid.Row="0" Margin="18,12">
-                <Border Style="{StaticResource GlassCapsule}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="13,8">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="10" Height="10" Fill="{DynamicResource CyanBrush}" Margin="0,0,9,0"/>
+            <!-- Two exact-height pills: their 22px radius is half their 44px height. -->
+            <Grid Grid.Row="0" Margin="20,12" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Border Style="{StaticResource GlassCapsule}" Height="44" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="15,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="9" Height="9" Fill="{DynamicResource CyanBrush}" Margin="0,0,9,0"/>
                         <TextBlock Text="AirType" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
                         <TextBlock Text="  •  local, private, instant" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="8,0,0,0" FlowDirection="LeftToRight"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource GlassCapsule}" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Style="{StaticResource TitleBarButton}" Content="{DynamicResource FloatingToggle}" Width="38" Click="FloatingToggle_Click" ToolTip="{DynamicResource FloatingToggleHint}"/>
+                <Border Style="{StaticResource GlassCapsule}" Height="44" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource TitleBarButton}" Content="◉" Width="38" Click="FloatingToggle_Click" ToolTip="{DynamicResource FloatingToggleHint}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="{DynamicResource LangToggle}" Width="66" Command="{Binding ToggleLanguageCommand}" ToolTip="عربي / English"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="—" Click="Minimize_Click" ToolTip="{DynamicResource WinMin}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" ToolTip="{DynamicResource WinClose}"/>
@@ -31,28 +35,25 @@
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="1" Margin="22,0,22,22" FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="224"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Margin="0,8,18,0" Padding="16" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="20" FlowDirection="RightToLeft">
-                    <StackPanel>
-                        <TextBlock Text="AirType" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
-                        <TextBlock Text="{DynamicResource AppSubtitle}" Style="{StaticResource Caption}" Margin="0,3,0,18"/>
-                        <Separator Background="{DynamicResource BorderBrushKey}" Margin="0,0,0,12"/>
-                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
-                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
-                        <RadioButton Style="{StaticResource NavItem}" HorizontalContentAlignment="Stretch" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
-                        <Border Style="{StaticResource GlassCapsule}" Margin="0,24,0,0" Padding="12">
-                            <StackPanel>
-                                <TextBlock Text="AIR / TYPE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource CyanBrush}" FlowDirection="LeftToRight"/>
-                                <TextBlock Text="{DynamicResource PrivacyTagline}" Style="{StaticResource Caption}" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </Border>
-                        <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Margin="2,14,2,0" Foreground="{DynamicResource WarnBrush}" Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}"/>
-                    </StackPanel>
-                </Border>
+            <Border Grid.Row="1" Margin="24,4,24,4" Background="Transparent" FlowDirection="RightToLeft">
+                <ContentControl Content="{Binding CurrentPage}"/>
+            </Border>
 
-                <Border Grid.Column="1" Margin="0,8,0,0" Background="Transparent" FlowDirection="RightToLeft">
-                    <ContentControl Content="{Binding CurrentPage}"/>
+            <Border Grid.Row="1" Margin="24,0,24,8" Padding="12,8" VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center" MaxWidth="620" Style="{StaticResource WarnCard}"
+                    Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}" Panel.ZIndex="12">
+                <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Foreground="{DynamicResource WarnBrush}" TextAlignment="Center"/>
+            </Border>
+
+            <!-- Floating bottom navigation: no panel or strip behind the capsule. -->
+            <Grid Grid.Row="2" Background="Transparent">
+                <Border Style="{StaticResource GlassCapsule}" Height="54" CornerRadius="27"
+                        HorizontalAlignment="Center" VerticalAlignment="Top" Padding="6,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
+                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
+                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
+                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
+                    </StackPanel>
                 </Border>
             </Grid>
 

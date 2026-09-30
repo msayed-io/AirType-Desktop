@@ -56,6 +56,11 @@ public partial class MainWindow : Window
 
     private void VmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(MainViewModel.StatsText))
+        {
+            Dispatcher.BeginInvoke(_indicator.PulseActivity);
+            return;
+        }
         if (e.PropertyName != nameof(MainViewModel.State)) return;
         Dispatcher.BeginInvoke(() =>
         {
