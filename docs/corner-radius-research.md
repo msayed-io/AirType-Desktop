@@ -7,12 +7,17 @@ Apple’s Human Interface Guidelines define hierarchy, grouping, adaptable layou
 - Apple HIG — Layout: https://developer.apple.com/design/human-interface-guidelines/layout
 - Apple HIG — Buttons: https://developer.apple.com/design/human-interface-guidelines/buttons
 - Apple Design Resources (the official platform templates): https://developer.apple.com/design/resources/
+- PaintCode’s published `UIBezierPath` extraction and coefficients: https://www.paintcodeapp.com/news/code-for-ios-7-rounded-rectangles
 
 On Apple-native layers, the characteristic smooth result is produced by a continuous corner curve (`CALayer.cornerCurve = .continuous`), not by setting every component to a capsule and not by one radius percentage that applies everywhere. Values circulated for app icons are icon-mask measurements and are not an official general-purpose control rule.
 
 ## WPF translation
 
-WPF `Border.CornerRadius` draws ordinary circular-arc rounded corners and has no native equivalent of Apple’s continuous corner curve. Replacing every control with a custom clipped Bézier geometry would alter rendering, focus outlines, hit testing, and control templates beyond the requested corner-only scope. The safe translation is therefore a fixed semantic radius scale whose values stay substantially below half of each component’s height; a half-height radius is specifically avoided because it produces an oval/capsule.
+WPF `Border.CornerRadius` and `DrawingContext.DrawRoundedRectangle` draw ordinary circular-arc corners and expose no equivalent of Apple’s continuous corner-curve selector. Radius changes alone therefore cannot produce the requested curvature.
+
+The targeted interactive surfaces now use `Controls/SmoothBorder.cs`, a WPF `Decorator` that keeps the existing child layout, padding, dependency-property bindings, brushes, template triggers, focus behavior, and hit testing while replacing only the rendered outline. Its `StreamGeometry` follows PaintCode’s published reconstruction of the well-behaved iOS continuous rounded rectangle extracted from `UIBezierPath`: multiple cubic Bézier segments per corner, curve extent `1.52866483 × radius`, and radius clamp `min(width, height) / (2 × 1.52866483)`. Those coefficients are reverse-engineered implementation data—not values Apple documents as a universal HIG rule.
+
+The conversion is deliberately scoped to the requested surfaces: header containers, navigation container/items, buttons, text inputs, language choices, toggle track/thumb, floating indicator, and related compact status badges. Large content cards remain ordinary `Border` surfaces to avoid unrelated visual or layout changes.
 
 | Component | Height | Radius | Radius / height |
 |---|---:|---:|---:|

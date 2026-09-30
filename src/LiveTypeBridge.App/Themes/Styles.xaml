@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:LiveTypeBridge.App.Controls">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Themes/Colors.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Themes/DesignTokens.xaml"/>
@@ -53,15 +54,15 @@
     <Style x:Key="DangerCard" TargetType="Border" BasedOn="{StaticResource Card}">
         <Setter Property="Background" Value="{DynamicResource DangerSoftBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource TertiaryBrush}"/>
     </Style>
-    <Style x:Key="ChromeCapsule" TargetType="Border">
+    <Style x:Key="ChromeCapsule" TargetType="controls:SmoothBorder">
         <Setter Property="Background" Value="{DynamicResource BgElevatedBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}"/><Setter Property="CornerRadius" Value="{DynamicResource Radius.Header}"/>
         <Setter Property="Padding" Value="{DynamicResource Space.Nav}"/><Setter Property="Effect" Value="{DynamicResource Elevation.Level1}"/>
     </Style>
-    <Style x:Key="NavCapsule" TargetType="Border" BasedOn="{StaticResource ChromeCapsule}">
+    <Style x:Key="NavCapsule" TargetType="controls:SmoothBorder" BasedOn="{StaticResource ChromeCapsule}">
         <Setter Property="Background" Value="{DynamicResource CardRaisedBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource BorderBrushKey}"/><Setter Property="Effect" Value="{DynamicResource Elevation.Level2}"/>
     </Style>
-    <Style x:Key="GlassCapsule" TargetType="Border" BasedOn="{StaticResource ChromeCapsule}"/>
+    <Style x:Key="GlassCapsule" TargetType="controls:SmoothBorder" BasedOn="{StaticResource ChromeCapsule}"/>
 
     <!-- Buttons -->
     <Style TargetType="Button">
@@ -71,9 +72,9 @@
         <Setter Property="Cursor" Value="Hand"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value><ControlTemplate TargetType="Button">
-                <Border x:Name="ButtonSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}">
+                <controls:SmoothBorder x:Name="ButtonSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}">
                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="False"/>
-                </Border>
+                </controls:SmoothBorder>
                 <ControlTemplate.Triggers>
                     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ButtonSurface" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/><Setter TargetName="ButtonSurface" Property="Opacity" Value="{DynamicResource Opacity.Hover}"/></Trigger>
                     <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="ButtonSurface" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/><Setter TargetName="ButtonSurface" Property="BorderThickness" Value="{DynamicResource Stroke.Focus}"/></Trigger>
@@ -102,9 +103,9 @@
     <Style x:Key="InputBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TextBox">
-            <Border x:Name="InputSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource Radius.Control}">
+            <controls:SmoothBorder x:Name="InputSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource Radius.Control}">
                 <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
-            </Border>
+            </controls:SmoothBorder>
             <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="InputSurface" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/><Setter TargetName="InputSurface" Property="BorderThickness" Value="{DynamicResource Stroke.Focus}"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="InputSurface" Property="Opacity" Value="{DynamicResource Opacity.Disabled}"/></Trigger></ControlTemplate.Triggers>
         </ControlTemplate></Setter.Value></Setter>
     </Style>
@@ -114,14 +115,14 @@
     <Style x:Key="BottomNavItem" TargetType="RadioButton">
         <Setter Property="FontFamily" Value="{DynamicResource Font.Latin}"/><Setter Property="FontSize" Value="{DynamicResource Type.Label}"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Height" Value="{DynamicResource Size.ControlHeight}"/><Setter Property="Padding" Value="{DynamicResource Space.Button}"/><Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
-            <Border x:Name="NavSurface" Background="Transparent" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}" BorderThickness="{DynamicResource Stroke.Hairline}" BorderBrush="Transparent"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+            <controls:SmoothBorder x:Name="NavSurface" Background="Transparent" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}" BorderThickness="{DynamicResource Stroke.Hairline}" BorderBrush="Transparent"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></controls:SmoothBorder>
             <ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="NavSurface" Property="Background" Value="{DynamicResource AccentSoftBrush}"/><Setter TargetName="NavSurface" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/><Setter Property="Foreground" Value="{DynamicResource OnAccentBrush}"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="NavSurface" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="NavSurface" Property="BorderBrush" Value="{DynamicResource SecondaryBrush}"/></Trigger></ControlTemplate.Triggers>
         </ControlTemplate></Setter.Value></Setter>
     </Style>
     <Style x:Key="ChoicePill" TargetType="RadioButton">
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/><Setter Property="FontFamily" Value="{DynamicResource Font.Latin}"/><Setter Property="FontSize" Value="{DynamicResource Type.Label}"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Padding" Value="{DynamicResource Space.Button}"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
-            <Border x:Name="ChoiceSurface" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+            <controls:SmoothBorder x:Name="ChoiceSurface" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.Control}" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></controls:SmoothBorder>
             <ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="ChoiceSurface" Property="Background" Value="{DynamicResource AccentBrush}"/><Setter TargetName="ChoiceSurface" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/><Setter Property="Foreground" Value="{DynamicResource OnAccentBrush}"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ChoiceSurface" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/></Trigger></ControlTemplate.Triggers>
         </ControlTemplate></Setter.Value></Setter>
     </Style>
@@ -129,7 +130,7 @@
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="FontFamily" Value="{DynamicResource Font.Latin}"/><Setter Property="FontSize" Value="{DynamicResource Type.Label}"/><Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox">
             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <Border x:Name="Track" Grid.Column="0" Width="44" Height="24" CornerRadius="{DynamicResource Radius.Toggle}" Background="{DynamicResource SurfaceMutedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}" VerticalAlignment="Center"><Border x:Name="Thumb" Width="18" Height="18" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Left" Margin="2"/></Border>
+                <controls:SmoothBorder x:Name="Track" Grid.Column="0" Width="44" Height="24" CornerRadius="{DynamicResource Radius.Toggle}" Background="{DynamicResource SurfaceMutedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}" VerticalAlignment="Center"><controls:SmoothBorder x:Name="Thumb" Width="18" Height="18" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Left" Margin="2"/></controls:SmoothBorder>
                 <ContentPresenter Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="False"/>
             </Grid>
             <ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{DynamicResource AccentBrush}"/><Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/><Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Thumb" Property="Background" Value="{DynamicResource OnAccentBrush}"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource OverlayBrush}"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="{DynamicResource Opacity.Disabled}"/></Trigger></ControlTemplate.Triggers>

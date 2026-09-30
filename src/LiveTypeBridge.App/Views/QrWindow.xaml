@@ -1,6 +1,7 @@
 <Window x:Class="LiveTypeBridge.App.Views.QrWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:LiveTypeBridge.App.Controls"
         Title="{DynamicResource QrTitle}" Width="{DynamicResource Size.QrWindow}" SizeToContent="Height"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         Background="{DynamicResource BgBrush}" FlowDirection="RightToLeft" UseLayoutRounding="True">
@@ -27,12 +28,12 @@
             <TextBlock Text="{DynamicResource QrPinLabel}" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
             <TextBlock Text="{Binding PinText}" FontSize="{DynamicResource Type.Pin}" FontWeight="Bold" FontFamily="{DynamicResource Font.Mono}" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center"/>
 
-            <Border Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.Control}" Padding="16,8" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <controls:SmoothBorder Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.Control}" Padding="16,8" HorizontalAlignment="Center" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{DynamicResource QrExpiresIn}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding ExpiresText}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource OnAccentBrush}" Margin="8,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
-            </Border>
+            </controls:SmoothBorder>
 
             <Expander Margin="0,16,0,0" BorderThickness="0">
                 <Expander.Header><TextBlock Text="{DynamicResource QrManual}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource InfoBrush}"/></Expander.Header>
