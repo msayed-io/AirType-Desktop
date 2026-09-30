@@ -39,19 +39,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Set up Node.js for Orb asset verification
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: web/orb/package-lock.json
-
-      - name: Build official thinking-orbs WebView2 asset
-        shell: pwsh
-        run: |
-          npm ci --prefix web/orb --ignore-scripts
-          npm run build --prefix web/orb
-
       - name: Resolve automatic version
         id: version
         shell: pwsh
