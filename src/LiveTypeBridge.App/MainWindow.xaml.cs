@@ -124,8 +124,10 @@ public partial class MainWindow : Window
     private void ShowQr(QrViewModel qrVm)
     {
         CloseQr();
-        _qrWindow = new QrWindow(qrVm) { Owner = this };
-        _qrWindow.Show();
+        var window = new QrWindow(qrVm) { Owner = this };
+        window.Closed += (_, _) => _vm.PairingWindowClosed(qrVm.SessionIdText);
+        _qrWindow = window;
+        window.Show();
     }
 
     private void CloseQr()

@@ -77,6 +77,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             PhoneName = name;
             _activePump = _s.Connections.TryGetPump(sid);
             _pendingSession = null;
+            _ = _s.Discovery.StopAsync();
             _elevatedWarning = false;
             Raise(nameof(ShowElevatedCard));
             QrDismissed?.Invoke();
@@ -131,6 +132,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(LastReceiveText));
             if (_pendingSession is { } ps && ps.IsExpired && _state == UiState.ReadyToScan)
             {
+                _pendingSession = null;
+                _ = _s.Discovery.StopAsync();
                 QrDismissed?.Invoke();
                 SetState(UiState.NotConnected);
             }
@@ -324,10 +327,21 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             _lastStats = null;
             StatsText = Loc.Get("StatsEmpty");
 
+            var discoveryStarted = await _s.Discovery.StartAsync(new LiveTypeAdvertisement(
+                Name: Environment.MachineName,
+                Host: ip.Address,
+                Port: _s.Server.ActualPort,
+                SessionId: session.SessionId,
+                ExpiresUtc: session.ExpiresUtc));
+            if (!discoveryStarted)
+                _s.Log.Warn("LAN auto-discovery unavailable; QR/manual pairing remains active");
+
             var qrVm = new QrViewModel(ImageHelpers.BitmapFromPng(png), session.Pin, address, session.SessionId, session.ExpiresUtc);
             qrVm.Expired += () => RunOnUi(() =>
             {
                 if (State != UiState.ReadyToScan) return;
+                _pendingSession = null;
+                _ = _s.Discovery.StopAsync();
                 QrDismissed?.Invoke();
                 SetState(UiState.NotConnected);
             });
@@ -337,6 +351,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         }
         catch (Exception ex)
         {
+            await _s.Discovery.StopAsync();
             _s.Log.Error($"PairPhone failed: {ex.Message}");
             SetError(ex.Message);
         }
@@ -351,6 +366,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     {
         QrDismissed?.Invoke();
         _pendingSession = null;
+        await _s.Discovery.StopAsync();
         await _s.Connections.DisconnectAllAsync();
         SetState(UiState.NotConnected);
     }
@@ -487,6 +503,13 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     }
 
     private void RunOnUi(Action action) => _ui.BeginInvoke(action);
+
+    public void PairingWindowClosed(string sessionId)
+    {
+        if (_pendingSession?.SessionId != sessionId) return;
+        _ = _s.Discovery.StopAsync();
+        _s.Log.Info("Pairing window closed; LAN discovery advertising stopped");
+    }
 
     private void Navigate(string page)
     {

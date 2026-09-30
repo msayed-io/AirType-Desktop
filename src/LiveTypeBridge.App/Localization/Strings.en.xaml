@@ -71,13 +71,13 @@
     <sys:String x:Key="ErrUnexpectedMsg">Unexpected message type from the phone — update the phone app</sys:String>
 
     <sys:String x:Key="QrTitle">Pair a phone</sys:String>
-    <sys:String x:Key="QrScanHint">Scan this code from the phone app — the phone must be on the same Wi-Fi / hotspot</sys:String>
+    <sys:String x:Key="QrScanHint">Open the phone app on the same Wi-Fi to discover this PC automatically — or scan the code if needed</sys:String>
     <sys:String x:Key="QrPinLabel">PIN</sys:String>
     <sys:String x:Key="QrExpiresIn">Session expires in</sys:String>
     <sys:String x:Key="QrManual">Manual entry (if the camera fails)</sys:String>
     <sys:String x:Key="QrAddrLabel">Address</sys:String>
     <sys:String x:Key="QrSidLabel">Session ID</sys:String>
-    <sys:String x:Key="QrFirewallNote">Firewall note: on first server start Windows may ask to allow the connection — choose “Allow” for private networks. The connection is fully local between your phone and this PC; no Internet is used.</sys:String>
+    <sys:String x:Key="QrFirewallNote">Firewall note: allow AirType on private networks so the TCP connection and UDP discovery port 53018 can work. Traffic stays local between your phone and this PC; no Internet is used.</sys:String>
     <sys:String x:Key="QrClose">Close</sys:String>
     <sys:String x:Key="QrSec">s</sys:String>
 

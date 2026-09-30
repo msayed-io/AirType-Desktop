@@ -29,6 +29,7 @@ public sealed class AppServices : IDisposable
     public PairingSessionManager Sessions { get; private set; } = new();
     public PhoneConnectionManager Connections { get; private set; } = null!;
     public PhoneLinkServer Server { get; private set; } = new();
+    public LiveTypeDiscoveryService Discovery { get; private set; } = new();
     public SelfTestRunner SelfTest { get; private set; } = null!;
     public UiHub Hub { get; } = new();
 
@@ -55,12 +56,14 @@ public sealed class AppServices : IDisposable
         });
 
         services.Server.ServerLog += line => services.Log.Info($"[server] {line}");
+        services.Discovery.DiscoveryLog += line => services.Log.Info($"[discovery] {line}");
         services.SelfTest = new SelfTestRunner(services.Server, services.Sessions, services.Connections);
         return services;
     }
 
     public void Dispose()
     {
+        try { Discovery.Dispose(); } catch { }
         try { Connections.Dispose(); } catch { }
         try { Server.DisposeAsync().AsTask().Wait(TimeSpan.FromSeconds(3)); } catch { }
         try { Log.Info("AirType stopped."); Log.Dispose(); } catch { }

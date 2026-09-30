@@ -74,13 +74,13 @@
 
     <!-- QR window -->
     <sys:String x:Key="QrTitle">اقتران هاتف</sys:String>
-    <sys:String x:Key="QrScanHint">امسح الرمز من تطبيق الهاتف — تأكد أن الهاتف على نفس شبكة Wi-Fi أو نقطة الاتصال</sys:String>
+    <sys:String x:Key="QrScanHint">افتح تطبيق الهاتف على شبكة Wi-Fi نفسها ليكتشف هذا الكمبيوتر تلقائيًا — أو امسح الرمز عند الحاجة</sys:String>
     <sys:String x:Key="QrPinLabel">رمز PIN</sys:String>
     <sys:String x:Key="QrExpiresIn">تنتهي الجلسة خلال</sys:String>
     <sys:String x:Key="QrManual">إدخال يدوي (إن تعذّرت الكاميرا)</sys:String>
     <sys:String x:Key="QrAddrLabel">العنوان</sys:String>
     <sys:String x:Key="QrSidLabel">معرّف الجلسة</sys:String>
-    <sys:String x:Key="QrFirewallNote">ملاحظة جدار الحماية: عند أول تشغيل للخادم قد يطلب ويندوز السماح بمرور الاتصال — اختر «السماح» للشبكات الخاصة. الاتصال محلي بالكامل بين هاتفك وهذا الجهاز ولا يستخدم الإنترنت.</sys:String>
+    <sys:String x:Key="QrFirewallNote">ملاحظة جدار الحماية: اسمح لـ AirType على الشبكات الخاصة حتى يعمل اتصال TCP ومنفذ الاكتشاف UDP 53018. الاتصال محلي بالكامل بين هاتفك وهذا الجهاز ولا يستخدم الإنترنت.</sys:String>
     <sys:String x:Key="QrClose">إغلاق</sys:String>
     <sys:String x:Key="QrSec">ثانية</sys:String>
 
