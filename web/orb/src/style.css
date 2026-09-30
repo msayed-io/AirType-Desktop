@@ -1,4 +1,0 @@
-html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; background: transparent; }
-body { display: grid; place-items: center; user-select: none; cursor: pointer; }
-main { width: 92px; height: 92px; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 30% 20%, rgba(101,230,255,.22), rgba(139,124,255,.11) 42%, rgba(255,114,200,.08) 72%, transparent 74%); filter: drop-shadow(0 10px 20px rgba(0,0,0,.45)); }
-main > div { transform: translateZ(0); }

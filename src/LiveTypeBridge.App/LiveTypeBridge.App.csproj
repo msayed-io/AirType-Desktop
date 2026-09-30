@@ -23,11 +23,6 @@
 
   <ItemGroup>
     <PackageReference Include="Velopack" Version="1.2.161" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\web\orb\dist\**\*" LinkBase="web\orb\dist" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

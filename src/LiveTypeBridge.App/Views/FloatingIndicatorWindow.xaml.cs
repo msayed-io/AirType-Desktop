@@ -1,9 +1,7 @@
-using System.Drawing;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Web.WebView2.Core;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using LiveTypeBridge.App.ViewModels;
 
 namespace LiveTypeBridge.App.Views;
@@ -12,72 +10,80 @@ public partial class FloatingIndicatorWindow : Window
 {
     public event Action? Clicked;
     private bool _working;
-    private bool _webReady;
+    private Point _pointerDown;
+    private bool _dragging;
 
     public FloatingIndicatorWindow()
     {
         InitializeComponent();
         PositionBottomRight();
-        Loaded += async (_, _) => await InitializeOrbAsync();
-        OrbWebView.WebMessageReceived += OrbWebView_WebMessageReceived;
-        OrbWebView.NavigationCompleted += (_, args) =>
-        {
-            if (!args.IsSuccess)
-            {
-                _webReady = false;
-                OrbWebView.Visibility = Visibility.Collapsed;
-                FallbackOrb.Visibility = Visibility.Visible;
-                return;
-            }
-            _webReady = true;
-            _ = OrbWebView.ExecuteScriptAsync($"window.setOrbState && window.setOrbState('{(_working ? "working" : "breathing")}')");
-        };
+        Loaded += (_, _) => StartOrbAnimation();
+        OrbRoot.MouseLeftButtonDown += OrbRoot_MouseLeftButtonDown;
+        OrbRoot.MouseMove += OrbRoot_MouseMove;
     }
 
     public void PositionBottomRight()
     {
-        Left = SystemParameters.WorkArea.Right - Width - 26;
-        Top = SystemParameters.WorkArea.Bottom - Height - 26;
+        Left = SystemParameters.WorkArea.Right - Width - 24;
+        Top = SystemParameters.WorkArea.Bottom - Height - 24;
     }
 
     public void SetState(UiState state)
     {
         var working = state is UiState.Streaming or UiState.Resync;
+        if (_working == working) return;
         _working = working;
-        if (!_webReady) return;
-        var name = working ? "working" : "breathing";
-        _ = OrbWebView.ExecuteScriptAsync($"window.setOrbState && window.setOrbState('{name}')");
+        StartOrbAnimation();
     }
 
-    private async Task InitializeOrbAsync()
+    private void StartOrbAnimation()
     {
-        try
+        if (!IsLoaded) return;
+        var duration = TimeSpan.FromMilliseconds(_working ? 900 : 1700);
+        var pulse = new DoubleAnimation(0.78, 1.08, duration)
         {
-            await OrbWebView.EnsureCoreWebView2Async();
-            OrbWebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-            OrbWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
-            OrbWebView.CoreWebView2.Settings.IsStatusBarEnabled = false;
-            OrbWebView.DefaultBackgroundColor = Color.FromArgb(0, 0, 0, 0);
-            var dist = Path.Combine(AppContext.BaseDirectory, "web", "orb", "dist", "index.html");
-            if (!File.Exists(dist)) throw new FileNotFoundException("Orb WebView2 assets were not packaged.", dist);
-            OrbWebView.Source = new Uri(dist);
-        }
-        catch
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever,
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
+        };
+        GlowScale.BeginAnimation(ScaleTransform.ScaleXProperty, pulse);
+        GlowScale.BeginAnimation(ScaleTransform.ScaleYProperty, pulse);
+
+        var opacity = new DoubleAnimation(_working ? 0.72 : 0.42, _working ? 1.0 : 0.78, duration)
         {
-            OrbWebView.Visibility = Visibility.Collapsed;
-            FallbackOrb.Visibility = Visibility.Visible;
-        }
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever,
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
+        };
+        Glow.BeginAnimation(UIElement.OpacityProperty, opacity);
     }
 
-    private void OrbWebView_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+    private void OrbRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        try
-        {
-            using var json = JsonDocument.Parse(e.WebMessageAsJson);
-            if (json.RootElement.TryGetProperty("type", out var type) && type.GetString() == "click")
-                Clicked?.Invoke();
-        }
-        catch { }
+        _pointerDown = e.GetPosition(this);
+        _dragging = false;
+        OrbRoot.CaptureMouse();
+        e.Handled = true;
     }
 
+    private void OrbRoot_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton != MouseButtonState.Pressed || !OrbRoot.IsMouseCaptured) return;
+        var point = e.GetPosition(this);
+        var delta = point - _pointerDown;
+        if (!_dragging && (Math.Abs(delta.X) > 4 || Math.Abs(delta.Y) > 4)) _dragging = true;
+        if (_dragging)
+        {
+            Left += delta.X;
+            Top += delta.Y;
+        }
+    }
+
+    private void OrbRoot_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        OrbRoot.ReleaseMouseCapture();
+        if (!_dragging) Clicked?.Invoke();
+        _dragging = false;
+        e.Handled = true;
+    }
 }
