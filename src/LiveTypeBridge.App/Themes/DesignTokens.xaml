@@ -26,6 +26,9 @@
     <sys:Double x:Key="Space.XXXL">40</sys:Double>
     <Thickness x:Key="Space.Page">32,84,32,104</Thickness>
     <Thickness x:Key="Space.PageCompact">28,84,28,104</Thickness>
+    <Thickness x:Key="Space.InsetXXS">4</Thickness>
+    <Thickness x:Key="Space.InsetS">12</Thickness>
+    <Thickness x:Key="Space.InsetXL">24</Thickness>
     <Thickness x:Key="Space.Card">20</Thickness>
     <Thickness x:Key="Space.CardCompact">16</Thickness>
     <Thickness x:Key="Space.Button">18,10</Thickness>

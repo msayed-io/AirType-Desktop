@@ -91,7 +91,7 @@
     </Style>
     <Style x:Key="TitleBarButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="{DynamicResource Size.TitleButton}"/><Setter Property="Height" Value="{DynamicResource Size.TitleButton}"/><Setter Property="MinHeight" Value="{DynamicResource Size.TitleButton}"/>
-        <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="{DynamicResource Stroke.None}"/><Setter Property="Padding" Value="{DynamicResource Space.XXS}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="{DynamicResource Stroke.None}"/><Setter Property="Padding" Value="{DynamicResource Space.InsetXXS}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
     </Style>
 
     <!-- Inputs -->

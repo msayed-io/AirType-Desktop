@@ -10,6 +10,7 @@ public partial class App : Application
     private Mutex? _singleInstance;
     private bool _ownsSingleInstance;
     private AppServices? _services;
+    private bool _startupCompleted;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -36,6 +37,12 @@ public partial class App : Application
             MessageBox.Show(args.Exception.Message, Loc.Get("MsgTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             args.Handled = true;
+
+            // A presentation failure while constructing/showing the first window leaves
+            // no usable UI. With explicit shutdown mode, merely dismissing the error
+            // dialog would otherwise keep a headless process and its instance mutex alive.
+            if (!_startupCompleted)
+                Shutdown(-1);
         };
 
         _services = AppServices.Create();
@@ -45,6 +52,7 @@ public partial class App : Application
         var window = new MainWindow(_services);
         MainWindow = window;
         window.Show();
+        _startupCompleted = true;
         _ = CheckForUpdatesAsync(window);
     }
 

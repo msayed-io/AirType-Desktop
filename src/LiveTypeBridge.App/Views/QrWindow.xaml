@@ -8,7 +8,7 @@
         <WindowChrome CaptionHeight="{StaticResource Size.HeaderHeight}" ResizeBorderThickness="0" CornerRadius="{StaticResource Radius.XL}" UseAeroCaptionButtons="False" GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    <Border Background="{DynamicResource BgBrush}" CornerRadius="{DynamicResource Radius.XL}" Padding="{DynamicResource Space.XL}" Effect="{DynamicResource Elevation.Level3}">
+    <Border Background="{DynamicResource BgBrush}" CornerRadius="{DynamicResource Radius.XL}" Padding="{DynamicResource Space.InsetXL}" Effect="{DynamicResource Elevation.Level3}">
         <StackPanel>
             <Grid>
                 <StackPanel>
@@ -18,7 +18,7 @@
                 <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" HorizontalAlignment="Right" VerticalAlignment="Top" ToolTip="{DynamicResource QrClose}" WindowChrome.IsHitTestVisibleInChrome="True"/>
             </Grid>
 
-            <Border Background="{DynamicResource PureWhiteBrush}" Padding="{DynamicResource Space.S}" CornerRadius="{DynamicResource Radius.M}"
+            <Border Background="{DynamicResource PureWhiteBrush}" Padding="{DynamicResource Space.InsetS}" CornerRadius="{DynamicResource Radius.M}"
                     BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}"
                     HorizontalAlignment="Center" Margin="0,20,0,0" Effect="{DynamicResource Elevation.Level1}">
                 <Image Source="{Binding QrImage}" Width="{DynamicResource Size.Qr}" Height="{DynamicResource Size.Qr}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
@@ -45,7 +45,7 @@
                 </Border>
             </Expander>
 
-            <Border Style="{StaticResource WarnCard}" Padding="{DynamicResource Space.S}" Margin="0,16,0,0">
+            <Border Style="{StaticResource WarnCard}" Padding="{DynamicResource Space.InsetS}" Margin="0,16,0,0">
                 <TextBlock Text="{DynamicResource QrFirewallNote}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource WarnBrush}" TextWrapping="Wrap" TextTrimming="None"/>
             </Border>
         </StackPanel>
