@@ -49,26 +49,30 @@ public sealed class ThemeTokenTests
     }
 
     [Fact]
-    public void Continuous_corner_geometry_uses_the_published_ios_bezier_coefficients()
+    public void Pill_renderer_clamps_9999_to_one_circular_half_height_radius()
     {
-        var source = File.ReadAllText(Path.Combine(FindAppRoot(), "Controls", "SmoothBorder.cs"));
+        var appRoot = FindAppRoot();
+        var source = File.ReadAllText(Path.Combine(appRoot, "Controls", "PillBorder.cs"));
+        var tokens = XDocument.Load(Path.Combine(appRoot, "Themes", "DesignTokens.xaml"));
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var pillToken = tokens.Root!.Elements().Single(element =>
+            (string?)element.Attribute(x + "Key") == "Radius.Pill");
 
-        Assert.Contains("1.52866483", source, StringComparison.Ordinal);
-        Assert.Contains("0.66993427", source, StringComparison.Ordinal);
-        Assert.Contains("0.06549600", source, StringComparison.Ordinal);
-        Assert.Contains("0.37282392", source, StringComparison.Ordinal);
-        Assert.Contains("0.16906013", source, StringComparison.Ordinal);
-        Assert.Contains("path.BezierTo", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("DrawRoundedRectangle", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("ArcTo", source, StringComparison.Ordinal);
+        Assert.Equal("9999", pillToken.Value.Trim());
+        Assert.Contains("Math.Min(rect.Width, rect.Height) / 2", source, StringComparison.Ordinal);
+        Assert.Contains("effectiveRadius, effectiveRadius", source, StringComparison.Ordinal);
+        Assert.Contains("DrawRoundedRectangle", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("BezierTo", source, StringComparison.Ordinal);
+        Assert.False(File.Exists(Path.Combine(appRoot, "Controls", "SmoothBorder.cs")));
     }
 
     [Fact]
-    public void Requested_compact_surfaces_use_smooth_border_instead_of_circular_border()
+    public void Every_declared_pill_surface_uses_pill_border_and_the_9999_token()
     {
         var appRoot = FindAppRoot();
         XNamespace presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
         XNamespace controls = "clr-namespace:LiveTypeBridge.App.Controls";
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         var styles = XDocument.Load(Path.Combine(appRoot, "Themes", "Styles.xaml"));
         var requiredTemplateParts = new[]
@@ -77,32 +81,47 @@ public sealed class ThemeTokenTests
         };
         foreach (var name in requiredTemplateParts)
         {
-            Assert.NotNull(styles.Descendants(controls + "SmoothBorder")
-                .SingleOrDefault(element => (string?)element.Attribute(
-                    XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml")) == name));
+            var surface = styles.Descendants(controls + "PillBorder").SingleOrDefault(element =>
+                (string?)element.Attribute(x + "Name") == name);
+            Assert.NotNull(surface);
+            Assert.Equal("{DynamicResource Radius.Pill}", (string?)surface!.Attribute("CornerRadius"));
             Assert.DoesNotContain(styles.Descendants(presentation + "Border"), element =>
-                (string?)element.Attribute(XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml")) == name);
+                (string?)element.Attribute(x + "Name") == name);
         }
 
-        var styleTargets = styles.Descendants(presentation + "Style")
-            .Where(style => new[] { "ChromeCapsule", "NavCapsule", "GlassCapsule" }
-                .Contains((string?)style.Attribute(XName.Get("Key", "http://schemas.microsoft.com/winfx/2006/xaml"))))
-            .Select(style => (string?)style.Attribute("TargetType"))
-            .ToArray();
-        Assert.Equal(3, styleTargets.Length);
-        Assert.All(styleTargets, target => Assert.Equal("controls:SmoothBorder", target));
-
-        var requiredFiles = new[]
+        var pillStyleKeys = new[] { "ChromeCapsule", "GlassCapsule" };
+        foreach (var key in pillStyleKeys)
         {
-            "MainWindow.xaml",
-            Path.Combine("Views", "DiagnosticsPage.xaml"),
-            Path.Combine("Views", "FloatingIndicatorWindow.xaml"),
-            Path.Combine("Views", "QrWindow.xaml"),
-            Path.Combine("Views", "StatusPage.xaml"),
-        };
-        Assert.All(requiredFiles, relativePath =>
-            Assert.NotEmpty(XDocument.Load(Path.Combine(appRoot, relativePath))
-                .Descendants(controls + "SmoothBorder")));
+            var style = styles.Descendants(presentation + "Style").Single(element =>
+                (string?)element.Attribute(x + "Key") == key);
+            Assert.Equal("controls:PillBorder", (string?)style.Attribute("TargetType"));
+        }
+
+        var navContainer = styles.Descendants(presentation + "Style").Single(element =>
+            (string?)element.Attribute(x + "Key") == "NavContainer");
+        Assert.Equal("Border", (string?)navContainer.Attribute("TargetType"));
+        Assert.Contains(navContainer.Descendants(presentation + "Setter"), setter =>
+            (string?)setter.Attribute("Property") == "CornerRadius" &&
+            (string?)setter.Attribute("Value") == "{DynamicResource Radius.Navigation}");
+
+        foreach (var path in Directory.EnumerateFiles(appRoot, "*.xaml", SearchOption.AllDirectories))
+        {
+            var document = XDocument.Load(path);
+            Assert.All(document.Descendants(controls + "PillBorder"), element =>
+                Assert.Equal("{DynamicResource Radius.Pill}", (string?)element.Attribute("CornerRadius")));
+        }
+    }
+
+    [Theory]
+    [InlineData(44, 22)]
+    [InlineData(48, 24)]
+    [InlineData(52, 26)]
+    [InlineData(24, 12)]
+    [InlineData(28, 14)]
+    public void Pill_radius_is_exactly_half_the_actual_height(double height, double expectedRadius)
+    {
+        var effectiveRadius = Math.Min(9999, Math.Min(400, height) / 2);
+        Assert.Equal(expectedRadius, effectiveRadius);
     }
 
     private static Dictionary<string, string> ReadTokenTypes(string path)

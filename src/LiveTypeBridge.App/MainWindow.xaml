@@ -15,12 +15,12 @@
         <Grid>
             <Grid Height="{DynamicResource Size.HeaderHeight}" Margin="{DynamicResource Space.Header}"
                   VerticalAlignment="Top" Panel.ZIndex="30" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-                <controls:SmoothBorder Style="{StaticResource ChromeCapsule}" Height="{DynamicResource Size.HeaderHeight}"
+                <controls:PillBorder Style="{StaticResource ChromeCapsule}" CornerRadius="{DynamicResource Radius.Pill}" Height="{DynamicResource Size.HeaderHeight}"
                         HorizontalAlignment="Left" VerticalAlignment="Center" Padding="{DynamicResource Space.HeaderBrand}">
                     <TextBlock Text="AirType" FontSize="{DynamicResource Type.Heading}" FontWeight="Bold" VerticalAlignment="Center"/>
-                </controls:SmoothBorder>
+                </controls:PillBorder>
 
-                <controls:SmoothBorder Style="{StaticResource ChromeCapsule}" Height="{DynamicResource Size.HeaderHeight}"
+                <controls:PillBorder Style="{StaticResource ChromeCapsule}" CornerRadius="{DynamicResource Radius.Pill}" Height="{DynamicResource Size.HeaderHeight}"
                         HorizontalAlignment="Right" VerticalAlignment="Center" Padding="{DynamicResource Space.HeaderControls}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse Width="8" Height="8" Fill="{DynamicResource AccentBrush}" Margin="8,0"/>
@@ -28,7 +28,7 @@
                         <Button Style="{StaticResource TitleBarButton}" Content="—" Click="Minimize_Click" ToolTip="{DynamicResource WinMin}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" ToolTip="{DynamicResource WinClose}"/>
                     </StackPanel>
-                </controls:SmoothBorder>
+                </controls:PillBorder>
             </Grid>
 
             <Border Margin="{DynamicResource Space.ContentHorizontal}" Background="Transparent" FlowDirection="RightToLeft" Panel.ZIndex="0">
@@ -42,14 +42,14 @@
             </Border>
 
             <Grid Height="{DynamicResource Size.FooterHeight}" VerticalAlignment="Bottom" Panel.ZIndex="30">
-                <controls:SmoothBorder Style="{StaticResource NavCapsule}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.Navigation}"
+                <Border Style="{StaticResource NavContainer}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.Navigation}"
                         HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="{DynamicResource Size.NavMaxWidth}" Padding="{DynamicResource Space.Nav}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
                         <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
                         <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
                         <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
                     </StackPanel>
-                </controls:SmoothBorder>
+                </Border>
             </Grid>
 
             <Border x:Name="UpdateBanner" Margin="{DynamicResource Space.UpdateBanner}" VerticalAlignment="Top" HorizontalAlignment="Stretch"

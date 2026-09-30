@@ -65,6 +65,13 @@ jobs:
       - name: Run tests
         run: dotnet test LiveTypeBridge.sln --configuration $env:BUILD_CONFIGURATION --no-build --no-restore --logger "trx;LogFileName=test-results.trx" --results-directory TestResults --nologo
 
+      - name: Capture native WPF pill geometry evidence
+        shell: pwsh
+        run: |
+          $output = Join-Path (Get-Location) "artifacts/pill-proof"
+          dotnet run --project src/LiveTypeBridge.App/LiveTypeBridge.App.csproj --configuration $env:BUILD_CONFIGURATION --no-build -- "--pill-evidence=$output"
+          Get-ChildItem $output | Format-Table Name, Length
+
       - name: Publish self-contained Windows application
         run: >-
           dotnet publish src/LiveTypeBridge.App/LiveTypeBridge.App.csproj
@@ -93,6 +100,8 @@ jobs:
           name: AirType-ci-win-x64-${{ github.run_number }}
           path: |
             artifacts/*.zip
+            artifacts/pill-proof/*.png
+            artifacts/pill-proof/*.txt
             publish/AirType-win-x64/AirType.exe
           if-no-files-found: error
           retention-days: 14

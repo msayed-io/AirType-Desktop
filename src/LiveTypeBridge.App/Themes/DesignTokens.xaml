@@ -50,13 +50,11 @@
     <CornerRadius x:Key="Radius.M">16</CornerRadius>
     <CornerRadius x:Key="Radius.L">20</CornerRadius>
     <CornerRadius x:Key="Radius.XL">28</CornerRadius>
-    <!-- Fixed, non-capsule control radii: each remains well below half the control height. -->
-    <CornerRadius x:Key="Radius.Control">10</CornerRadius>
-    <CornerRadius x:Key="Radius.Header">12</CornerRadius>
-    <CornerRadius x:Key="Radius.Navigation">14</CornerRadius>
-    <CornerRadius x:Key="Radius.Toggle">6</CornerRadius>
-    <CornerRadius x:Key="Radius.ToggleThumb">4</CornerRadius>
-    <CornerRadius x:Key="Radius.Indicator">10</CornerRadius>
+    <!-- Oversized pill radius: PillBorder clamps this to half the actual shorter side. -->
+    <CornerRadius x:Key="Radius.Pill">9999</CornerRadius>
+    <!-- Rounded rectangles that must remain distinct from pills. -->
+    <CornerRadius x:Key="Radius.Navigation">24</CornerRadius>
+    <CornerRadius x:Key="Radius.Input">12</CornerRadius>
 
     <!-- Stroke and opacity -->
     <Thickness x:Key="Stroke.None">0</Thickness>

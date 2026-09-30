@@ -7,20 +7,20 @@
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" ShowActivated="False"
         WindowStartupLocation="Manual" UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Grid x:Name="OrbRoot" Background="Transparent" ToolTip="AirType" MouseLeftButtonUp="OrbRoot_MouseLeftButtonUp">
-        <controls:SmoothBorder x:Name="GlassBody" Width="{DynamicResource Size.IndicatorBodyWidth}" Height="{DynamicResource Size.IndicatorBodyHeight}"
-                CornerRadius="{DynamicResource Radius.Indicator}" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <controls:PillBorder x:Name="GlassBody" Width="{DynamicResource Size.IndicatorBodyWidth}" Height="{DynamicResource Size.IndicatorBodyHeight}"
+                CornerRadius="{DynamicResource Radius.Pill}" HorizontalAlignment="Center" VerticalAlignment="Center"
                 Background="{DynamicResource HeroGradient}" BorderBrush="{DynamicResource AccentHoverBrush}"
                 BorderThickness="{DynamicResource Stroke.Hairline}" Effect="{DynamicResource Elevation.Indicator}">
             <Grid ClipToBounds="True">
-                <controls:SmoothBorder Height="12" VerticalAlignment="Top" CornerRadius="{DynamicResource Radius.Indicator}" Opacity="0.20" Background="{DynamicResource PureWhiteBrush}"/>
+                <controls:PillBorder Height="12" VerticalAlignment="Top" CornerRadius="{DynamicResource Radius.Pill}" Opacity="0.20" Background="{DynamicResource PureWhiteBrush}"/>
                 <StackPanel x:Name="Waveform" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="LeftToRight">
-                    <Border x:Name="Bar1" Width="3" Height="7" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar2" Width="3" Height="14" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar3" Width="3" Height="19" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar4" Width="3" Height="12" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar5" Width="3" Height="6" CornerRadius="{DynamicResource Radius.ToggleThumb}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <controls:PillBorder x:Name="Bar1" Width="3" Height="7" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><controls:PillBorder.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></controls:PillBorder.RenderTransform></controls:PillBorder>
+                    <controls:PillBorder x:Name="Bar2" Width="3" Height="14" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><controls:PillBorder.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></controls:PillBorder.RenderTransform></controls:PillBorder>
+                    <controls:PillBorder x:Name="Bar3" Width="3" Height="19" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><controls:PillBorder.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></controls:PillBorder.RenderTransform></controls:PillBorder>
+                    <controls:PillBorder x:Name="Bar4" Width="3" Height="12" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><controls:PillBorder.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></controls:PillBorder.RenderTransform></controls:PillBorder>
+                    <controls:PillBorder x:Name="Bar5" Width="3" Height="6" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource AccentSoftBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><controls:PillBorder.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></controls:PillBorder.RenderTransform></controls:PillBorder>
                 </StackPanel>
             </Grid>
-        </controls:SmoothBorder>
+        </controls:PillBorder>
     </Grid>
 </Window>

@@ -24,12 +24,12 @@
                         <TextBlock Text="{DynamicResource DiagWs}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource OnAccentBrush}"/>
                         <TextBlock Text="{Binding WsText}" FontSize="{DynamicResource Type.Heading}" FontWeight="Bold" Foreground="{DynamicResource OnAccentBrush}" Margin="0,6,0,0" TextWrapping="Wrap" TextTrimming="None"/>
                     </StackPanel>
-                    <controls:SmoothBorder Grid.Column="2" Background="{DynamicResource CardBrush}" CornerRadius="{DynamicResource Radius.M}" Padding="16,10" VerticalAlignment="Center" MinWidth="104">
+                    <controls:PillBorder Grid.Column="2" Background="{DynamicResource CardBrush}" CornerRadius="{DynamicResource Radius.Pill}" Padding="16,10" VerticalAlignment="Center" MinWidth="104">
                         <StackPanel>
                             <TextBlock Text="{DynamicResource DiagUptime}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
                             <TextBlock Text="{Binding UptimeText}" FontSize="{DynamicResource Type.Heading}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" FontFamily="{DynamicResource Font.Mono}" Margin="0,6,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
-                    </controls:SmoothBorder>
+                    </controls:PillBorder>
                 </Grid>
             </Border>
 
@@ -55,12 +55,12 @@
                         <StackPanel Grid.Column="0"><TextBlock Text="{DynamicResource DiagSelfTest}" Style="{StaticResource H2}"/><TextBlock Text="{DynamicResource DiagTestHint}" Style="{StaticResource Caption}" Margin="0,-4,16,0"/></StackPanel>
                         <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="{DynamicResource DiagRunTest}" Command="{Binding RunSelfTestCommand}" VerticalAlignment="Center" MinWidth="{DynamicResource Size.SelfTestWidth}"/>
                     </Grid>
-                    <controls:SmoothBorder Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.M}" Margin="0,16,0,0" Padding="{DynamicResource Space.InsetS}">
+                    <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.Input}" Margin="0,16,0,0" Padding="{DynamicResource Space.InsetS}">
                         <TextBox Text="{Binding SelfTestOutput, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" Height="{DynamicResource Size.ConsoleHeight}"
                                  Background="Transparent" BorderThickness="{DynamicResource Stroke.None}" Padding="{DynamicResource Space.Zero}"
                                  Foreground="{DynamicResource OnAccentBrush}" FontFamily="{DynamicResource Font.Mono}" FontSize="{DynamicResource Type.Caption}"
                                  TextWrapping="Wrap" TextAlignment="Left" FlowDirection="LeftToRight" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"/>
-                    </controls:SmoothBorder>
+                    </Border>
                 </StackPanel>
             </Border>
         </StackPanel>

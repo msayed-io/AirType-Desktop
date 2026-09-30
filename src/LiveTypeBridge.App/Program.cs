@@ -1,4 +1,6 @@
+using System.IO;
 using System.Windows;
+using LiveTypeBridge.App.Diagnostics;
 using Velopack;
 
 namespace LiveTypeBridge.App;
@@ -13,6 +15,16 @@ internal static class Program
 
         var app = new App();
         app.InitializeComponent();
+
+        const string evidencePrefix = "--pill-evidence=";
+        var evidenceArgument = args.FirstOrDefault(arg =>
+            arg.StartsWith(evidencePrefix, StringComparison.OrdinalIgnoreCase));
+        if (evidenceArgument is not null)
+        {
+            PillEvidenceRenderer.Render(Path.GetFullPath(evidenceArgument[evidencePrefix.Length..]));
+            return;
+        }
+
         app.Run();
     }
 }
