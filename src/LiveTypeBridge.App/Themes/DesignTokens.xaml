@@ -44,6 +44,7 @@
     <Thickness x:Key="Space.Zero">0</Thickness>
 
     <!-- Radius -->
+    <CornerRadius x:Key="Radius.XXS">4</CornerRadius>
     <CornerRadius x:Key="Radius.XS">8</CornerRadius>
     <CornerRadius x:Key="Radius.S">12</CornerRadius>
     <CornerRadius x:Key="Radius.M">16</CornerRadius>

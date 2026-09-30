@@ -4,14 +4,13 @@
         Title="AirType"
         Width="{DynamicResource Size.WindowWidth}" Height="{DynamicResource Size.WindowHeight}"
         MinWidth="{DynamicResource Size.WindowMinWidth}" MinHeight="{DynamicResource Size.WindowMinHeight}"
-        WindowStartupLocation="CenterScreen" Background="{DynamicResource CanvasBrush}"
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource BgBrush}"
         FlowDirection="RightToLeft" UseLayoutRounding="True" SnapsToDevicePixels="True">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="{StaticResource Radius.XL}" UseAeroCaptionButtons="False" GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    <Border Background="{DynamicResource BgBrush}" CornerRadius="{DynamicResource Radius.XL}"
-            Margin="{DynamicResource Space.ShellInset}" Effect="{DynamicResource Elevation.Level3}">
+    <Border Background="{DynamicResource BgBrush}" CornerRadius="{DynamicResource Radius.XL}">
         <Grid>
             <Grid Height="{DynamicResource Size.HeaderHeight}" Margin="{DynamicResource Space.Header}"
                   VerticalAlignment="Top" Panel.ZIndex="30" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
@@ -34,7 +33,6 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse Width="8" Height="8" Fill="{DynamicResource AccentBrush}" Margin="8,0"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="◉" Click="FloatingToggle_Click" ToolTip="{DynamicResource FloatingToggleHint}"/>
-                        <Button Style="{StaticResource TitleBarButton}" Content="{DynamicResource LangToggle}" Width="{DynamicResource Size.LanguageButton}" Command="{Binding ToggleLanguageCommand}" ToolTip="عربي / English"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="—" Click="Minimize_Click" ToolTip="{DynamicResource WinMin}"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" ToolTip="{DynamicResource WinClose}"/>
                     </StackPanel>
@@ -52,7 +50,7 @@
             </Border>
 
             <Grid Height="{DynamicResource Size.FooterHeight}" VerticalAlignment="Bottom" Panel.ZIndex="30">
-                <Border Style="{StaticResource NavCapsule}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.Nav}"
+                <Border Style="{StaticResource NavCapsule}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.M}"
                         HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="{DynamicResource Size.NavMaxWidth}" Padding="{DynamicResource Space.Nav}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
                         <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>

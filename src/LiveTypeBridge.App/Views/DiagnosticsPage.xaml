@@ -54,10 +54,10 @@
                         <StackPanel Grid.Column="0"><TextBlock Text="{DynamicResource DiagSelfTest}" Style="{StaticResource H2}"/><TextBlock Text="{DynamicResource DiagTestHint}" Style="{StaticResource Caption}" Margin="0,-4,16,0"/></StackPanel>
                         <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="{DynamicResource DiagRunTest}" Command="{Binding RunSelfTestCommand}" VerticalAlignment="Center" MinWidth="{DynamicResource Size.SelfTestWidth}"/>
                     </Grid>
-                    <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource OverlayBrush}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.M}" Margin="0,16,0,0" Padding="{DynamicResource Space.InsetS}">
+                    <Border Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.M}" Margin="0,16,0,0" Padding="{DynamicResource Space.InsetS}">
                         <TextBox Text="{Binding SelfTestOutput, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" Height="{DynamicResource Size.ConsoleHeight}"
                                  Background="Transparent" BorderThickness="{DynamicResource Stroke.None}" Padding="{DynamicResource Space.Zero}"
-                                 Foreground="{DynamicResource OnDarkBrush}" FontFamily="{DynamicResource Font.Mono}" FontSize="{DynamicResource Type.Caption}"
+                                 Foreground="{DynamicResource OnAccentBrush}" FontFamily="{DynamicResource Font.Mono}" FontSize="{DynamicResource Type.Caption}"
                                  TextWrapping="Wrap" TextAlignment="Left" FlowDirection="LeftToRight" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"/>
                     </Border>
                 </StackPanel>

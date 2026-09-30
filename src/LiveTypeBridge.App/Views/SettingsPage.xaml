@@ -4,17 +4,19 @@
              xmlns:controls="clr-namespace:LiveTypeBridge.App.Controls">
     <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
         <StackPanel Margin="{DynamicResource Space.PageCompact}">
-            <Grid Margin="0,0,0,20">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="{DynamicResource SetTitle}" Style="{StaticResource H1}"/>
-                    <TextBlock Text="{DynamicResource SetIntro}" Style="{StaticResource Caption}" Margin="0,6,0,0" MaxWidth="560" HorizontalAlignment="Left"/>
-                </StackPanel>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
-                    <Button Style="{StaticResource PrimaryButton}" Content="{DynamicResource SetApply}" Command="{Binding SaveCommand}" MinWidth="{DynamicResource Size.SettingsSaveWidth}"/>
-                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" Foreground="{DynamicResource InfoBrush}" TextAlignment="Center" Margin="0,8,0,0" MaxWidth="200"/>
-                </StackPanel>
-            </Grid>
+            <Border Style="{StaticResource HeroCard}" Margin="0,0,0,20" Padding="{DynamicResource Space.CardCompact}">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{DynamicResource SetTitle}" Style="{StaticResource H1}" Foreground="{DynamicResource OnAccentBrush}"/>
+                        <TextBlock Text="{DynamicResource SetIntro}" Style="{StaticResource Caption}" Foreground="{DynamicResource OnAccentBrush}" Margin="0,6,0,0" MaxWidth="560" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <Button Content="{DynamicResource SetApply}" Command="{Binding SaveCommand}" MinWidth="{DynamicResource Size.SettingsSaveWidth}"/>
+                        <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" Foreground="{DynamicResource OnAccentBrush}" TextAlignment="Center" Margin="0,8,0,0" MaxWidth="200"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
             <Grid>
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.08*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="0.92*"/></Grid.ColumnDefinitions>
