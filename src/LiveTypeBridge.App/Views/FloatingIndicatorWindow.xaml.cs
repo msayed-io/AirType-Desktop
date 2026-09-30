@@ -31,7 +31,11 @@ public partial class FloatingIndicatorWindow : Window
         };
 
         PositionBottomRight();
-        SourceInitialized += (_, _) => EnableAcrylicBackdrop();
+        SourceInitialized += (_, _) =>
+        {
+            ApplyCapsuleWindowRegion();
+            EnableAcrylicBackdrop();
+        };
         Loaded += (_, _) => AnimateWave(active: false);
         OrbRoot.MouseLeftButtonDown += OrbRoot_MouseLeftButtonDown;
         OrbRoot.MouseMove += OrbRoot_MouseMove;
@@ -40,7 +44,28 @@ public partial class FloatingIndicatorWindow : Window
     public void PositionBottomRight()
     {
         Left = SystemParameters.WorkArea.Right - Width - 18;
-        Top = SystemParameters.WorkArea.Bottom - Height - 18;
+        Top = SystemParameters.WorkArea.Bottom - Height - 6;
+    }
+
+    private void ApplyCapsuleWindowRegion()
+    {
+        // Acrylic is composed for the native HWND, whose default shape is rectangular.
+        // Clip the HWND itself to the exact 48×34 WPF capsule so no rectangular
+        // composition surface can appear around the transparent corners.
+        var dpi = VisualTreeHelper.GetDpi(this);
+        var left = (int)Math.Round(2 * dpi.DpiScaleX);
+        var top = (int)Math.Round(2 * dpi.DpiScaleY);
+        var right = (int)Math.Round(50 * dpi.DpiScaleX);
+        var bottom = (int)Math.Round(36 * dpi.DpiScaleY);
+        var diameterX = (int)Math.Round(34 * dpi.DpiScaleX);
+        var diameterY = (int)Math.Round(34 * dpi.DpiScaleY);
+
+        var region = CreateRoundRectRgn(left, top, right + 1, bottom + 1, diameterX, diameterY);
+        if (region == IntPtr.Zero) return;
+
+        // On success Windows owns the region handle. Delete it only if assignment fails.
+        if (SetWindowRgn(new WindowInteropHelper(this).Handle, region, true) == 0)
+            DeleteObject(region);
     }
 
     public void SetState(UiState state)
@@ -176,4 +201,14 @@ public partial class FloatingIndicatorWindow : Window
 
     [DllImport("user32.dll")]
     private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+
+    [DllImport("gdi32.dll")]
+    private static extern IntPtr CreateRoundRectRgn(int left, int top, int right, int bottom, int widthEllipse, int heightEllipse);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowRgn(IntPtr hwnd, IntPtr region, bool redraw);
+
+    [DllImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DeleteObject(IntPtr value);
 }

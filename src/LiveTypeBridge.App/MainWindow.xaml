@@ -10,14 +10,9 @@
 
     <Border Background="{DynamicResource BgBrush}" CornerRadius="22">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="68"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="78"/>
-            </Grid.RowDefinitions>
-
-            <!-- Two exact-height pills: their 22px radius is half their 44px height. -->
-            <Grid Grid.Row="0" Margin="20,12" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <!-- Overlay layer: the pills keep their exact design while content scrolls beneath them. -->
+            <Grid Height="44" Margin="20,12,20,0" VerticalAlignment="Top" Panel.ZIndex="30"
+                  MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border Style="{StaticResource GlassCapsule}" Height="44" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="15,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse Width="9" Height="9" Fill="{DynamicResource CyanBrush}" Margin="0,0,9,0"/>
@@ -35,18 +30,18 @@
                 </Border>
             </Grid>
 
-            <Border Grid.Row="1" Margin="24,4,24,4" Background="Transparent" FlowDirection="RightToLeft">
+            <Border Margin="24,0" Background="Transparent" FlowDirection="RightToLeft" Panel.ZIndex="0">
                 <ContentControl Content="{Binding CurrentPage}"/>
             </Border>
 
-            <Border Grid.Row="1" Margin="24,0,24,8" Padding="12,8" VerticalAlignment="Bottom"
+            <Border Margin="24,0,24,82" Padding="12,8" VerticalAlignment="Bottom"
                     HorizontalAlignment="Center" MaxWidth="620" Style="{StaticResource WarnCard}"
-                    Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}" Panel.ZIndex="12">
+                    Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}" Panel.ZIndex="20">
                 <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Foreground="{DynamicResource WarnBrush}" TextAlignment="Center"/>
             </Border>
 
-            <!-- Floating bottom navigation: no panel or strip behind the capsule. -->
-            <Grid Grid.Row="2" Background="Transparent">
+            <!-- Floating bottom navigation overlay: no reserved row or panel behind it. -->
+            <Grid Height="78" VerticalAlignment="Bottom" Panel.ZIndex="30">
                 <Border Style="{StaticResource GlassCapsule}" Height="54" CornerRadius="27"
                         HorizontalAlignment="Center" VerticalAlignment="Top" Padding="6,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
@@ -57,7 +52,7 @@
                 </Border>
             </Grid>
 
-            <Border x:Name="UpdateBanner" Grid.Row="1" Margin="24,10,24,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Style="{StaticResource WarnCard}" Visibility="Collapsed" Panel.ZIndex="20">
+            <Border x:Name="UpdateBanner" Margin="24,72,24,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Style="{StaticResource WarnCard}" Visibility="Collapsed" Panel.ZIndex="40">
                 <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,12,0"><TextBlock Text="{DynamicResource UpdateTitle}" Style="{StaticResource H2}" Margin="0,0,0,4"/><TextBlock x:Name="UpdateMessage" Style="{StaticResource Caption}"/></StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button x:Name="UpdateInstallButton" Style="{StaticResource PrimaryButton}" Content="{DynamicResource UpdateInstall}" Click="UpdateInstall_Click" Margin="0,0,6,0"/><Button Content="{DynamicResource UpdateLater}" Click="UpdateLater_Click"/></StackPanel>

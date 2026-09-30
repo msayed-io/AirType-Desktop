@@ -38,6 +38,7 @@ public partial class MainWindow : Window
             _vm.AttachSource(source!);
         };
 
+        Closing += (_, _) => _indicator.Hide();
         Closed += (_, _) =>
         {
             CloseQr();
@@ -45,12 +46,7 @@ public partial class MainWindow : Window
             Loc.LanguageChanged -= RefreshUpdateBanner;
             _vm.PropertyChanged -= VmPropertyChanged;
             _vm.Dispose();
-        };
-        Closing += (_, args) =>
-        {
-            // Closing the window is intentionally a hide-to-orb action; services stay alive.
-            args.Cancel = true;
-            HideToIndicator();
+            Application.Current.Shutdown();
         };
     }
 
@@ -142,5 +138,5 @@ public partial class MainWindow : Window
 
     private void FloatingToggle_Click(object sender, RoutedEventArgs e) => HideToIndicator();
     private void Minimize_Click(object sender, RoutedEventArgs e) => HideToIndicator();
-    private void Close_Click(object sender, RoutedEventArgs e) => HideToIndicator();
+    private void Close_Click(object sender, RoutedEventArgs e) => Close();
 }

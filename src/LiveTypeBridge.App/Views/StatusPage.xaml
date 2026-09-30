@@ -1,6 +1,6 @@
 <UserControl x:Class="LiveTypeBridge.App.Views.StatusPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
-        <StackPanel Margin="0,8,0,14">
+        <StackPanel Margin="0,76,0,92">
             <Border Style="{StaticResource HeroCard}" Padding="22" MinHeight="182">
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
