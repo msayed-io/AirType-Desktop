@@ -82,6 +82,13 @@
     <sys:String x:Key="QrSec">s</sys:String>
 
     <sys:String x:Key="SetTitle">Settings</sys:String>
+    <sys:String x:Key="SetIntro">Focused controls for connectivity, shortcuts, startup behavior, and privacy.</sys:String>
+    <sys:String x:Key="SetConnection">Connection</sys:String>
+    <sys:String x:Key="SetConnectionHint">Choose the local server port used by your phone.</sys:String>
+    <sys:String x:Key="SetExperience">Experience</sys:String>
+    <sys:String x:Key="SetStartupHint">Launches AirType automatically after you sign in to Windows.</sys:String>
+    <sys:String x:Key="SetPrivacy">Privacy &amp; logging</sys:String>
+    <sys:String x:Key="SetPrivacyHint">Control what stays on this PC. Typed content remains hidden unless you explicitly enable it.</sys:String>
     <sys:String x:Key="SetPort">Port</sys:String>
     <sys:String x:Key="SetPortHint">If busy, the next free port is picked automatically. Changing this restarts the server.</sys:String>
     <sys:String x:Key="SetApply">Apply &amp; save</sys:String>
@@ -94,11 +101,9 @@
     <sys:String x:Key="SetLanguage">Language</sys:String>
     <sys:String x:Key="LangArabic">العربية</sys:String>
     <sys:String x:Key="LangEnglish">English</sys:String>
-    <sys:String x:Key="SetLogging">Local log</sys:String>
     <sys:String x:Key="SetLoggingOn">Enable logging (typed content is always hidden by default)</sys:String>
     <sys:String x:Key="SetLogContent">Also log streamed text content (not recommended — privacy)</sys:String>
     <sys:String x:Key="SetOpenLogs">Open log folder</sys:String>
-    <sys:String x:Key="SetNetwork">Network details</sys:String>
     <sys:String x:Key="SetSaved">Settings saved</sys:String>
     <sys:String x:Key="SetPortInvalid">Invalid port — enter a number between 1024 and 65535</sys:String>
     <sys:String x:Key="SetHotkeyDup">Duplicate hotkeys — fix them before saving</sys:String>
@@ -106,6 +111,9 @@
     <sys:String x:Key="SetRestartDone">Server restarted on port {0}</sys:String>
 
     <sys:String x:Key="DiagTitle">Diagnostics</sys:String>
+    <sys:String x:Key="DiagIntro">A direct view of local connectivity, protection status, and self-test results.</sys:String>
+    <sys:String x:Key="DiagNetwork">Local network</sys:String>
+    <sys:String x:Key="DiagProtection">Protection &amp; errors</sys:String>
     <sys:String x:Key="DiagIp">This PC's IP address</sys:String>
     <sys:String x:Key="DiagPort">Port</sys:String>
     <sys:String x:Key="DiagWs">Server status</sys:String>

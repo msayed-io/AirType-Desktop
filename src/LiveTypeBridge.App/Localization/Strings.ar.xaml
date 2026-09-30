@@ -86,6 +86,13 @@
 
     <!-- Settings -->
     <sys:String x:Key="SetTitle">الإعدادات</sys:String>
+    <sys:String x:Key="SetIntro">إعدادات واضحة ومركزة للاتصال والاختصارات وتجربة التشغيل والخصوصية.</sys:String>
+    <sys:String x:Key="SetConnection">الاتصال</sys:String>
+    <sys:String x:Key="SetConnectionHint">اضبط منفذ الخادم المحلي الذي يتصل به الهاتف.</sys:String>
+    <sys:String x:Key="SetExperience">تجربة الاستخدام</sys:String>
+    <sys:String x:Key="SetStartupHint">يشغّل AirType تلقائيًا بعد تسجيل الدخول إلى ويندوز.</sys:String>
+    <sys:String x:Key="SetPrivacy">الخصوصية والسجل</sys:String>
+    <sys:String x:Key="SetPrivacyHint">تحكم فيما يُحفظ محليًا. محتوى الكتابة يظل مخفيًا ما لم تفعّله صراحة.</sys:String>
     <sys:String x:Key="SetPort">المنفذ</sys:String>
     <sys:String x:Key="SetPortHint">إذا كان المنفذ مشغولًا يُختار التالي تلقائيًا. تغييره يعيد تشغيل الخادم.</sys:String>
     <sys:String x:Key="SetApply">تطبيق وحفظ</sys:String>
@@ -98,11 +105,9 @@
     <sys:String x:Key="SetLanguage">اللغة</sys:String>
     <sys:String x:Key="LangArabic">العربية</sys:String>
     <sys:String x:Key="LangEnglish">English</sys:String>
-    <sys:String x:Key="SetLogging">السجل المحلي</sys:String>
     <sys:String x:Key="SetLoggingOn">تفعيل السجل (يُخفى محتوى النص دائمًا افتراضيًا)</sys:String>
     <sys:String x:Key="SetLogContent">تسجيل محتوى النص المُبث أيضًا (غير موصى به للخصوصية)</sys:String>
     <sys:String x:Key="SetOpenLogs">فتح مجلد السجل</sys:String>
-    <sys:String x:Key="SetNetwork">تفاصيل الشبكة</sys:String>
     <sys:String x:Key="SetSaved">تم حفظ الإعدادات</sys:String>
     <sys:String x:Key="SetPortInvalid">منفذ غير صالح — أدخل رقمًا بين 1024 و65535</sys:String>
     <sys:String x:Key="SetHotkeyDup">توجد اختصارات متكررة — عدّلها قبل الحفظ</sys:String>
@@ -111,6 +116,9 @@
 
     <!-- Diagnostics -->
     <sys:String x:Key="DiagTitle">التشخيص</sys:String>
+    <sys:String x:Key="DiagIntro">نظرة مباشرة على الاتصال المحلي وحالة الحماية ونتيجة الفحص الذاتي.</sys:String>
+    <sys:String x:Key="DiagNetwork">الشبكة المحلية</sys:String>
+    <sys:String x:Key="DiagProtection">الحماية والأخطاء</sys:String>
     <sys:String x:Key="DiagIp">عنوان IP لهذا الجهاز</sys:String>
     <sys:String x:Key="DiagPort">المنفذ</sys:String>
     <sys:String x:Key="DiagWs">حالة الخادم</sys:String>

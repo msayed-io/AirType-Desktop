@@ -5,7 +5,6 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="BaseText" TargetType="TextBlock"><Setter Property="FontFamily" Value="Segoe UI, Segoe UI Variable Text"/><Setter Property="FontSize" Value="13"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/></Style>
-    <Style x:Key="H1" TargetType="TextBlock" BasedOn="{StaticResource BaseText}"><Setter Property="FontSize" Value="20"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
     <Style x:Key="H2" TargetType="TextBlock" BasedOn="{StaticResource BaseText}"><Setter Property="FontSize" Value="14"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Margin" Value="0,4,0,10"/></Style>
     <Style x:Key="Caption" TargetType="TextBlock" BasedOn="{StaticResource BaseText}"><Setter Property="FontSize" Value="11.5"/><Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
     <Style x:Key="ValueText" TargetType="TextBlock" BasedOn="{StaticResource BaseText}"><Setter Property="FontWeight" Value="Medium"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
@@ -29,6 +28,84 @@
     <Style TargetType="TextBox"><Setter Property="FontFamily" Value="Segoe UI"/><Setter Property="FontSize" Value="13"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="CaretBrush" Value="{DynamicResource CyanBrush}"/><Setter Property="Background" Value="{DynamicResource BgElevatedBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource BorderBrushKey}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="10,7"/></Style>
     <Style x:Key="MonoBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"><Setter Property="FontFamily" Value="Cascadia Mono, Consolas"/><Setter Property="FontSize" Value="12"/><Setter Property="IsReadOnly" Value="True"/><Setter Property="TextWrapping" Value="NoWrap"/></Style>
     <Style TargetType="CheckBox"><Setter Property="FontFamily" Value="Segoe UI"/><Setter Property="FontSize" Value="13"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="Margin" Value="0,7"/></Style>
-    <Style x:Key="NavItem" TargetType="RadioButton"><Setter Property="FontFamily" Value="Segoe UI"/><Setter Property="FontSize" Value="13"/><Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Margin" Value="0,4"/><Setter Property="Padding" Value="14,11"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton"><Border x:Name="bd" Background="Transparent" CornerRadius="13" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentSoftBrush}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="bd" Property="Background" Value="#201F3150"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
     <Style x:Key="BottomNavItem" TargetType="RadioButton"><Setter Property="FontFamily" Value="Segoe UI"/><Setter Property="FontSize" Value="12.5"/><Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Height" Value="40"/><Setter Property="MinWidth" Value="112"/><Setter Property="Margin" Value="3,0"/><Setter Property="Padding" Value="18,0"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton"><Border x:Name="bd" Background="Transparent" CornerRadius="20" Padding="{TemplateBinding Padding}" BorderThickness="1" BorderBrush="Transparent"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="bd" Property="Background" Value="#55392F76"/><Setter TargetName="bd" Property="BorderBrush" Value="#808B7CFF"/><Setter Property="Foreground" Value="White"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="bd" Property="Background" Value="#332B3551"/><Setter Property="Foreground" Value="White"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource CyanBrush}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
+    <Style x:Key="SectionCard" TargetType="Border">
+        <Setter Property="Background" Value="#B811182C"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushKey}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="18"/>
+        <Setter Property="Padding" Value="18"/>
+    </Style>
+    <Style x:Key="FieldLabel" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+    <Style x:Key="InputBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="InputBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="11">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="InputBorder" Property="BorderBrush" Value="{DynamicResource CyanBrush}"/><Setter TargetName="InputBorder" Property="BorderThickness" Value="1.5"/></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter TargetName="InputBorder" Property="Opacity" Value="0.48"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ChoicePill" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="16,9"/>
+        <Setter Property="Margin" Value="0,0,7,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="ChoiceBorder" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="18" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True"><Setter TargetName="ChoiceBorder" Property="Background" Value="{DynamicResource AccentSoftBrush}"/><Setter TargetName="ChoiceBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/><Setter Property="Foreground" Value="White"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ChoiceBorder" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ToggleSwitch" TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Margin" Value="0,6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border x:Name="Track" Grid.Column="0" Width="42" Height="23" CornerRadius="12" Background="{DynamicResource BgElevatedBrush}" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" VerticalAlignment="Center">
+                            <Ellipse x:Name="Thumb" Width="17" Height="17" Fill="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Left" Margin="2"/>
+                        </Border>
+                        <ContentPresenter Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="False"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{DynamicResource AccentBrush}"/><Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/><Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Thumb" Property="Fill" Value="White"/></Trigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource CyanBrush}"/></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="MetricValue" TargetType="TextBlock" BasedOn="{StaticResource ValueText}">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Margin" Value="0,5,0,0"/>
+    </Style>
 </ResourceDictionary>

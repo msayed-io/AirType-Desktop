@@ -1,42 +1,79 @@
-<UserControl x:Class="LiveTypeBridge.App.Views.DiagnosticsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="4,8,4,18">
-            <TextBlock Text="{DynamicResource NavDiagnostics}" Style="{StaticResource H1}" Margin="4,0,0,4"/>
-            <TextBlock Text="{DynamicResource DiagTestHint}" Style="{StaticResource Caption}" Margin="4,0,0,18"/>
+<UserControl x:Class="LiveTypeBridge.App.Views.DiagnosticsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
+        <StackPanel Margin="4,8,4,28">
+            <Grid Margin="4,0,4,18">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource DiagTitle}" FontSize="25" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock Text="{DynamicResource DiagIntro}" Style="{StaticResource Caption}" Margin="0,5,0,0" MaxWidth="520" HorizontalAlignment="Left"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="{DynamicResource DiagRefresh}" Command="{Binding RefreshCommand}" VerticalAlignment="Center" MinWidth="104" Margin="18,0,0,0"/>
+            </Grid>
 
-            <Border Style="{StaticResource HeroCard}" Padding="20" MinHeight="104">
+            <Border Style="{StaticResource HeroCard}" Padding="20" MinHeight="108">
                 <Grid>
-                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <TextBlock Text="AIRTYPE / SYSTEM HEALTH" FontSize="11" FontWeight="Bold" Foreground="#CCFFFFFF" FlowDirection="LeftToRight"/>
-                        <TextBlock Text="{Binding WsText}" FontSize="21" FontWeight="SemiBold" Foreground="White" Margin="0,8,0,0"/>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <Grid Width="46" Height="46" VerticalAlignment="Center">
+                        <Ellipse Fill="#30FFFFFF"/>
+                        <Ellipse Width="14" Height="14" Fill="{DynamicResource CyanBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0">
+                        <TextBlock Text="{DynamicResource DiagWs}" FontSize="11" Foreground="#D9D4FF"/>
+                        <TextBlock Text="{Binding WsText}" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,4,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <Ellipse Grid.Column="1" Width="18" Height="18" Fill="{DynamicResource CyanBrush}" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" MinWidth="92">
+                        <TextBlock Text="{DynamicResource DiagUptime}" FontSize="11" Foreground="#D9D4FF" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding UptimeText}" FontSize="17" FontWeight="SemiBold" Foreground="White" FontFamily="Cascadia Mono, Consolas" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
-                <StackPanel>
-                    <TextBlock Text="{DynamicResource DiagIp}" Style="{StaticResource H2}"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="130"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource DiagIp}" Style="{StaticResource Caption}" Margin="0,0,10,8"/><TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding IpText}" Style="{StaticResource ValueText}" FontFamily="Cascadia Mono, Consolas" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource DiagPort}" Style="{StaticResource Caption}" Margin="0,0,10,8"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PortText}" Style="{StaticResource ValueText}" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource DiagWs}" Style="{StaticResource Caption}" Margin="0,0,10,8"/><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding WsText}" Style="{StaticResource ValueText}" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource DiagUptime}" Style="{StaticResource Caption}" Margin="0,0,10,8"/><TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding UptimeText}" Style="{StaticResource ValueText}" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource DiagFw}" Style="{StaticResource Caption}" Margin="0,0,10,8" VerticalAlignment="Top"/><TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding FirewallText}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource DiagErr}" Style="{StaticResource Caption}" Margin="0,0,10,0" VerticalAlignment="Top"/><TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding LastErrorText}" Style="{StaticResource Caption}" TextWrapping="Wrap"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="14"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
 
-            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                <Border Grid.Column="0" Style="{StaticResource SectionCard}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource DiagNetwork}" Style="{StaticResource H2}"/>
+                        <TextBlock Text="{DynamicResource DiagIp}" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock Text="{Binding IpText}" Style="{StaticResource MetricValue}" FontFamily="Cascadia Mono, Consolas" TextWrapping="Wrap" FlowDirection="LeftToRight" TextAlignment="Left"/>
+                        <Border Height="1" Background="{DynamicResource BorderBrushKey}" Margin="0,15"/>
+                        <TextBlock Text="{DynamicResource DiagPort}" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock Text="{Binding PortText}" Style="{StaticResource MetricValue}" FontFamily="Cascadia Mono, Consolas" FlowDirection="LeftToRight" TextAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource SectionCard}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource DiagProtection}" Style="{StaticResource H2}"/>
+                        <TextBlock Text="{DynamicResource DiagFw}" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock Text="{Binding FirewallText}" Style="{StaticResource MetricValue}" FontSize="13" TextWrapping="Wrap"/>
+                        <Border Height="1" Background="{DynamicResource BorderBrushKey}" Margin="0,15"/>
+                        <TextBlock Text="{DynamicResource DiagErr}" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock Text="{Binding LastErrorText}" Style="{StaticResource MetricValue}" FontSize="13" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Style="{StaticResource SectionCard}" Margin="0,14,0,0">
                 <StackPanel>
-                    <TextBlock Text="{DynamicResource DiagSelfTest}" Style="{StaticResource H2}"/>
-                    <TextBlock Text="{DynamicResource DiagTestHint}" Style="{StaticResource Caption}"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0"><Button Style="{StaticResource PrimaryButton}" Content="{DynamicResource DiagRunTest}" Command="{Binding RunSelfTestCommand}"/><Button Content="{DynamicResource DiagRefresh}" Margin="8,0,0,0" Command="{Binding RefreshCommand}"/></StackPanel>
-                    <TextBox Style="{StaticResource MonoBox}" Margin="0,12,0,0" Height="240" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Text="{Binding SelfTestOutput, Mode=OneWay}" TextAlignment="Left" FlowDirection="LeftToRight" IsReadOnly="True" Background="#0B1020" Foreground="#C9F5D2"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{DynamicResource DiagSelfTest}" Style="{StaticResource H2}"/>
+                            <TextBlock Text="{DynamicResource DiagTestHint}" Style="{StaticResource Caption}" Margin="0,-4,12,0"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="{DynamicResource DiagRunTest}" Command="{Binding RunSelfTestCommand}" VerticalAlignment="Center" MinWidth="142"/>
+                    </Grid>
+
+                    <Border Background="#D9080D1A" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="13" Margin="0,15,0,0" Padding="12">
+                        <TextBox Text="{Binding SelfTestOutput, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True"
+                                 Height="176" Background="Transparent" BorderThickness="0" Padding="0"
+                                 Foreground="#C9F5D2" FontFamily="Cascadia Mono, Consolas" FontSize="11.5"
+                                 TextWrapping="Wrap" TextAlignment="Left" FlowDirection="LeftToRight"
+                                 VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"/>
+                    </Border>
                 </StackPanel>
             </Border>
         </StackPanel>

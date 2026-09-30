@@ -4,7 +4,6 @@ using LiveTypeBridge.App.Localization;
 using LiveTypeBridge.App.Mvvm;
 using LiveTypeBridge.App.Services;
 using LiveTypeBridge.Core.Input;
-using LiveTypeBridge.Core.Networking;
 using LiveTypeBridge.Core.Settings;
 
 namespace LiveTypeBridge.App.ViewModels;
@@ -20,7 +19,6 @@ public sealed class SettingsViewModel : ObservableObject
     private string _hkQr = "";
     private string _hkEmergency = "";
     private string _statusText = "";
-    private string _networkText = "";
     private bool _runAtStartup;
     private bool _enableLogging;
     private bool _logTextContent;
@@ -43,7 +41,6 @@ public sealed class SettingsViewModel : ObservableObject
         SetLangArCommand = new RelayCommand(_ => Loc.Set(Loc.Arabic));
         SetLangEnCommand = new RelayCommand(_ => Loc.Set(Loc.English));
 
-        _networkText = BuildNetworkText();
         Loc.LanguageChanged += OnLanguageChanged;
     }
 
@@ -66,7 +63,6 @@ public sealed class SettingsViewModel : ObservableObject
 
     public string StatusText { get => _statusText; private set => Set(ref _statusText, value); }
 
-    public string NetworkText { get => _networkText; private set => Set(ref _networkText, value); }
 
     private async Task SaveAsync()
     {
@@ -120,17 +116,6 @@ public sealed class SettingsViewModel : ObservableObject
             StatusText = Loc.Get("SetSaved");
         }
 
-        NetworkText = BuildNetworkText();
-    }
-
-    private string BuildNetworkText()
-    {
-        var ips = LocalIpFinder.GetCandidates();
-        var lines = ips.Count == 0
-            ? "—"
-            : string.Join("\n", ips.Select(c => $"{c.Address}  ({c.InterfaceName}{(c.IsPreferred ? " ✓" : "")})"));
-        var port = _s.Server.IsRunning ? _s.Server.ActualPort : _s.Settings.Port;
-        return $"{lines}\n{Loc.Get("DiagPort")}: {port}";
     }
 
     private void OpenLogs()
@@ -147,6 +132,5 @@ public sealed class SettingsViewModel : ObservableObject
         Raise(nameof(LangIsAr));
         Raise(nameof(LangIsEn));
         Raise(string.Empty);
-        NetworkText = BuildNetworkText();
     }
 }
