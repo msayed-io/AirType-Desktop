@@ -16,16 +16,7 @@
                   VerticalAlignment="Top" Panel.ZIndex="30" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border Style="{StaticResource ChromeCapsule}" Height="{DynamicResource Size.HeaderHeight}"
                         HorizontalAlignment="Left" VerticalAlignment="Center" Padding="{DynamicResource Space.HeaderBrand}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Grid Width="{DynamicResource Size.IconContainer}" Height="{DynamicResource Size.IconContainer}" Margin="0,0,12,0">
-                            <Ellipse Fill="{DynamicResource OverlayBrush}"/>
-                            <TextBlock Text="⌨" Foreground="{DynamicResource OnDarkBrush}" FontSize="{DynamicResource Type.Heading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="AirType" FontSize="{DynamicResource Type.Heading}" FontWeight="Bold"/>
-                            <TextBlock Text="{DynamicResource PrivacyTagline}" Style="{StaticResource Caption}"/>
-                        </StackPanel>
-                    </StackPanel>
+                    <TextBlock Text="AirType" FontSize="{DynamicResource Type.Heading}" FontWeight="Bold" VerticalAlignment="Center"/>
                 </Border>
 
                 <Border Style="{StaticResource ChromeCapsule}" Height="{DynamicResource Size.HeaderHeight}"
@@ -50,7 +41,7 @@
             </Border>
 
             <Grid Height="{DynamicResource Size.FooterHeight}" VerticalAlignment="Bottom" Panel.ZIndex="30">
-                <Border Style="{StaticResource NavCapsule}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.M}"
+                <Border Style="{StaticResource NavCapsule}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.Navigation}"
                         HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="{DynamicResource Size.NavMaxWidth}" Padding="{DynamicResource Space.Nav}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
                         <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>

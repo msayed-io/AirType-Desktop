@@ -27,7 +27,7 @@
             <TextBlock Text="{DynamicResource QrPinLabel}" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
             <TextBlock Text="{Binding PinText}" FontSize="{DynamicResource Type.Pin}" FontWeight="Bold" FontFamily="{DynamicResource Font.Mono}" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center"/>
 
-            <Border Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.S}" Padding="16,8" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Border Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.Control}" Padding="16,8" HorizontalAlignment="Center" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{DynamicResource QrExpiresIn}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding ExpiresText}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource OnAccentBrush}" Margin="8,0,0,0" VerticalAlignment="Center"/>

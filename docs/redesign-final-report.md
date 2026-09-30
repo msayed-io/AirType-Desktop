@@ -39,7 +39,8 @@ AirType’s application-owned WPF presentation layer was rebuilt around the visu
 ### Geometry, typography, and motion
 
 - Spacing rhythm: 4, 8, 12, 16, 20, 24, 32, 40 DIP.
-- Radius scale: 8, 12, 16, 20, 28, full pill.
+- Surface radius scale: 4, 8, 12, 16, 20, 28 DIP.
+- Fixed non-capsule control radii: controls 10, upper header 12, navigation container 14, toggle track 6, toggle thumb 4, floating indicator 10 DIP. Full-pill tokens were removed.
 - Type scale: 10, 11, 12, 13, 16, 24, 30 DIP; PIN 38; watermark 64.
 - Fonts: Segoe UI Variable Text / Segoe UI; Cascadia Mono / Consolas for technical values.
 - Control height: 44 DIP; primary interactive sizing targets 44–48 DIP.

@@ -20,7 +20,7 @@
                     <TextBlock Grid.Row="1" Text="AIRTYPE" FontSize="{DynamicResource Type.Watermark}" FontWeight="Bold" Foreground="{DynamicResource OnAccentBrush}" Opacity="{DynamicResource Opacity.Watermark}" VerticalAlignment="Center" HorizontalAlignment="Left" FlowDirection="LeftToRight"/>
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Text="{DynamicResource LabelPhone}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
-                        <Border Background="{DynamicResource CardBrush}" CornerRadius="{DynamicResource Radius.S}" Padding="12,6" Margin="8,0,0,0">
+                        <Border Background="{DynamicResource CardBrush}" CornerRadius="{DynamicResource Radius.Control}" Padding="12,6" Margin="8,0,0,0">
                             <TextBlock Text="{Binding PhoneDisplay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
                         </Border>
                     </StackPanel>

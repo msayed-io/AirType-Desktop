@@ -25,11 +25,11 @@ public partial class FloatingIndicatorWindow : Window
         _activityRelease.Tick += (_, _) =>
         {
             _activityRelease.Stop();
-            AnimateWave(_streaming);
+            SetWaveRestState();
         };
 
         PositionBottomRight();
-        Loaded += (_, _) => AnimateWave(active: false);
+        Loaded += (_, _) => SetWaveRestState();
         OrbRoot.MouseLeftButtonDown += OrbRoot_MouseLeftButtonDown;
         OrbRoot.MouseMove += OrbRoot_MouseMove;
     }
@@ -45,42 +45,50 @@ public partial class FloatingIndicatorWindow : Window
         var streaming = state is UiState.Streaming or UiState.Resync;
         if (_streaming == streaming) return;
         _streaming = streaming;
-        AnimateWave(streaming);
+        _activityRelease.Stop();
+        SetWaveRestState();
     }
 
     /// <summary>
-    /// Gives the waveform a short, high-energy response when a stream operation is applied.
-    /// This is driven by real stream activity; the application does not capture microphone audio.
+    /// Plays one short response only when a real stream operation updates the session stats.
+    /// There is no idle or state-driven looping animation.
     /// </summary>
     public void PulseActivity()
     {
-        if (!IsLoaded) return;
-        AnimateWave(active: true, burst: true);
+        if (!IsLoaded || !_streaming) return;
+        AnimateActivityBurst();
         _activityRelease.Stop();
         _activityRelease.Start();
     }
 
-    private void AnimateWave(bool active, bool burst = false)
+    private void AnimateActivityBurst()
     {
-        if (!IsLoaded) return;
-
-        var duration = TimeSpan.FromMilliseconds(burst ? 150 : active ? 320 : 1150);
-        var peaks = new[] { 0.70, 1.00, 0.82, 1.00, 0.66 };
+        const double restScale = 0.42;
+        var duration = TimeSpan.FromMilliseconds(140);
+        var peaks = new[] { 0.74, 1.00, 0.86, 1.00, 0.70 };
         for (var i = 0; i < _bars.Length; i++)
         {
-            var low = active ? 0.30 : 0.44;
-            var high = burst ? 1.12 : active ? peaks[i] : 0.62;
-            var animation = new DoubleAnimation(low, high, duration)
+            var animation = new DoubleAnimation(restScale, peaks[i], duration)
             {
-                BeginTime = TimeSpan.FromMilliseconds(i * (burst ? 18 : active ? 45 : 85)),
+                BeginTime = TimeSpan.FromMilliseconds(i * 18),
                 AutoReverse = true,
-                RepeatBehavior = RepeatBehavior.Forever,
+                RepeatBehavior = new RepeatBehavior(1),
                 EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
             };
             _bars[i].BeginAnimation(ScaleTransform.ScaleYProperty, animation, HandoffBehavior.SnapshotAndReplace);
         }
+        GlassBody.Opacity = 1.0;
+    }
 
-        GlassBody.Opacity = active || burst ? 1.0 : 0.78;
+    private void SetWaveRestState()
+    {
+        const double restScale = 0.42;
+        foreach (var bar in _bars)
+        {
+            bar.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+            bar.ScaleY = restScale;
+        }
+        GlassBody.Opacity = _streaming ? 0.92 : 0.82;
     }
 
     private void OrbRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
