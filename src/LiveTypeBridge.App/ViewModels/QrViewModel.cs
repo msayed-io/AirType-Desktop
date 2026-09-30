@@ -14,6 +14,7 @@ public sealed class QrViewModel : ObservableObject, IDisposable
     {
         QrImage = qrImage;
         PinText = pin;
+        PinDisplayText = string.Join(" ", pin.ToCharArray());
         AddressText = address;
         SessionIdText = sessionId;
         ExpiresUtc = expiresUtc;
@@ -28,6 +29,7 @@ public sealed class QrViewModel : ObservableObject, IDisposable
 
     public ImageSource QrImage { get; }
     public string PinText { get; }
+    public string PinDisplayText { get; }
     public string AddressText { get; }
     public string SessionIdText { get; }
     public DateTime ExpiresUtc { get; }

@@ -4,6 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using LiveTypeBridge.App.Controls;
+using LiveTypeBridge.App.ViewModels;
+using LiveTypeBridge.App.Views;
+using LiveTypeBridge.Core.Pairing;
 
 namespace LiveTypeBridge.App.Diagnostics;
 
@@ -19,6 +22,7 @@ internal static class PillEvidenceRenderer
         RenderSingle(Path.Combine(outputDirectory, "pill-proof-01-short-text.png"), "SHORT TEXT / نص قصير", false, 900, 690);
         RenderSingle(Path.Combine(outputDirectory, "pill-proof-02-long-text.png"), "LONG TEXT / نص طويل", true, 1100, 690);
         RenderResizeCases(Path.Combine(outputDirectory, "pill-proof-03-window-sizes.png"));
+        RenderQuickPairingPin(Path.Combine(outputDirectory, "quick-pairing-pin-proof.png"));
 
         var lines = new List<string>
         {
@@ -83,6 +87,29 @@ internal static class PillEvidenceRenderer
             columns.Children.Add(panel);
         }
         Save(root, path, width, height);
+    }
+
+    private static void RenderQuickPairingPin(string path)
+    {
+        var session = PairingSession.CreateNew(TimeSpan.FromMinutes(5));
+        const string host = "192.168.1.15";
+        const int port = 53017;
+        var payload = QrPayload.Build(session, host, port);
+        var png = QrPayload.RenderPng(payload);
+        var vm = new QrViewModel(
+            ImageHelpers.BitmapFromPng(png),
+            session.Pin,
+            $"ws://{host}:{port}/livetype",
+            session.SessionId,
+            session.ExpiresUtc);
+        var window = new QrWindow(vm);
+        var content = (FrameworkElement)window.Content;
+        content.Measure(new Size(620, double.PositiveInfinity));
+        var height = Math.Ceiling(content.DesiredSize.Height);
+        content.Arrange(new Rect(0, 0, 620, height));
+        content.UpdateLayout();
+        Save(content, path, 620, height);
+        vm.Dispose();
     }
 
     private static Grid EvidenceRoot(double width, double height, string title)

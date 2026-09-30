@@ -73,6 +73,8 @@
     <sys:String x:Key="QrTitle">Pair a phone</sys:String>
     <sys:String x:Key="QrScanHint">Open the phone app on the same Wi-Fi to discover this PC automatically — or scan the code if needed</sys:String>
     <sys:String x:Key="QrPinLabel">PIN</sys:String>
+    <sys:String x:Key="QrQuickPinLabel">Quick Pairing PIN</sys:String>
+    <sys:String x:Key="QrQuickPinHint">Enter these six digits in the phone app</sys:String>
     <sys:String x:Key="QrExpiresIn">Session expires in</sys:String>
     <sys:String x:Key="QrManual">Manual entry (if the camera fails)</sys:String>
     <sys:String x:Key="QrAddrLabel">Address</sys:String>

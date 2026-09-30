@@ -76,6 +76,8 @@
     <sys:String x:Key="QrTitle">اقتران هاتف</sys:String>
     <sys:String x:Key="QrScanHint">افتح تطبيق الهاتف على شبكة Wi-Fi نفسها ليكتشف هذا الكمبيوتر تلقائيًا — أو امسح الرمز عند الحاجة</sys:String>
     <sys:String x:Key="QrPinLabel">رمز PIN</sys:String>
+    <sys:String x:Key="QrQuickPinLabel">رمز الاقتران السريع</sys:String>
+    <sys:String x:Key="QrQuickPinHint">أدخل هذه الأرقام الستة في تطبيق الهاتف</sys:String>
     <sys:String x:Key="QrExpiresIn">تنتهي الجلسة خلال</sys:String>
     <sys:String x:Key="QrManual">إدخال يدوي (إن تعذّرت الكاميرا)</sys:String>
     <sys:String x:Key="QrAddrLabel">العنوان</sys:String>

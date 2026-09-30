@@ -74,7 +74,7 @@
     <sys:Double x:Key="Size.HeroMinHeight">184</sys:Double>
     <sys:Double x:Key="Size.TitleButton">40</sys:Double>
     <sys:Double x:Key="Size.Qr">230</sys:Double>
-    <sys:Double x:Key="Size.QrWindow">450</sys:Double>
+    <sys:Double x:Key="Size.QrWindow">620</sys:Double>
     <sys:Double x:Key="Size.IndicatorWidth">52</sys:Double>
     <sys:Double x:Key="Size.IndicatorHeight">38</sys:Double>
     <sys:Double x:Key="Size.IndicatorBodyWidth">48</sys:Double>

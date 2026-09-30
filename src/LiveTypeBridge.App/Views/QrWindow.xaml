@@ -19,21 +19,41 @@
                 <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" HorizontalAlignment="Right" VerticalAlignment="Top" ToolTip="{DynamicResource QrClose}" WindowChrome.IsHitTestVisibleInChrome="True"/>
             </Grid>
 
-            <Border Background="{DynamicResource PureWhiteBrush}" Padding="{DynamicResource Space.InsetS}" CornerRadius="{DynamicResource Radius.M}"
-                    BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}"
-                    HorizontalAlignment="Center" Margin="0,20,0,0" Effect="{DynamicResource Elevation.Level1}">
-                <Image Source="{Binding QrImage}" Width="{DynamicResource Size.Qr}" Height="{DynamicResource Size.Qr}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-            </Border>
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="254"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{DynamicResource QrPinLabel}" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
-            <TextBlock Text="{Binding PinText}" FontSize="{DynamicResource Type.Pin}" FontWeight="Bold" FontFamily="{DynamicResource Font.Mono}" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center"/>
+                <Border Grid.Column="0" Background="{DynamicResource PureWhiteBrush}" Padding="{DynamicResource Space.InsetS}" CornerRadius="{DynamicResource Radius.M}"
+                        BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="{DynamicResource Stroke.Hairline}"
+                        HorizontalAlignment="Center" Effect="{DynamicResource Elevation.Level1}">
+                    <Image Source="{Binding QrImage}" Width="{DynamicResource Size.Qr}" Height="{DynamicResource Size.Qr}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Border>
 
-            <controls:PillBorder Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.Pill}" Padding="16,8" HorizontalAlignment="Center" Margin="0,8,0,0">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{DynamicResource QrExpiresIn}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding ExpiresText}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource OnAccentBrush}" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
-            </controls:PillBorder>
+                <Border Grid.Column="2" Background="{DynamicResource AccentSoftBrush}" BorderBrush="{DynamicResource AccentBrush}"
+                        BorderThickness="{DynamicResource Stroke.Hairline}" CornerRadius="{DynamicResource Radius.L}"
+                        Padding="{DynamicResource Space.Card}" VerticalAlignment="Stretch">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource QrQuickPinLabel}" FontSize="{DynamicResource Type.Heading}" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource InfoBrush}" TextAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding PinDisplayText}" FontSize="{DynamicResource Type.Pin}" FontWeight="Bold"
+                                   FontFamily="{DynamicResource Font.Mono}" Foreground="{DynamicResource TextBrush}"
+                                   FlowDirection="LeftToRight" TextAlignment="Center" HorizontalAlignment="Center"
+                                   Margin="0,14,0,8" TextTrimming="None"/>
+                        <TextBlock Text="{DynamicResource QrQuickPinHint}" Style="{StaticResource Caption}"
+                                   TextAlignment="Center" HorizontalAlignment="Center"/>
+                        <controls:PillBorder Background="{DynamicResource AccentBrush}" CornerRadius="{DynamicResource Radius.Pill}"
+                                             Padding="16,8" HorizontalAlignment="Center" Margin="0,18,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{DynamicResource QrExpiresIn}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ExpiresText}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource OnAccentBrush}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </controls:PillBorder>
+                    </StackPanel>
+                </Border>
+            </Grid>
 
             <Expander Margin="0,16,0,0" BorderThickness="0">
                 <Expander.Header><TextBlock Text="{DynamicResource QrManual}" FontSize="{DynamicResource Type.Label}" FontWeight="SemiBold" Foreground="{DynamicResource InfoBrush}"/></Expander.Header>

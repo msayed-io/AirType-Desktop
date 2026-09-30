@@ -124,6 +124,38 @@ public sealed class ThemeTokenTests
         Assert.Equal(expectedRadius, effectiveRadius);
     }
 
+    [Fact]
+    public void Quick_pairing_pin_is_prominent_and_derived_from_the_verified_session_pin()
+    {
+        var appRoot = FindAppRoot();
+        XNamespace presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+
+        var qrWindow = XDocument.Load(Path.Combine(appRoot, "Views", "QrWindow.xaml"));
+        var display = qrWindow.Descendants(presentation + "TextBlock").SingleOrDefault(element =>
+            (string?)element.Attribute("Text") == "{Binding PinDisplayText}");
+        Assert.NotNull(display);
+        Assert.Equal("{DynamicResource Type.Pin}", (string?)display!.Attribute("FontSize"));
+        Assert.Equal("Bold", (string?)display.Attribute("FontWeight"));
+        Assert.Equal("LeftToRight", (string?)display.Attribute("FlowDirection"));
+
+        var viewModelSource = File.ReadAllText(Path.Combine(appRoot, "ViewModels", "QrViewModel.cs"));
+        Assert.Contains("PinText = pin;", viewModelSource, StringComparison.Ordinal);
+        Assert.Contains("PinDisplayText = string.Join(\" \", pin.ToCharArray());", viewModelSource, StringComparison.Ordinal);
+
+        var mainViewModelSource = File.ReadAllText(Path.Combine(appRoot, "ViewModels", "MainViewModel.cs"));
+        Assert.Contains("new QrViewModel(ImageHelpers.BitmapFromPng(png), session.Pin", mainViewModelSource, StringComparison.Ordinal);
+
+        foreach (var language in new[] { "ar", "en" })
+        {
+            var strings = XDocument.Load(Path.Combine(appRoot, "Localization", $"Strings.{language}.xaml"));
+            XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+            Assert.Contains(strings.Root!.Elements(), element =>
+                (string?)element.Attribute(x + "Key") == "QrQuickPinLabel");
+            Assert.Contains(strings.Root!.Elements(), element =>
+                (string?)element.Attribute(x + "Key") == "QrQuickPinHint");
+        }
+    }
+
     private static Dictionary<string, string> ReadTokenTypes(string path)
     {
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
