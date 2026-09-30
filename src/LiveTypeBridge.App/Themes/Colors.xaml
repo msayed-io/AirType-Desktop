@@ -1,41 +1,33 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- AirType design tokens: deep layered surfaces + vivid indigo/cyan accents. -->
-    <SolidColorBrush x:Key="BgBrush" Color="#080B18"/>
-    <SolidColorBrush x:Key="BgElevatedBrush" Color="#0D1224"/>
-    <SolidColorBrush x:Key="CardBrush" Color="#11182D"/>
-    <SolidColorBrush x:Key="CardRaisedBrush" Color="#17213A"/>
-    <SolidColorBrush x:Key="TitleBarBrush" Color="#0A0F20"/>
-    <SolidColorBrush x:Key="BorderBrushKey" Color="#25304B"/>
-    <SolidColorBrush x:Key="GlassBrush" Color="#A617223F"/>
-    <SolidColorBrush x:Key="GlassHighlightBrush" Color="#66FFFFFF"/>
-    <SolidColorBrush x:Key="AccentBrush" Color="#8B7CFF"/>
-    <SolidColorBrush x:Key="AccentHoverBrush" Color="#A99EFF"/>
-    <SolidColorBrush x:Key="AccentSoftBrush" Color="#251F55"/>
-    <SolidColorBrush x:Key="CyanBrush" Color="#65E6FF"/>
-    <SolidColorBrush x:Key="CyanSoftBrush" Color="#102F43"/>
-    <SolidColorBrush x:Key="PinkBrush" Color="#FF72C8"/>
-    <SolidColorBrush x:Key="TextBrush" Color="#F5F7FF"/>
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#A9B3CC"/>
-    <SolidColorBrush x:Key="TextMutedBrush" Color="#697493"/>
-    <SolidColorBrush x:Key="SuccessBrush" Color="#62E6A8"/>
-    <SolidColorBrush x:Key="SuccessSoftBrush" Color="#123A34"/>
-    <SolidColorBrush x:Key="WarnBrush" Color="#FFC56B"/>
-    <SolidColorBrush x:Key="WarnSoftBrush" Color="#3A2B1A"/>
-    <SolidColorBrush x:Key="DangerBrush" Color="#FF718C"/>
-    <SolidColorBrush x:Key="DangerSoftBrush" Color="#3B1D30"/>
-    <SolidColorBrush x:Key="IdleBrush" Color="#7883A5"/>
-    <SolidColorBrush x:Key="IdleSoftBrush" Color="#1A2136"/>
+    <!-- AirType dark-theme tokens: charcoal surfaces, soft ivory text, and muted olive accents. -->
+    <SolidColorBrush x:Key="BgBrush" Color="#111718"/>
+    <SolidColorBrush x:Key="BgElevatedBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="CardBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="CardRaisedBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="TitleBarBrush" Color="#111718"/>
+    <SolidColorBrush x:Key="BorderBrushKey" Color="#7F8C8E"/>
+    <SolidColorBrush x:Key="GlassBrush" Color="#D91B2324"/>
+    <SolidColorBrush x:Key="GlassHighlightBrush" Color="#667F8C8E"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="CyanBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="CyanSoftBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="PinkBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="TextBrush" Color="#E2DFD2"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8E"/>
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#7F8C8E"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="SuccessSoftBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="WarnBrush" Color="#9FA365"/>
+    <SolidColorBrush x:Key="WarnSoftBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="#E2DFD2"/>
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#1B2324"/>
+    <SolidColorBrush x:Key="IdleBrush" Color="#7F8C8E"/>
+    <SolidColorBrush x:Key="IdleSoftBrush" Color="#1B2324"/>
     <SolidColorBrush x:Key="ShadowColor" Color="#CC000000"/>
 
-    <LinearGradientBrush x:Key="HeroGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#392D87" Offset="0"/>
-        <GradientStop Color="#6B43B8" Offset="0.46"/>
-        <GradientStop Color="#B34B9A" Offset="1"/>
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="OrbGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#65E6FF" Offset="0"/>
-        <GradientStop Color="#8B7CFF" Offset="0.48"/>
-        <GradientStop Color="#FF72C8" Offset="1"/>
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="HeroGradient" Color="#1B2324"/>
+    <SolidColorBrush x:Key="OrbGradient" Color="#9FA365"/>
 </ResourceDictionary>

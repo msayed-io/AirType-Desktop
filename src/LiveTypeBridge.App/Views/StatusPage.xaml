@@ -5,11 +5,11 @@
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
-                        <Grid Width="38" Height="38" Margin="0,0,12,0"><Ellipse Fill="#35FFFFFF"/><Ellipse Width="18" Height="18" Fill="{Binding StateBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
-                        <StackPanel><TextBlock Text="{Binding StatusText}" FontSize="24" FontWeight="SemiBold" Foreground="White"/><TextBlock Text="{Binding StatusSub}" FontSize="12" Foreground="#D9D4FF" MaxWidth="520" Margin="0,4,0,0"/></StackPanel>
+                        <Grid Width="38" Height="38" Margin="0,0,12,0"><Ellipse Fill="#357F8C8E"/><Ellipse Width="18" Height="18" Fill="{Binding StateBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
+                        <StackPanel><TextBlock Text="{Binding StatusText}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/><TextBlock Text="{Binding StatusSub}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" MaxWidth="520" Margin="0,4,0,0"/></StackPanel>
                     </StackPanel>
-                    <TextBlock Grid.Row="1" Text="AIRTYPE" FontSize="64" FontWeight="Bold" Foreground="#22FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Left" FlowDirection="LeftToRight"/>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"><TextBlock Text="{DynamicResource LabelPhone}" Foreground="#D9D4FF" VerticalAlignment="Center"/><TextBlock Text="{Binding PhoneDisplay}" Foreground="White" FontWeight="SemiBold" Margin="8,0,0,0"/></StackPanel>
+                    <TextBlock Grid.Row="1" Text="AIRTYPE" FontSize="64" FontWeight="Bold" Foreground="#22E2DFD2" VerticalAlignment="Center" HorizontalAlignment="Left" FlowDirection="LeftToRight"/>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"><TextBlock Text="{DynamicResource LabelPhone}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/><TextBlock Text="{Binding PhoneDisplay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/></StackPanel>
                 </Grid>
             </Border>
 

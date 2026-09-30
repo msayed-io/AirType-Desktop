@@ -16,16 +16,16 @@
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <Grid Width="46" Height="46" VerticalAlignment="Center">
-                        <Ellipse Fill="#30FFFFFF"/>
+                        <Ellipse Fill="#307F8C8E"/>
                         <Ellipse Width="14" Height="14" Fill="{DynamicResource CyanBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0">
-                        <TextBlock Text="{DynamicResource DiagWs}" FontSize="11" Foreground="#D9D4FF"/>
-                        <TextBlock Text="{Binding WsText}" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="{DynamicResource DiagWs}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding WsText}" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,4,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" VerticalAlignment="Center" MinWidth="92">
-                        <TextBlock Text="{DynamicResource DiagUptime}" FontSize="11" Foreground="#D9D4FF" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding UptimeText}" FontSize="17" FontWeight="SemiBold" Foreground="White" FontFamily="Cascadia Mono, Consolas" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource DiagUptime}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding UptimeText}" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" FontFamily="Cascadia Mono, Consolas" Margin="0,5,0,0" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -67,10 +67,10 @@
                         <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="{DynamicResource DiagRunTest}" Command="{Binding RunSelfTestCommand}" VerticalAlignment="Center" MinWidth="142"/>
                     </Grid>
 
-                    <Border Background="#D9080D1A" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="13" Margin="0,15,0,0" Padding="12">
+                    <Border Background="#D91B2324" BorderBrush="{DynamicResource BorderBrushKey}" BorderThickness="1" CornerRadius="13" Margin="0,15,0,0" Padding="12">
                         <TextBox Text="{Binding SelfTestOutput, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True"
                                  Height="176" Background="Transparent" BorderThickness="0" Padding="0"
-                                 Foreground="#C9F5D2" FontFamily="Cascadia Mono, Consolas" FontSize="11.5"
+                                 Foreground="{DynamicResource TextBrush}" FontFamily="Cascadia Mono, Consolas" FontSize="11.5"
                                  TextWrapping="Wrap" TextAlignment="Left" FlowDirection="LeftToRight"
                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"/>
                     </Border>

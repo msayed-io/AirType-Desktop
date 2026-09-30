@@ -8,13 +8,13 @@
           MouseLeftButtonUp="OrbRoot_MouseLeftButtonUp">
         <Border x:Name="GlassBody" Width="48" Height="34" CornerRadius="17"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                Background="#B8151822" BorderThickness="1">
+                Background="#D91B2324" BorderThickness="1">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#90E0E0E0" Offset="0"/>
-                    <GradientStop Color="#55404758" Offset="0.20"/>
-                    <GradientStop Color="#7023293A" Offset="0.55"/>
-                    <GradientStop Color="#75D0D0D0" Offset="1"/>
+                    <GradientStop Color="#907F8C8E" Offset="0"/>
+                    <GradientStop Color="#557F8C8E" Offset="0.20"/>
+                    <GradientStop Color="#701B2324" Offset="0.55"/>
+                    <GradientStop Color="#757F8C8E" Offset="1"/>
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <Border.Effect>
@@ -24,17 +24,17 @@
                 <Border Height="15" VerticalAlignment="Top" CornerRadius="16,16,8,8" Opacity="0.42">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#48FFFFFF" Offset="0"/>
-                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                            <GradientStop Color="#48E2DFD2" Offset="0"/>
+                            <GradientStop Color="#00E2DFD2" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
                 <StackPanel x:Name="Waveform" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="LeftToRight">
-                    <Border x:Name="Bar1" Width="3" Height="7" CornerRadius="1.5" Background="#FF65E6FF" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar2" Width="3" Height="14" CornerRadius="1.5" Background="#FF8B7CFF" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar3" Width="3" Height="19" CornerRadius="1.5" Background="#FFFF72C8" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar4" Width="3" Height="12" CornerRadius="1.5" Background="#FFA99EFF" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar5" Width="3" Height="6" CornerRadius="1.5" Background="#FF65E6FF" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar1" Width="3" Height="7" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar2" Width="3" Height="14" CornerRadius="1.5" Background="#FFE2DFD2" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar3" Width="3" Height="19" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar4" Width="3" Height="12" CornerRadius="1.5" Background="#FF7F8C8E" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar5" Width="3" Height="6" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></Border.RenderTransform></Border>
                 </StackPanel>
             </Grid>
         </Border>
