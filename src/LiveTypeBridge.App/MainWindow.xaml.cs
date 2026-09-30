@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private QrWindow? _qrWindow;
     private UpdateInfo? _availableUpdate;
     private UpdateService? _updateService;
+    private bool _shutdownRequested;
 
     public MainWindow(AppServices services)
     {
@@ -38,15 +39,22 @@ public partial class MainWindow : Window
             _vm.AttachSource(source!);
         };
 
-        Closing += (_, _) => _indicator.Hide();
+        Closing += (_, args) =>
+        {
+            if (_shutdownRequested) return;
+
+            // Alt+F4 and any native close request follow the exact same explicit
+            // shutdown path as the title-bar close button.
+            args.Cancel = true;
+            Dispatcher.BeginInvoke(RequestShutdown);
+        };
         Closed += (_, _) =>
         {
             CloseQr();
-            _indicator.Close();
+            try { _indicator.Close(); } catch { }
             Loc.LanguageChanged -= RefreshUpdateBanner;
             _vm.PropertyChanged -= VmPropertyChanged;
-            _vm.Dispose();
-            Application.Current.Shutdown();
+            try { _vm.Dispose(); } catch { }
         };
     }
 
@@ -136,7 +144,15 @@ public partial class MainWindow : Window
         }
     }
 
+    private void RequestShutdown()
+    {
+        if (_shutdownRequested) return;
+        _shutdownRequested = true;
+        _indicator.Hide();
+        Application.Current.Shutdown();
+    }
+
     private void FloatingToggle_Click(object sender, RoutedEventArgs e) => HideToIndicator();
     private void Minimize_Click(object sender, RoutedEventArgs e) => HideToIndicator();
-    private void Close_Click(object sender, RoutedEventArgs e) => Close();
+    private void Close_Click(object sender, RoutedEventArgs e) => RequestShutdown();
 }

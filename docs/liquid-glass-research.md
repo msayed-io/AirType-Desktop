@@ -12,5 +12,5 @@ Applied principles:
 - Use scroll-edge/dimming support when translucency could reduce contrast.
 - Use vivid foreground colors and preserve hierarchy, predictable action placement, adaptive layout, and accessibility.
 - LiquidGlass2 uses Windhawk-only `WindhawkBlur`, dark translucent tints, a lightly saturated blur, vertical highlight borders, and a corner radius equal to half the control height.
-- AirType maps that treatment to standalone WPF: native Windows acrylic composition where supported, a deterministic layered translucent fallback, a vertical gradient border, half-height pill radii, and restrained shadow. It does not copy Windhawk-only controls that cannot run in a normal WPF process.
+- AirType maps that treatment to standalone WPF with per-pixel transparent layered windows, a dark translucent material, a vertical gradient border, half-height pill radii, and restrained shadow. This keeps the floating capsule shape exact; native HWND-wide acrylic is intentionally avoided because it paints a rectangular composition surface outside WPF's rounded content.
 - Content cards remain solid and legible; glass is limited to floating controls and navigation.

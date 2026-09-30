@@ -8,12 +8,13 @@ namespace LiveTypeBridge.App;
 public partial class App : Application
 {
     private Mutex? _singleInstance;
+    private bool _ownsSingleInstance;
     private AppServices? _services;
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        _singleInstance = new Mutex(initiallyOwned: true, "AirType_SingleInstance", out var isFirst);
-        if (!isFirst)
+        _singleInstance = new Mutex(initiallyOwned: true, "AirType_SingleInstance", out _ownsSingleInstance);
+        if (!_ownsSingleInstance)
         {
             MessageBox.Show(Loc.Get("ErrAlreadyRunning"), Loc.Get("MsgTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
@@ -94,9 +95,18 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        // Release the single-instance gate before any potentially blocking service
+        // cleanup, so a deliberate close can be followed by an immediate relaunch.
+        if (_ownsSingleInstance)
+        {
+            try { _singleInstance?.ReleaseMutex(); } catch (ApplicationException) { }
+            _ownsSingleInstance = false;
+        }
+
+        _singleInstance?.Dispose();
+        _singleInstance = null;
         _services?.Settings.Save();
         _services?.Dispose();
-        _singleInstance?.ReleaseMutex();
         base.OnExit(e);
     }
 }
