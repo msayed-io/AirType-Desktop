@@ -1,40 +1,23 @@
 <Window x:Class="LiveTypeBridge.App.Views.FloatingIndicatorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="52" Height="38" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Width="{DynamicResource Size.IndicatorWidth}" Height="{DynamicResource Size.IndicatorHeight}"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" ShowActivated="False"
         WindowStartupLocation="Manual" UseLayoutRounding="True" SnapsToDevicePixels="True">
-    <Grid x:Name="OrbRoot" Background="Transparent" ToolTip="AirType"
-          MouseLeftButtonUp="OrbRoot_MouseLeftButtonUp">
-        <Border x:Name="GlassBody" Width="48" Height="34" CornerRadius="17"
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Background="#D91B2324" BorderThickness="1">
-            <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#907F8C8E" Offset="0"/>
-                    <GradientStop Color="#557F8C8E" Offset="0.20"/>
-                    <GradientStop Color="#701B2324" Offset="0.55"/>
-                    <GradientStop Color="#757F8C8E" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.BorderBrush>
-            <Border.Effect>
-                <DropShadowEffect Color="#000000" BlurRadius="14" ShadowDepth="3" Opacity="0.72"/>
-            </Border.Effect>
+    <Grid x:Name="OrbRoot" Background="Transparent" ToolTip="AirType" MouseLeftButtonUp="OrbRoot_MouseLeftButtonUp">
+        <Border x:Name="GlassBody" Width="{DynamicResource Size.IndicatorBodyWidth}" Height="{DynamicResource Size.IndicatorBodyHeight}"
+                CornerRadius="{DynamicResource Radius.Full}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}"
+                BorderThickness="{DynamicResource Stroke.Hairline}" Effect="{DynamicResource Elevation.Indicator}">
             <Grid ClipToBounds="True">
-                <Border Height="15" VerticalAlignment="Top" CornerRadius="16,16,8,8" Opacity="0.42">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#48E2DFD2" Offset="0"/>
-                            <GradientStop Color="#00E2DFD2" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                </Border>
+                <Border Height="12" VerticalAlignment="Top" CornerRadius="{DynamicResource Radius.Full}" Opacity="0.16" Background="{DynamicResource PureWhiteBrush}"/>
                 <StackPanel x:Name="Waveform" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="LeftToRight">
-                    <Border x:Name="Bar1" Width="3" Height="7" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar2" Width="3" Height="14" CornerRadius="1.5" Background="#FFE2DFD2" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar3" Width="3" Height="19" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar4" Width="3" Height="12" CornerRadius="1.5" Background="#FF7F8C8E" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></Border.RenderTransform></Border>
-                    <Border x:Name="Bar5" Width="3" Height="6" CornerRadius="1.5" Background="#FF9FA365" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar1" Width="3" Height="7" CornerRadius="{DynamicResource Radius.Full}" Background="{DynamicResource AccentBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale1" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar2" Width="3" Height="14" CornerRadius="{DynamicResource Radius.Full}" Background="{DynamicResource SecondaryBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale2" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar3" Width="3" Height="19" CornerRadius="{DynamicResource Radius.Full}" Background="{DynamicResource AccentBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale3" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar4" Width="3" Height="12" CornerRadius="{DynamicResource Radius.Full}" Background="{DynamicResource TertiaryBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale4" ScaleY="0.55"/></Border.RenderTransform></Border>
+                    <Border x:Name="Bar5" Width="3" Height="6" CornerRadius="{DynamicResource Radius.Full}" Background="{DynamicResource AccentBrush}" Margin="1,0" RenderTransformOrigin="0.5,0.5"><Border.RenderTransform><ScaleTransform x:Name="Scale5" ScaleY="0.55"/></Border.RenderTransform></Border>
                 </StackPanel>
             </Grid>
         </Border>

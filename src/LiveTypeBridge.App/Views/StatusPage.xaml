@@ -1,34 +1,56 @@
-<UserControl x:Class="LiveTypeBridge.App.Views.StatusPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<UserControl x:Class="LiveTypeBridge.App.Views.StatusPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
-        <StackPanel Margin="0,76,0,92">
-            <Border Style="{StaticResource HeroCard}" Padding="22" MinHeight="182">
+        <StackPanel Margin="{DynamicResource Space.Page}">
+            <Border Style="{StaticResource HeroCard}" MinHeight="{DynamicResource Size.HeroMinHeight}">
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                        <Grid Width="38" Height="38" Margin="0,0,12,0"><Ellipse Fill="#357F8C8E"/><Ellipse Width="18" Height="18" Fill="{Binding StateBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
-                        <StackPanel><TextBlock Text="{Binding StatusText}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/><TextBlock Text="{Binding StatusSub}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" MaxWidth="520" Margin="0,4,0,0"/></StackPanel>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid Width="{DynamicResource Size.IconContainer}" Height="{DynamicResource Size.IconContainer}" Margin="0,0,16,0">
+                            <Ellipse Fill="{DynamicResource OverlayBrush}"/>
+                            <Ellipse Width="16" Height="16" Fill="{Binding StateBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding StatusText}" FontSize="{DynamicResource Type.Title}" FontWeight="Bold" Foreground="{DynamicResource OnAccentBrush}"/>
+                            <TextBlock Text="{Binding StatusSub}" FontSize="{DynamicResource Type.Label}" Foreground="{DynamicResource OnAccentBrush}" TextWrapping="Wrap" TextTrimming="None" MaxWidth="620" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Grid.Row="1" Text="AIRTYPE" FontSize="{DynamicResource Type.Watermark}" FontWeight="Bold" Foreground="{DynamicResource OnAccentBrush}" Opacity="{DynamicResource Opacity.Watermark}" VerticalAlignment="Center" HorizontalAlignment="Left" FlowDirection="LeftToRight"/>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="{DynamicResource LabelPhone}" Foreground="{DynamicResource OnAccentBrush}" VerticalAlignment="Center"/>
+                        <Border Background="{DynamicResource CardBrush}" CornerRadius="{DynamicResource Radius.Full}" Padding="12,6" Margin="8,0,0,0">
+                            <TextBlock Text="{Binding PhoneDisplay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold"/>
+                        </Border>
                     </StackPanel>
-                    <TextBlock Grid.Row="1" Text="AIRTYPE" FontSize="64" FontWeight="Bold" Foreground="#22E2DFD2" VerticalAlignment="Center" HorizontalAlignment="Left" FlowDirection="LeftToRight"/>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"><TextBlock Text="{DynamicResource LabelPhone}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/><TextBlock Text="{Binding PhoneDisplay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/></StackPanel>
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource LabelStats}" Style="{StaticResource H2}"/>
                     <Grid>
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0"><TextBlock Text="{DynamicResource LabelLastReceive}" Style="{StaticResource Caption}"/><TextBlock Text="{Binding LastReceiveText}" Style="{StaticResource ValueText}" Margin="0,5,0,0"/></StackPanel>
-                        <StackPanel Grid.Column="1"><TextBlock Text="{DynamicResource LabelLatency}" Style="{StaticResource Caption}"/><TextBlock Text="{Binding LatencyText}" Style="{StaticResource ValueText}" Margin="0,5,0,0"/></StackPanel>
-                        <StackPanel Grid.Column="2"><TextBlock Text="{DynamicResource LabelStats}" Style="{StaticResource Caption}"/><TextBlock Text="{Binding StatsText}" Style="{StaticResource ValueText}" Margin="0,5,0,0" TextWrapping="Wrap"/></StackPanel>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"><TextBlock Text="{DynamicResource LabelLastReceive}" Style="{StaticResource FieldLabel}"/><TextBlock Text="{Binding LastReceiveText}" Style="{StaticResource MetricValue}"/></StackPanel>
+                        <Border Grid.Column="1" Width="1" Background="{DynamicResource BorderBrushKey}" HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Column="2"><TextBlock Text="{DynamicResource LabelLatency}" Style="{StaticResource FieldLabel}"/><TextBlock Text="{Binding LatencyText}" Style="{StaticResource MetricValue}"/></StackPanel>
+                        <Border Grid.Column="3" Width="1" Background="{DynamicResource BorderBrushKey}" HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Column="4"><TextBlock Text="{DynamicResource LabelStats}" Style="{StaticResource FieldLabel}"/><TextBlock Text="{Binding StatsText}" Style="{StaticResource MetricValue}"/></StackPanel>
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <Border Style="{StaticResource DangerCard}" Margin="0,12,0,0" Visibility="{Binding ShowElevatedCard, Converter={StaticResource BoolToVis}}"><StackPanel><TextBlock Text="{DynamicResource ElevatedTitle}" FontWeight="SemiBold" Foreground="{DynamicResource DangerBrush}"/><TextBlock Text="{DynamicResource ElevatedMsg}" Style="{StaticResource Caption}" Margin="0,6"/></StackPanel></Border>
+            <Border Style="{StaticResource DangerCard}" Margin="0,16,0,0" Visibility="{Binding ShowElevatedCard, Converter={StaticResource BoolToVis}}">
+                <StackPanel><TextBlock Text="{DynamicResource ElevatedTitle}" FontWeight="SemiBold" Foreground="{DynamicResource DangerBrush}"/><TextBlock Text="{DynamicResource ElevatedMsg}" Style="{StaticResource Caption}" Margin="0,8,0,0"/></StackPanel>
+            </Border>
 
-            <Grid Margin="0,14,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="10"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Button Grid.Column="0" Style="{StaticResource PrimaryButton}" Content="{DynamicResource BtnPairPhone}" Command="{Binding PairPhoneCommand}"/><Button Grid.Column="2" Content="{Binding StreamButtonLabel}" Command="{Binding ToggleStreamCommand}" IsEnabled="{Binding StreamButtonEnabled}"/></Grid>
-            <Button Style="{StaticResource DangerGhostButton}" Content="{DynamicResource BtnDisconnect}" Command="{Binding DisconnectCommand}" IsEnabled="{Binding DisconnectEnabled}" Margin="0,10,0,0"/>
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Style="{StaticResource PrimaryButton}" Content="{DynamicResource BtnPairPhone}" Command="{Binding PairPhoneCommand}"/>
+                <Button Grid.Column="2" Content="{Binding StreamButtonLabel}" Command="{Binding ToggleStreamCommand}" IsEnabled="{Binding StreamButtonEnabled}"/>
+            </Grid>
+            <Button Style="{StaticResource DangerGhostButton}" Content="{DynamicResource BtnDisconnect}" Command="{Binding DisconnectCommand}" IsEnabled="{Binding DisconnectEnabled}" Margin="0,12,0,0"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
