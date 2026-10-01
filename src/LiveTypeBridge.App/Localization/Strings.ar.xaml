@@ -93,6 +93,11 @@
     <sys:String x:Key="SetConnectionHint">اضبط منفذ الخادم المحلي الذي يتصل به الهاتف.</sys:String>
     <sys:String x:Key="SetExperience">تجربة الاستخدام</sys:String>
     <sys:String x:Key="SetStartupHint">يشغّل AirType تلقائيًا بعد تسجيل الدخول إلى ويندوز.</sys:String>
+    <sys:String x:Key="SetTrustedTitle">الأجهزة الموثوقة</sys:String>
+    <sys:String x:Key="SetTrustedHint">تتصل هذه الهواتف تلقائيًا بعد الاقتران الأول دون PIN أو QR.</sys:String>
+    <sys:String x:Key="SetTrustedNone">لا توجد أجهزة موثوقة بعد.</sys:String>
+    <sys:String x:Key="SetTrustedForgetAll">إلغاء الثقة بكل الأجهزة</sys:String>
+    <sys:String x:Key="SetTrustedCleared">تم إلغاء الثقة وقطع الاتصال. يلزم PIN عند الاقتران التالي.</sys:String>
     <sys:String x:Key="SetPrivacy">الخصوصية والسجل</sys:String>
     <sys:String x:Key="SetPrivacyHint">تحكم فيما يُحفظ محليًا. محتوى الكتابة يظل مخفيًا ما لم تفعّله صراحة.</sys:String>
     <sys:String x:Key="SetPort">المنفذ</sys:String>

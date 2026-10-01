@@ -13,6 +13,7 @@ public class ProtocolTests
             SessionId: "abc123",
             Pin: "123456",
             DeviceName: "Pixel",
+            ClientId: "android_123",
             Token: "tok",
             Ok: true,
             ErrorCode: null,
@@ -29,6 +30,7 @@ public class ProtocolTests
         Assert.Equal("abc123", parsed.SessionId);
         Assert.Equal("123456", parsed.Pin);
         Assert.Equal("Pixel", parsed.DeviceName);
+        Assert.Equal("android_123", parsed.ClientId);
         Assert.Equal("tok", parsed.Token);
         Assert.True(parsed.Ok);
         Assert.Equal(42, parsed.Revision);

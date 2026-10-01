@@ -89,6 +89,11 @@
     <sys:String x:Key="SetConnectionHint">Choose the local server port used by your phone.</sys:String>
     <sys:String x:Key="SetExperience">Experience</sys:String>
     <sys:String x:Key="SetStartupHint">Launches AirType automatically after you sign in to Windows.</sys:String>
+    <sys:String x:Key="SetTrustedTitle">Trusted devices</sys:String>
+    <sys:String x:Key="SetTrustedHint">These phones reconnect automatically after the first pairing, without PIN or QR.</sys:String>
+    <sys:String x:Key="SetTrustedNone">No trusted devices yet.</sys:String>
+    <sys:String x:Key="SetTrustedForgetAll">Forget all trusted devices</sys:String>
+    <sys:String x:Key="SetTrustedCleared">Trust was revoked and the phone disconnected. PIN is required next time.</sys:String>
     <sys:String x:Key="SetPrivacy">Privacy &amp; logging</sys:String>
     <sys:String x:Key="SetPrivacyHint">Control what stays on this PC. Typed content remains hidden unless you explicitly enable it.</sys:String>
     <sys:String x:Key="SetPort">Port</sys:String>

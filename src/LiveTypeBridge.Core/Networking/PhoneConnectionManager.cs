@@ -30,11 +30,12 @@ internal sealed class SocketState
 /// </summary>
 public sealed class PhoneConnectionManager : IDisposable
 {
-    public const int HeartbeatIntervalMs = 2000;
+    public const int HeartbeatIntervalMs = 2500;
     public const int StaleTimeoutMs = 12_000;
     private const int MaxMessageBytes = 128 * 1024;
 
     private readonly PairingSessionManager _sessions;
+    private readonly TrustedDeviceStore _trustedDevices;
     private readonly Func<PairingSession, PumpCore> _pumpFactory;
     private readonly ConcurrentDictionary<Guid, SocketState> _sockets = new();
     private readonly ConcurrentDictionary<string, PumpCore> _pumps = new(); // sessionId -> pump
@@ -50,9 +51,13 @@ public sealed class PhoneConnectionManager : IDisposable
     public event Action<double /*lagMs*/, int? /*rttMs*/>? LatencySample;
     public event Action<string /*code*/, string /*detail*/>? ProtocolError;
 
-    public PhoneConnectionManager(PairingSessionManager sessions, Func<PairingSession, PumpCore> pumpFactory)
+    public PhoneConnectionManager(
+        PairingSessionManager sessions,
+        TrustedDeviceStore trustedDevices,
+        Func<PairingSession, PumpCore> pumpFactory)
     {
         _sessions = sessions;
+        _trustedDevices = trustedDevices;
         _pumpFactory = pumpFactory;
         _sessions.SessionInvalidated += OnSessionInvalidated;
         _watchdog = new Timer(_ => WatchdogTick(), null, 3000, 3000);
@@ -122,20 +127,60 @@ public sealed class PhoneConnectionManager : IDisposable
             await SendErrorAndCloseAsync(st, Envelope.Errors.UnknownSession, "no such session");
             return null;
         }
-        if (!session.VerifyPin(pairRequest.Pin))
-        {
-            ProtocolError?.Invoke(Envelope.Errors.BadPin, $"from {st.Remote}");
-            await SendErrorAndCloseAsync(st, Envelope.Errors.BadPin, "PIN mismatch");
-            return null;
-        }
         if (session.BoundSocket is SocketState bound && !bound.Closed && !ReferenceEquals(bound, st))
         {
             await SendErrorAndCloseAsync(st, Envelope.Errors.AlreadyPaired, "another phone holds this session");
             return null;
         }
 
-        var name = string.IsNullOrWhiteSpace(pairRequest.DeviceName) ? "Android" : pairRequest.DeviceName.Trim();
-        session.MarkPaired(name.Length > 40 ? name[..40] : name);
+        var name = NormalizeDeviceName(pairRequest.DeviceName);
+        var hasPersistentToken = !string.IsNullOrWhiteSpace(pairRequest.Token);
+        string authToken;
+
+        if (hasPersistentToken)
+        {
+            if (!_trustedDevices.TryAuthenticate(pairRequest.ClientId, pairRequest.Token, name))
+            {
+                ProtocolError?.Invoke(Envelope.Errors.BadToken, $"trusted reconnect from {st.Remote}");
+                await SendErrorAndCloseAsync(
+                    st,
+                    Envelope.Errors.BadToken,
+                    "Device token is invalid or revoked");
+                return null;
+            }
+            authToken = pairRequest.Token!;
+        }
+        else
+        {
+            if (!session.VerifyPin(pairRequest.Pin))
+            {
+                ProtocolError?.Invoke(Envelope.Errors.BadPin, $"from {st.Remote}");
+                await SendErrorAndCloseAsync(st, Envelope.Errors.BadPin, "PIN mismatch");
+                return null;
+            }
+
+            // New Android clients provide clientId and receive a permanent token.
+            // Legacy clients without clientId continue using an ephemeral session token.
+            if (string.IsNullOrWhiteSpace(pairRequest.ClientId))
+            {
+                authToken = session.IssueAuthToken();
+            }
+            else
+            {
+                try
+                {
+                    authToken = _trustedDevices.Enroll(pairRequest.ClientId, name).Token;
+                }
+                catch (ArgumentException)
+                {
+                    await SendErrorAndCloseAsync(st, Envelope.Errors.Malformed, "clientId is invalid");
+                    return null;
+                }
+            }
+        }
+
+        session.UseAuthToken(authToken);
+        session.MarkPaired(name);
         session.BoundSocket = st;
         st.Session = session;
 
@@ -349,6 +394,12 @@ public sealed class PhoneConnectionManager : IDisposable
             // Session was replaced or expired: cut the old phone off immediately.
             _ = CloseSocketAsync(st, Envelope.Reasons.Replaced, notifyPhone: false);
         }
+    }
+
+    private static string NormalizeDeviceName(string? deviceName)
+    {
+        var name = string.IsNullOrWhiteSpace(deviceName) ? "Android" : deviceName.Trim();
+        return name.Length > 80 ? name[..80] : name;
     }
 
     private void WatchdogTick()

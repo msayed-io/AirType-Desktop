@@ -50,6 +50,13 @@
                         <TextBlock Text="{DynamicResource SetStartupHint}" Style="{StaticResource Caption}" Margin="56,4,0,0"/>
                     </StackPanel></Border>
                     <Border Style="{StaticResource SectionCard}" Margin="0,16,0,0"><StackPanel>
+                        <TextBlock Text="{DynamicResource SetTrustedTitle}" Style="{StaticResource H2}"/>
+                        <TextBlock Text="{DynamicResource SetTrustedHint}" Style="{StaticResource Caption}" Margin="0,-4,0,12"/>
+                        <TextBlock Text="{Binding TrustedDevicesSummary}" Style="{StaticResource ValueText}" TextWrapping="Wrap"/>
+                        <Button Style="{StaticResource DangerGhostButton}" Content="{DynamicResource SetTrustedForgetAll}"
+                                Command="{Binding ForgetTrustedDevicesCommand}" HorizontalAlignment="Left" Margin="0,16,0,0"/>
+                    </StackPanel></Border>
+                    <Border Style="{StaticResource SectionCard}" Margin="0,16,0,0"><StackPanel>
                         <TextBlock Text="{DynamicResource SetPrivacy}" Style="{StaticResource H2}"/>
                         <TextBlock Text="{DynamicResource SetPrivacyHint}" Style="{StaticResource Caption}" Margin="0,-4,0,16"/>
                         <CheckBox Style="{StaticResource ToggleSwitch}" IsChecked="{Binding EnableLogging}" Content="{DynamicResource SetLoggingOn}" Margin="0,0,0,12"/>

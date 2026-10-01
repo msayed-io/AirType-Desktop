@@ -36,6 +36,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     private readonly AppServices _s;
     private readonly Dispatcher _ui;
     private readonly DispatcherTimer _clock;
+    private readonly SemaphoreSlim _trustedDiscoveryGate = new(1, 1);
     private GlobalHotkeyManager? _hotkeys;
 
     private UiState _state = UiState.NotConnected;
@@ -45,6 +46,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     private string _hotkeyWarning = "";
     private bool _elevatedWarning;
     private bool _busy;
+    private bool _suppressTrustedReconnect;
+    private bool _disposed;
     private object _currentPage;
     private double _lastLagMs;
     private int? _lastRttMs;
@@ -77,8 +80,10 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             PhoneName = name;
             _activePump = _s.Connections.TryGetPump(sid);
             _pendingSession = null;
-            _ = _s.Discovery.StopAsync();
+            _suppressTrustedReconnect = false;
+            _ = StopDiscoveryAsync();
             _elevatedWarning = false;
+            SettingsVm.NotifyTrustedDevicesChanged();
             Raise(nameof(ShowElevatedCard));
             QrDismissed?.Invoke();
             SetState(UiState.Streaming);
@@ -90,7 +95,9 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             _activePump = null;
             PhoneName = "";
             SetState(UiState.NotConnected);
-            _s.Log.Info($"Phone disconnected ({reason}) — session stays valid until expiry for auto-reconnect");
+            _s.Log.Info($"Phone disconnected ({reason}) — trusted discovery will resume when allowed");
+            if (!_suppressTrustedReconnect)
+                _ = StartTrustedDiscoveryAsync();
         });
 
         _s.Connections.LatencySample += (lag, rtt) => RunOnUi(() =>
@@ -133,12 +140,14 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             if (_pendingSession is { } ps && ps.IsExpired && _state == UiState.ReadyToScan)
             {
                 _pendingSession = null;
-                _ = _s.Discovery.StopAsync();
+                _suppressTrustedReconnect = false;
                 QrDismissed?.Invoke();
                 SetState(UiState.NotConnected);
+                _ = RestartTrustedDiscoveryAsync();
             }
         };
         _clock.Start();
+        _ = StartTrustedDiscoveryAsync();
     }
 
     // ---- Bound properties --------------------------------------------------
@@ -288,13 +297,89 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     // ---- Pairing ------------------------------------------------------------
 
+    private async Task StopDiscoveryAsync()
+    {
+        await _trustedDiscoveryGate.WaitAsync();
+        try { await _s.Discovery.StopAsync(); }
+        finally { _trustedDiscoveryGate.Release(); }
+    }
+
+    private async Task RestartTrustedDiscoveryAsync()
+    {
+        await _trustedDiscoveryGate.WaitAsync();
+        try
+        {
+            await _s.Discovery.StopAsync();
+            await StartTrustedDiscoveryCoreAsync();
+        }
+        finally
+        {
+            _trustedDiscoveryGate.Release();
+        }
+    }
+
+    private async Task StartTrustedDiscoveryAsync()
+    {
+        await _trustedDiscoveryGate.WaitAsync();
+        try { await StartTrustedDiscoveryCoreAsync(); }
+        finally { _trustedDiscoveryGate.Release(); }
+    }
+
+    private async Task StartTrustedDiscoveryCoreAsync()
+    {
+        try
+        {
+            if (_disposed
+                || _suppressTrustedReconnect
+                || _s.TrustedDevices.Count == 0
+                || _s.Connections.HasPairedPhone)
+                return;
+
+            if (!_s.Server.IsRunning)
+            {
+                var started = await _s.Server.StartAsync(_s.Settings.Port, _s.Connections);
+                if (!started)
+                {
+                    _s.Log.Warn("Trusted auto-reconnect could not start the WebSocket server");
+                    return;
+                }
+            }
+
+            var ip = LocalIpFinder.GetPrimary();
+            if (ip is null)
+            {
+                _s.Log.Warn("Trusted auto-reconnect is waiting for a LAN IPv4 address");
+                return;
+            }
+
+            var session = _s.Sessions.ActiveUserSession
+                          ?? _s.Sessions.Create(TimeSpan.FromDays(3650));
+            var startedDiscovery = await _s.Discovery.StartAsync(new LiveTypeAdvertisement(
+                Name: Environment.MachineName,
+                Host: ip.Address,
+                Port: _s.Server.ActualPort,
+                SessionId: session.SessionId,
+                ExpiresUtc: session.ExpiresUtc));
+            if (startedDiscovery)
+                _s.Log.Info($"Trusted auto-reconnect ready on {ip.Address}:{_s.Server.ActualPort}");
+            else
+                _s.Log.Warn("Trusted auto-reconnect could not bind UDP discovery port 53018");
+        }
+        catch (Exception ex)
+        {
+            _s.Log.Warn($"Trusted auto-reconnect unavailable: {ex.Message}");
+        }
+    }
+
     private async Task PairPhoneAsync()
     {
         if (_busy) return;
         _busy = true;
+        _suppressTrustedReconnect = true;
         Raise(nameof(IsBusy));
         try
         {
+            await StopDiscoveryAsync();
             if (!_s.Server.IsRunning)
             {
                 var started = await _s.Server.StartAsync(_s.Settings.Port, _s.Connections);
@@ -341,9 +426,10 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             {
                 if (State != UiState.ReadyToScan) return;
                 _pendingSession = null;
-                _ = _s.Discovery.StopAsync();
+                _suppressTrustedReconnect = false;
                 QrDismissed?.Invoke();
                 SetState(UiState.NotConnected);
+                _ = RestartTrustedDiscoveryAsync();
             });
             QrRequested?.Invoke(qrVm);
             SetState(UiState.ReadyToScan);
@@ -351,7 +437,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         }
         catch (Exception ex)
         {
-            await _s.Discovery.StopAsync();
+            await StopDiscoveryAsync();
+            _suppressTrustedReconnect = false;
             _s.Log.Error($"PairPhone failed: {ex.Message}");
             SetError(ex.Message);
         }
@@ -359,14 +446,20 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         {
             _busy = false;
             Raise(nameof(IsBusy));
+            if (_pendingSession is null && _activePump is null && State == UiState.Error)
+            {
+                _suppressTrustedReconnect = false;
+                _ = StartTrustedDiscoveryAsync();
+            }
         }
     }
 
     private async Task DisconnectAsync()
     {
+        _suppressTrustedReconnect = true;
         QrDismissed?.Invoke();
         _pendingSession = null;
-        await _s.Discovery.StopAsync();
+        await StopDiscoveryAsync();
         await _s.Connections.DisconnectAllAsync();
         SetState(UiState.NotConnected);
     }
@@ -507,8 +600,11 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     public void PairingWindowClosed(string sessionId)
     {
         if (_pendingSession?.SessionId != sessionId) return;
-        _ = _s.Discovery.StopAsync();
-        _s.Log.Info("Pairing window closed; LAN discovery advertising stopped");
+        _pendingSession = null;
+        _suppressTrustedReconnect = false;
+        SetState(UiState.NotConnected);
+        _ = RestartTrustedDiscoveryAsync();
+        _s.Log.Info("Pairing window closed; trusted auto-reconnect resumed when available");
     }
 
     private void Navigate(string page)
@@ -523,6 +619,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        _disposed = true;
         _clock.Stop();
         Loc.LanguageChanged -= OnLanguageChanged;
         _hotkeys?.Dispose();

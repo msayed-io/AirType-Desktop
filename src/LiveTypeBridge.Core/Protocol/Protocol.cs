@@ -14,6 +14,7 @@ public sealed record Envelope(
     string? SessionId = null,
     string? Pin = null,
     string? DeviceName = null,
+    string? ClientId = null,
     string? Token = null,
     bool? Ok = null,
     string? ErrorCode = null,

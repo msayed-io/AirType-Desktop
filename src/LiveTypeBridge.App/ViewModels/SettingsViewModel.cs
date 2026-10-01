@@ -38,6 +38,7 @@ public sealed class SettingsViewModel : ObservableObject
 
         SaveCommand = new RelayCommand(_ => _ = SaveAsync());
         OpenLogsCommand = new RelayCommand(_ => OpenLogs());
+        ForgetTrustedDevicesCommand = new RelayCommand(_ => _ = ForgetTrustedDevicesAsync(), _ => HasTrustedDevices);
         SetLangArCommand = new RelayCommand(_ => Loc.Set(Loc.Arabic));
         SetLangEnCommand = new RelayCommand(_ => Loc.Set(Loc.English));
 
@@ -46,6 +47,7 @@ public sealed class SettingsViewModel : ObservableObject
 
     public ICommand SaveCommand { get; }
     public ICommand OpenLogsCommand { get; }
+    public ICommand ForgetTrustedDevicesCommand { get; }
     public ICommand SetLangArCommand { get; }
     public ICommand SetLangEnCommand { get; }
 
@@ -63,6 +65,18 @@ public sealed class SettingsViewModel : ObservableObject
 
     public string StatusText { get => _statusText; private set => Set(ref _statusText, value); }
 
+    public bool HasTrustedDevices => _s.TrustedDevices.Count > 0;
+
+    public string TrustedDevicesSummary
+    {
+        get
+        {
+            var devices = _s.TrustedDevices.Snapshot();
+            if (devices.Count == 0) return Loc.Get("SetTrustedNone");
+            return string.Join(Environment.NewLine, devices.Select(device =>
+                $"{device.DeviceName}  ·  {device.LastSeenUtc.ToLocalTime():yyyy-MM-dd HH:mm}"));
+        }
+    }
 
     private async Task SaveAsync()
     {
@@ -116,6 +130,24 @@ public sealed class SettingsViewModel : ObservableObject
             StatusText = Loc.Get("SetSaved");
         }
 
+    }
+
+    public void NotifyTrustedDevicesChanged()
+    {
+        Raise(nameof(HasTrustedDevices));
+        Raise(nameof(TrustedDevicesSummary));
+        RelayCommand.Refresh();
+    }
+
+    private async Task ForgetTrustedDevicesAsync()
+    {
+        _s.TrustedDevices.RevokeAll();
+        await _s.Discovery.StopAsync();
+        await _s.Connections.DisconnectAllAsync();
+        StatusText = Loc.Get("SetTrustedCleared");
+        Raise(nameof(HasTrustedDevices));
+        Raise(nameof(TrustedDevicesSummary));
+        RelayCommand.Refresh();
     }
 
     private void OpenLogs()

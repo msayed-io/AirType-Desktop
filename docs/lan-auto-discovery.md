@@ -5,10 +5,10 @@ AirType Desktop implements the Android discovery contract over IPv4 UDP while pr
 ## Transport
 
 - Listener: `0.0.0.0:53018/UDP`
-- Active only while the Pair Phone window is open.
+- Active while the Pair Phone window is open and, when trusted devices exist, automatically while Desktop is waiting for trusted reconnect.
 - Direct response: unicast to the source IP and source port of a valid request.
 - Proactive advertisement: IPv4 broadcast to `255.255.255.255:53018` every 2.5 seconds.
-- Stops on successful pairing, pairing-window close, session expiry, disconnect, or process shutdown.
+- Pauses on successful pairing and resumes after an unexpected trusted-device disconnect. Explicit Desktop disconnect and process shutdown stop it.
 
 Request:
 
@@ -32,7 +32,7 @@ Only an exact JSON `type` value is accepted; substring matches, malformed JSON, 
 
 ## Security boundary
 
-Discovery reveals routing metadata and the temporary session identifier; it does not reveal the session PIN, derived auth token, text content, or server secret. The existing WebSocket `pair_request` and token checks are unchanged. UDP discovery therefore does not bypass pairing authentication.
+Discovery reveals routing metadata and the temporary runtime session identifier; it never reveals the PIN, persistent device token, text content, or server secret. First-time PIN and subsequent `clientId + token` authentication happen only in the WebSocket `pair_request`. UDP discovery therefore does not bypass pairing authentication.
 
 ## Firewall
 

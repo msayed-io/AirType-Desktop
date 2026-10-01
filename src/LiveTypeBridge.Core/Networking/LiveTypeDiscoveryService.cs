@@ -15,9 +15,9 @@ public sealed record LiveTypeAdvertisement(
     DateTime ExpiresUtc);
 
 /// <summary>
-/// LAN discovery responder for the Android client. While a pairing window is active it
-/// listens for {"type":"livetype_discover"} on UDP 53018, replies directly to the
-/// sender, and periodically advertises the same beacon by IPv4 broadcast.
+/// LAN discovery responder for the Android client. During first-time pairing or while
+/// trusted devices are waiting to reconnect, it listens for {"type":"livetype_discover"}
+/// on UDP 53018, replies directly, and advertises the same beacon by IPv4 broadcast.
 /// </summary>
 public sealed class LiveTypeDiscoveryService : IAsyncDisposable, IDisposable
 {

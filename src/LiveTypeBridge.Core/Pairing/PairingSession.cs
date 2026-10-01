@@ -10,7 +10,7 @@ namespace LiveTypeBridge.Core.Pairing;
 public sealed class PairingSession
 {
     private readonly byte[] _secret;
-    private readonly string _authToken;
+    private string _authToken;
     private volatile bool _invalidated;
 
     public string SessionId { get; }
@@ -63,8 +63,18 @@ public sealed class PairingSession
         return FixedTimeEquals(token, _authToken);
     }
 
-    /// <summary>The token handed to the phone exactly once, right after the PIN check.</summary>
+    /// <summary>The token used to authenticate all messages in this socket session.</summary>
     public string IssueAuthToken() => _authToken;
+
+    /// <summary>
+    /// First-time trust and trusted reconnect use the permanent device token as required
+    /// by the Android wire contract. Legacy clients keep the derived ephemeral token.
+    /// </summary>
+    internal void UseAuthToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token is required", nameof(token));
+        _authToken = token;
+    }
 
     internal void MarkPaired(string deviceName) => PairedDeviceName = deviceName;
     internal void MarkInvalidated() => _invalidated = true;

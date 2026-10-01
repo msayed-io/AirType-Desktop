@@ -27,6 +27,7 @@ public sealed class AppServices : IDisposable
     public AppSettings Settings { get; private set; } = new();
     public Log Log { get; private set; } = new(enabled: false);
     public PairingSessionManager Sessions { get; private set; } = new();
+    public TrustedDeviceStore TrustedDevices { get; private set; } = null!;
     public PhoneConnectionManager Connections { get; private set; } = null!;
     public PhoneLinkServer Server { get; private set; } = new();
     public LiveTypeDiscoveryService Discovery { get; private set; } = new();
@@ -39,8 +40,9 @@ public sealed class AppServices : IDisposable
         services.Settings = AppSettings.Load();
         services.Log = new Log(services.Settings.EnableLogging);
         services.Log.Info($"AirType starting (headless={headless})");
+        services.TrustedDevices = new TrustedDeviceStore(services.Settings);
 
-        services.Connections = new PhoneConnectionManager(services.Sessions, session =>
+        services.Connections = new PhoneConnectionManager(services.Sessions, services.TrustedDevices, session =>
         {
             var injector = session.IsSelfTest
                 ? SelfTestRunner.GetOrCreateRecorder(session.SessionId)
