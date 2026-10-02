@@ -30,6 +30,7 @@ public partial class MainWindow : Window
         _indicator.Clicked += RestoreFromIndicator;
         _vm.QrRequested += ShowQr;
         _vm.QrDismissed += CloseQr;
+        _vm.ShowMainWindowRequested += RestoreFromIndicator;
         _vm.PropertyChanged += VmPropertyChanged;
         Loc.LanguageChanged += RefreshUpdateBanner;
 
@@ -53,6 +54,7 @@ public partial class MainWindow : Window
             CloseQr();
             try { _indicator.Close(); } catch { }
             Loc.LanguageChanged -= RefreshUpdateBanner;
+            _vm.ShowMainWindowRequested -= RestoreFromIndicator;
             _vm.PropertyChanged -= VmPropertyChanged;
             try { _vm.Dispose(); } catch { }
         };
@@ -89,6 +91,7 @@ public partial class MainWindow : Window
         Show();
         if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
         Activate();
+        Focus();
     }
 
     public void ShowUpdateNotification(UpdateInfo update, UpdateService service)

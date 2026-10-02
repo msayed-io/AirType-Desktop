@@ -67,6 +67,70 @@ public sealed class TrustedPairingContractTests
     }
 
     [Fact]
+    public async Task Unexpected_socket_reconnect_keeps_revision_mirror_and_ignores_replay()
+    {
+        var settings = new AppSettings();
+        var trusted = new TrustedDeviceStore(settings, () => { });
+        var sessions = new PairingSessionManager();
+        var injector = new RecordingInjector();
+        PhoneConnectionManager? manager = null;
+        manager = new PhoneConnectionManager(
+            sessions,
+            trusted,
+            session => new PumpCore(injector, new PumpEventsBridge(session, manager!)));
+        using var connections = manager;
+        await using var server = new PhoneLinkServer();
+        Assert.True(await server.StartAsync(57317, connections, loopbackOnly: true));
+        var uri = new Uri($"ws://127.0.0.1:{server.ActualPort}/livetype");
+        var session = sessions.Create(TimeSpan.FromMinutes(5));
+
+        string token;
+        using (var firstPhone = new ClientWebSocket())
+        {
+            await firstPhone.ConnectAsync(uri, CancellationToken.None);
+            await SendAsync(firstPhone, new Envelope(
+                Type: Envelope.Types.PairRequest,
+                SessionId: session.SessionId,
+                Pin: session.Pin,
+                ClientId: "android_reconnect",
+                DeviceName: "Phone"));
+            token = (await ReceiveAsync(firstPhone))!.Token!;
+            await SendAsync(firstPhone, new Envelope(
+                Type: Envelope.Types.TextEdit,
+                Token: token,
+                Revision: 1,
+                DeleteCount: 0,
+                InsertText: "once"));
+            Assert.True((await ReceiveAsync(firstPhone))?.Applied);
+            await firstPhone.CloseAsync(WebSocketCloseStatus.NormalClosure, "network drop", CancellationToken.None);
+        }
+        await Task.Delay(100);
+
+        using var returningPhone = new ClientWebSocket();
+        await returningPhone.ConnectAsync(uri, CancellationToken.None);
+        await SendAsync(returningPhone, new Envelope(
+            Type: Envelope.Types.PairRequest,
+            SessionId: session.SessionId,
+            ClientId: "android_reconnect",
+            Token: token,
+            DeviceName: "Phone"));
+        Assert.Equal(Envelope.Types.SessionReady, (await ReceiveAsync(returningPhone))?.Type);
+
+        // Replaying revision 1 after the socket replacement must not type it twice.
+        await SendAsync(returningPhone, new Envelope(
+            Type: Envelope.Types.TextEdit,
+            Token: token,
+            Revision: 1,
+            DeleteCount: 0,
+            InsertText: "once"));
+        var replayAck = await ReceiveAsync(returningPhone);
+
+        Assert.False(replayAck?.Applied);
+        Assert.Equal(Envelope.Reasons.Duplicate, replayAck?.Reason);
+        Assert.Equal(new[] { (0, "once") }, injector.Ops);
+    }
+
+    [Fact]
     public async Task Legacy_pin_client_without_client_id_keeps_ephemeral_pairing_flow()
     {
         var settings = new AppSettings();
@@ -138,6 +202,18 @@ public sealed class TrustedPairingContractTests
         return ProtocolJson.TryParse(Encoding.UTF8.GetString(buffer, 0, result.Count), out var envelope)
             ? envelope
             : null;
+    }
+
+    private sealed class RecordingInjector : ITextInjector
+    {
+        public List<(int Backspaces, string Text)> Ops { get; } = [];
+
+        public bool Inject(int backspaceCount, string text, out string? warningCode)
+        {
+            warningCode = null;
+            Ops.Add((backspaceCount, text));
+            return true;
+        }
     }
 
     private sealed class NoOpInjector : ITextInjector

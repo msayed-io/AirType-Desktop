@@ -6,6 +6,7 @@ namespace LiveTypeBridge.Core.Input;
 public static class NativeInput
 {
     public const uint INPUT_KEYBOARD = 1;
+    public const uint KEYEVENTF_KEYUP = 0x0002;
     public const uint KEYEVENTF_UNICODE = 0x0004;
     public const ushort VK_BACK = 0x08;
     public const ushort VK_TAB = 0x09;
@@ -71,30 +72,30 @@ public static class NativeInput
         return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<INPUT>());
     }
 
-    public static INPUT Backspace()
-    {
-        var input = new INPUT { type = INPUT_KEYBOARD };
-        input.U.ki = new KEYBDINPUT { wVk = VK_BACK, dwExtraInfo = StreamMarker };
-        return input;
-    }
+    public static INPUT Backspace(bool keyUp = false) => VirtualKey(VK_BACK, keyUp);
 
-    public static INPUT UnicodeChar(char c)
+    public static INPUT UnicodeChar(char c, bool keyUp = false)
     {
         var input = new INPUT { type = INPUT_KEYBOARD };
         input.U.ki = new KEYBDINPUT
         {
             wVk = 0,
             wScan = c,
-            dwFlags = KEYEVENTF_UNICODE,
+            dwFlags = KEYEVENTF_UNICODE | (keyUp ? KEYEVENTF_KEYUP : 0),
             dwExtraInfo = StreamMarker,
         };
         return input;
     }
 
-    public static INPUT VirtualKey(ushort vk)
+    public static INPUT VirtualKey(ushort vk, bool keyUp = false)
     {
         var input = new INPUT { type = INPUT_KEYBOARD };
-        input.U.ki = new KEYBDINPUT { wVk = vk, dwExtraInfo = StreamMarker };
+        input.U.ki = new KEYBDINPUT
+        {
+            wVk = vk,
+            dwFlags = keyUp ? KEYEVENTF_KEYUP : 0,
+            dwExtraInfo = StreamMarker,
+        };
         return input;
     }
 }

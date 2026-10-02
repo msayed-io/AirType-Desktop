@@ -104,6 +104,7 @@
     <sys:String x:Key="SetPortHint">إذا كان المنفذ مشغولًا يُختار التالي تلقائيًا. تغييره يعيد تشغيل الخادم.</sys:String>
     <sys:String x:Key="SetApply">تطبيق وحفظ</sys:String>
     <sys:String x:Key="SetHotkeys">الاختصارات العامة</sys:String>
+    <sys:String x:Key="SetHkShowApp">إظهار واجهة AirType فورًا</sys:String>
     <sys:String x:Key="SetHkToggle">تشغيل / إيقاف البث</sys:String>
     <sys:String x:Key="SetHkQr">فتح نافذة رمز QR</sys:String>
     <sys:String x:Key="SetHkEmergency">إيقاف طارئ للإدخال</sys:String>

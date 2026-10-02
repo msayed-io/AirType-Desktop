@@ -10,26 +10,29 @@ public class InputPlanTests
     public void Backspaces_Produce_VK_BACK_Events()
     {
         var plan = InputPlanBuilder.Build(3, "");
-        Assert.Equal(3, plan.Length);
-        Assert.All(plan, p =>
+        Assert.Equal(6, plan.Length);
+        for (var i = 0; i < plan.Length; i += 2)
         {
-            Assert.Equal(1u, p.type);
-            Assert.Equal(NativeInput.VK_BACK, p.U.ki.wVk);
-        });
+            Assert.Equal(1u, plan[i].type);
+            Assert.Equal(NativeInput.VK_BACK, plan[i].U.ki.wVk);
+            Assert.Equal(0u, plan[i].U.ki.dwFlags);
+            Assert.Equal(NativeInput.KEYEVENTF_KEYUP, plan[i + 1].U.ki.dwFlags);
+        }
     }
 
     [Fact]
     public void Latin_Text_Uses_Unicode_Events()
     {
         var plan = InputPlanBuilder.Build(0, "Hi");
-        Assert.Equal(2, plan.Length);
-        Assert.All(plan, p =>
-        {
-            Assert.Equal(NativeInput.KEYEVENTF_UNICODE, p.U.ki.dwFlags);
-            Assert.Equal(0, p.U.ki.wVk);
-        });
+        Assert.Equal(4, plan.Length);
+        Assert.Equal(NativeInput.KEYEVENTF_UNICODE, plan[0].U.ki.dwFlags);
+        Assert.Equal(NativeInput.KEYEVENTF_UNICODE | NativeInput.KEYEVENTF_KEYUP, plan[1].U.ki.dwFlags);
+        Assert.Equal(NativeInput.KEYEVENTF_UNICODE, plan[2].U.ki.dwFlags);
+        Assert.Equal(NativeInput.KEYEVENTF_UNICODE | NativeInput.KEYEVENTF_KEYUP, plan[3].U.ki.dwFlags);
         Assert.Equal('H', plan[0].U.ki.wScan);
-        Assert.Equal('i', plan[1].U.ki.wScan);
+        Assert.Equal('H', plan[1].U.ki.wScan);
+        Assert.Equal('i', plan[2].U.ki.wScan);
+        Assert.Equal('i', plan[3].U.ki.wScan);
     }
 
     [Fact]
@@ -37,44 +40,49 @@ public class InputPlanTests
     {
         const string word = "مرحبا";
         var plan = InputPlanBuilder.Build(0, word);
-        Assert.Equal(word.Length, plan.Length);
+        Assert.Equal(word.Length * 2, plan.Length);
         for (var i = 0; i < word.Length; i++)
-            Assert.Equal(word[i], plan[i].U.ki.wScan);
+        {
+            Assert.Equal(word[i], plan[i * 2].U.ki.wScan);
+            Assert.Equal(word[i], plan[i * 2 + 1].U.ki.wScan);
+        }
     }
 
     [Fact]
     public void Emoji_Surrogate_Pair_Becomes_Two_Events()
     {
         var plan = InputPlanBuilder.Build(0, "🌍");
-        Assert.Equal(2, plan.Length);
-        Assert.True(char.IsSurrogatePair((char)plan[0].U.ki.wScan, (char)plan[1].U.ki.wScan));
+        Assert.Equal(4, plan.Length);
+        Assert.True(char.IsSurrogatePair((char)plan[0].U.ki.wScan, (char)plan[2].U.ki.wScan));
     }
 
     [Fact]
     public void Newline_Becomes_VK_RETURN_Tab_Becomes_VK_TAB()
     {
         var plan = InputPlanBuilder.Build(0, "\n\t");
-        Assert.Equal(2, plan.Length);
+        Assert.Equal(4, plan.Length);
         Assert.Equal(NativeInput.VK_RETURN, plan[0].U.ki.wVk);
-        Assert.Equal(NativeInput.VK_TAB, plan[1].U.ki.wVk);
+        Assert.Equal(NativeInput.KEYEVENTF_KEYUP, plan[1].U.ki.dwFlags);
+        Assert.Equal(NativeInput.VK_TAB, plan[2].U.ki.wVk);
+        Assert.Equal(NativeInput.KEYEVENTF_KEYUP, plan[3].U.ki.dwFlags);
     }
 
     [Fact]
     public void Mixed_Op_Is_Backspace_Then_Insert_Order()
     {
         var plan = InputPlanBuilder.Build(2, "ab");
-        Assert.Equal(4, plan.Length);
+        Assert.Equal(8, plan.Length);
         Assert.Equal(NativeInput.VK_BACK, plan[0].U.ki.wVk);
-        Assert.Equal(NativeInput.VK_BACK, plan[1].U.ki.wVk);
-        Assert.Equal('a', plan[2].U.ki.wScan);
-        Assert.Equal('b', plan[3].U.ki.wScan);
+        Assert.Equal(NativeInput.VK_BACK, plan[2].U.ki.wVk);
+        Assert.Equal('a', plan[4].U.ki.wScan);
+        Assert.Equal('b', plan[6].U.ki.wScan);
     }
 
     [Fact]
     public void Control_Characters_Are_Stripped_From_Plan()
     {
         var plan = InputPlanBuilder.Build(0, "a\u0007b"); // BEL
-        Assert.Equal(2, plan.Length);
+        Assert.Equal(4, plan.Length);
     }
 
     [Fact]
@@ -141,9 +149,16 @@ public class HotkeyTests
     [Fact]
     public void Defaults_Do_Not_Clash()
     {
-        Assert.False(HotkeyGesture.DefaultToggleStream.ConflictsWith(HotkeyGesture.DefaultShowQr));
-        Assert.False(HotkeyGesture.DefaultToggleStream.ConflictsWith(HotkeyGesture.DefaultEmergencyStop));
-        Assert.False(HotkeyGesture.DefaultShowQr.ConflictsWith(HotkeyGesture.DefaultEmergencyStop));
+        var defaults = new[]
+        {
+            HotkeyGesture.DefaultShowApp,
+            HotkeyGesture.DefaultToggleStream,
+            HotkeyGesture.DefaultShowQr,
+            HotkeyGesture.DefaultEmergencyStop,
+        };
+        for (var i = 0; i < defaults.Length; i++)
+            for (var j = i + 1; j < defaults.Length; j++)
+                Assert.False(defaults[i].ConflictsWith(defaults[j]));
     }
 }
 
@@ -154,12 +169,14 @@ public class SettingsTests
     {
         var s = new AppSettings
         {
+            HotkeyShowApp = "Ctrl+Alt+T",
             HotkeyToggleStream = "Ctrl+Alt+T",
-            HotkeyShowQr = "Ctrl+Alt+T",
+            HotkeyShowQr = "Ctrl+Alt+Q",
             HotkeyEmergencyStop = "Ctrl+Alt+X",
         };
         var errors = AppSettings.ValidateHotkeys(s);
         Assert.Single(errors);
+        Assert.Equal("show-app+toggle", errors[0]);
     }
 
     [Fact]

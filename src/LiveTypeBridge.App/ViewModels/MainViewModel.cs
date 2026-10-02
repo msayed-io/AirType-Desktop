@@ -57,6 +57,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     public event Action<QrViewModel>? QrRequested;
     public event Action? QrDismissed;
+    public event Action? ShowMainWindowRequested;
 
     public MainViewModel(AppServices services)
     {
@@ -514,23 +515,39 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         if (_hotkeys is null) return;
         var failed = new List<string>();
 
+        var showApp = HotkeyGesture.Parse(_s.Settings.HotkeyShowApp) ?? HotkeyGesture.DefaultShowApp;
         var toggle = HotkeyGesture.Parse(_s.Settings.HotkeyToggleStream) ?? HotkeyGesture.DefaultToggleStream;
         var qr = HotkeyGesture.Parse(_s.Settings.HotkeyShowQr) ?? HotkeyGesture.DefaultShowQr;
         var emergency = HotkeyGesture.Parse(_s.Settings.HotkeyEmergencyStop) ?? HotkeyGesture.DefaultEmergencyStop;
 
-        if (!_hotkeys.TryRegister(GlobalHotkeyManager.IdToggleStream, toggle,
-            () => RunOnUi(ToggleStream)))
-            failed.Add(Loc.Get("SetHkToggle"));
+        // Remove the whole old set before registering the new set. Registering one-by-one
+        // while old IDs remain active makes a valid swap (for example T ↔ Q) fail because
+        // Windows still sees the other old combination as occupied.
+        _hotkeys.UnregisterAll();
 
-        if (!_hotkeys.TryRegister(GlobalHotkeyManager.IdShowQr, qr,
-            () => RunOnUi(() => _ = PairPhoneAsync())))
-            failed.Add(Loc.Get("SetHkQr"));
-
-        if (!_hotkeys.TryRegister(GlobalHotkeyManager.IdEmergencyStop, emergency,
-            () => RunOnUi(EmergencyStop)))
-            failed.Add(Loc.Get("SetHkEmergency"));
+        Register(GlobalHotkeyManager.IdShowApp, showApp,
+            () => RunOnUi(() => ShowMainWindowRequested?.Invoke()), Loc.Get("SetHkShowApp"));
+        Register(GlobalHotkeyManager.IdToggleStream, toggle,
+            () => RunOnUi(ToggleStream), Loc.Get("SetHkToggle"));
+        Register(GlobalHotkeyManager.IdShowQr, qr,
+            () => RunOnUi(() => _ = PairPhoneAsync()), Loc.Get("SetHkQr"));
+        Register(GlobalHotkeyManager.IdEmergencyStop, emergency,
+            () => RunOnUi(EmergencyStop), Loc.Get("SetHkEmergency"));
 
         HotkeyWarning = failed.Count == 0 ? "" : Loc.Format("HotkeyRegFail", string.Join(", ", failed));
+        return;
+
+        void Register(int id, HotkeyGesture gesture, Action action, string displayName)
+        {
+            if (_hotkeys.TryRegister(id, gesture, action))
+            {
+                _s.Log.Info($"Global hotkey registered: id={id}, gesture={gesture}");
+                return;
+            }
+
+            failed.Add(displayName);
+            _s.Log.Warn($"Global hotkey registration failed: id={id}, gesture={gesture}, win32={_hotkeys.LastRegistrationError}");
+        }
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

@@ -11,6 +11,8 @@ public sealed class GlobalHotkeyManager : IDisposable
     public const int IdToggleStream = 1;
     public const int IdShowQr = 2;
     public const int IdEmergencyStop = 3;
+    public const int IdShowApp = 4;
+    private const uint MOD_NOREPEAT = 0x4000;
     private const int WM_HOTKEY = 0x0312;
 
     private readonly IntPtr _hwnd;
@@ -25,11 +27,22 @@ public sealed class GlobalHotkeyManager : IDisposable
 
     public GlobalHotkeyManager(IntPtr hwnd) => _hwnd = hwnd;
 
+    public int LastRegistrationError { get; private set; }
+
     public bool TryRegister(int id, HotkeyGesture gesture, Action action)
     {
         Unregister(id);
-        var ok = RegisterHotKey(_hwnd, id, gesture.ModifierFlags, (uint)gesture.VirtualKey);
-        if (!ok) return false;
+        var ok = RegisterHotKey(
+            _hwnd,
+            id,
+            gesture.ModifierFlags | MOD_NOREPEAT,
+            (uint)gesture.VirtualKey);
+        if (!ok)
+        {
+            LastRegistrationError = Marshal.GetLastWin32Error();
+            return false;
+        }
+        LastRegistrationError = 0;
         _registered.Add(id);
         _actions[id] = action;
         return true;
@@ -45,6 +58,11 @@ public sealed class GlobalHotkeyManager : IDisposable
         }
     }
 
+    public void UnregisterAll()
+    {
+        foreach (var id in _registered.ToList()) Unregister(id);
+    }
+
     /// <summary>Feed WM_HOTKEY here; returns true when the message was one of ours.</summary>
     public bool TryHandleHotkey(IntPtr wParam)
     {
@@ -57,10 +75,7 @@ public sealed class GlobalHotkeyManager : IDisposable
         return false;
     }
 
-    public void Dispose()
-    {
-        foreach (var id in _registered.ToList()) Unregister(id);
-    }
+    public void Dispose() => UnregisterAll();
 }
 
 /// <summary>A hotkey combo: modifier flags + a virtual-key code, serializable as "Ctrl+Alt+Shift+T".</summary>
@@ -73,6 +88,7 @@ public sealed record HotkeyGesture(uint ModifierFlags, int VirtualKey)
     public static HotkeyGesture DefaultToggleStream => Parse("Ctrl+Alt+Shift+T")!;
     public static HotkeyGesture DefaultShowQr => Parse("Ctrl+Alt+Shift+Q")!;
     public static HotkeyGesture DefaultEmergencyStop => Parse("Ctrl+Alt+Shift+X")!;
+    public static HotkeyGesture DefaultShowApp => Parse("Ctrl+Alt+A")!;
 
     public override string ToString()
     {

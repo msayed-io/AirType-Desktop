@@ -100,6 +100,7 @@
     <sys:String x:Key="SetPortHint">If busy, the next free port is picked automatically. Changing this restarts the server.</sys:String>
     <sys:String x:Key="SetApply">Apply &amp; save</sys:String>
     <sys:String x:Key="SetHotkeys">Global hotkeys</sys:String>
+    <sys:String x:Key="SetHkShowApp">Show AirType instantly</sys:String>
     <sys:String x:Key="SetHkToggle">Toggle streaming</sys:String>
     <sys:String x:Key="SetHkQr">Open QR window</sys:String>
     <sys:String x:Key="SetHkEmergency">Emergency input stop</sys:String>

@@ -15,6 +15,7 @@ public sealed class SettingsViewModel : ObservableObject
     private readonly MainViewModel _main;
 
     private string _portText = "";
+    private string _hkShowApp = "";
     private string _hkToggle = "";
     private string _hkQr = "";
     private string _hkEmergency = "";
@@ -29,6 +30,7 @@ public sealed class SettingsViewModel : ObservableObject
         _main = main;
 
         _portText = services.Settings.Port.ToString();
+        _hkShowApp = services.Settings.HotkeyShowApp;
         _hkToggle = services.Settings.HotkeyToggleStream;
         _hkQr = services.Settings.HotkeyShowQr;
         _hkEmergency = services.Settings.HotkeyEmergencyStop;
@@ -52,6 +54,7 @@ public sealed class SettingsViewModel : ObservableObject
     public ICommand SetLangEnCommand { get; }
 
     public string PortText { get => _portText; set => Set(ref _portText, value); }
+    public string HkShowApp { get => _hkShowApp; set => Set(ref _hkShowApp, value); }
     public string HkToggle { get => _hkToggle; set => Set(ref _hkToggle, value); }
     public string HkQr { get => _hkQr; set => Set(ref _hkQr, value); }
     public string HkEmergency { get => _hkEmergency; set => Set(ref _hkEmergency, value); }
@@ -86,12 +89,14 @@ public sealed class SettingsViewModel : ObservableObject
             return;
         }
 
+        if (HotkeyGesture.Parse(HkShowApp) is null) { StatusText = Loc.Format("SetHotkeyBad", Loc.Get("SetHkShowApp")); return; }
         if (HotkeyGesture.Parse(HkToggle) is null) { StatusText = Loc.Format("SetHotkeyBad", Loc.Get("SetHkToggle")); return; }
         if (HotkeyGesture.Parse(HkQr) is null) { StatusText = Loc.Format("SetHotkeyBad", Loc.Get("SetHkQr")); return; }
         if (HotkeyGesture.Parse(HkEmergency) is null) { StatusText = Loc.Format("SetHotkeyBad", Loc.Get("SetHkEmergency")); return; }
 
         var probe = new AppSettings
         {
+            HotkeyShowApp = HkShowApp,
             HotkeyToggleStream = HkToggle,
             HotkeyShowQr = HkQr,
             HotkeyEmergencyStop = HkEmergency,
@@ -104,6 +109,7 @@ public sealed class SettingsViewModel : ObservableObject
 
         var portChanged = port != _s.Settings.Port && _s.Server.IsRunning;
         _s.Settings.Port = port;
+        _s.Settings.HotkeyShowApp = HkShowApp;
         _s.Settings.HotkeyToggleStream = HkToggle;
         _s.Settings.HotkeyShowQr = HkQr;
         _s.Settings.HotkeyEmergencyStop = HkEmergency;

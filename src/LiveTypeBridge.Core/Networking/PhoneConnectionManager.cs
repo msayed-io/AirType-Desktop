@@ -184,8 +184,10 @@ public sealed class PhoneConnectionManager : IDisposable
         session.BoundSocket = st;
         st.Session = session;
 
-        var pump = _pumpFactory(session);
-        _pumps[session.SessionId] = pump;
+        // Preserve the session pump across an unexpected socket drop. Its revision and
+        // applied-length mirror are the idempotency boundary that prevents a reconnect
+        // from replaying text already typed into the focused Windows control.
+        _pumps.GetOrAdd(session.SessionId, _ => _pumpFactory(session));
 
         await SendToSocketAsync(st, new Envelope(
             Type: Envelope.Types.SessionReady,
@@ -376,11 +378,18 @@ public sealed class PhoneConnectionManager : IDisposable
         _sockets.TryRemove(st.Id, out _);
 
         var session = st.Session;
-        if (session is not null && _pumps.TryRemove(session.SessionId, out var pump))
-            pump.Dispose();
 
-        if (HasPairedPhone && session is not null && !session.IsSelfTest)
+        // Do not dispose the pump here: a network interruption replaces the socket,
+        // not the logical session. Session invalidation, explicit disconnect, or app
+        // shutdown owns final pump disposal.
+        if (HasPairedPhone
+            && session is not null
+            && !session.IsSelfTest
+            && session.BoundSocket is null)
         {
+            // A replacement socket may already own the same logical session by the
+            // time this old socket's finally block runs. Never let stale cleanup mark
+            // that live replacement as disconnected.
             HasPairedPhone = false;
             PairedDeviceName = null;
             PhoneDisconnected?.Invoke("phone_gone");
@@ -394,6 +403,9 @@ public sealed class PhoneConnectionManager : IDisposable
             // Session was replaced or expired: cut the old phone off immediately.
             _ = CloseSocketAsync(st, Envelope.Reasons.Replaced, notifyPhone: false);
         }
+
+        if (_pumps.TryRemove(session.SessionId, out var pump))
+            pump.Dispose();
     }
 
     private static string NormalizeDeviceName(string? deviceName)

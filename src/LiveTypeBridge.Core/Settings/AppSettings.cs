@@ -30,6 +30,7 @@ public sealed class AppSettings
     /// <summary>Off by default: streamed text content is never written to the log unless enabled.</summary>
     public bool LogTextContent { get; set; }
 
+    public string HotkeyShowApp { get; set; } = "Ctrl+Alt+A";
     public string HotkeyToggleStream { get; set; } = "Ctrl+Alt+Shift+T";
     public string HotkeyShowQr { get; set; } = "Ctrl+Alt+Shift+Q";
     public string HotkeyEmergencyStop { get; set; } = "Ctrl+Alt+Shift+X";
@@ -90,6 +91,7 @@ public sealed class AppSettings
             .OrderByDescending(device => device.LastSeenUtc)
             .Take(20)
             .ToList();
+        if (HotkeyGesture.Parse(s.HotkeyShowApp) is null) s.HotkeyShowApp = "Ctrl+Alt+A";
         if (HotkeyGesture.Parse(s.HotkeyToggleStream) is null) s.HotkeyToggleStream = "Ctrl+Alt+Shift+T";
         if (HotkeyGesture.Parse(s.HotkeyShowQr) is null) s.HotkeyShowQr = "Ctrl+Alt+Shift+Q";
         if (HotkeyGesture.Parse(s.HotkeyEmergencyStop) is null) s.HotkeyEmergencyStop = "Ctrl+Alt+Shift+X";
@@ -102,6 +104,7 @@ public sealed class AppSettings
     {
         var gestures = new (string Name, HotkeyGesture? G)[]
         {
+            ("show-app", HotkeyGesture.Parse(s.HotkeyShowApp)),
             ("toggle", HotkeyGesture.Parse(s.HotkeyToggleStream)),
             ("qr", HotkeyGesture.Parse(s.HotkeyShowQr)),
             ("emergency", HotkeyGesture.Parse(s.HotkeyEmergencyStop)),

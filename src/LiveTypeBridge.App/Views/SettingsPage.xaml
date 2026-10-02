@@ -31,6 +31,7 @@
                     <Border Style="{StaticResource SectionCard}" Margin="0,16,0,0"><StackPanel>
                         <TextBlock Text="{DynamicResource SetHotkeys}" Style="{StaticResource H2}"/>
                         <TextBlock Text="{DynamicResource SetHotkeyHint}" Style="{StaticResource Caption}" Margin="0,-4,0,16"/>
+                        <TextBlock Text="{DynamicResource SetHkShowApp}" Style="{StaticResource FieldLabel}"/><controls:HotkeyCaptureBox Style="{StaticResource InputBox}" Text="{Binding HkShowApp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" TextAlignment="Left" Margin="0,0,0,12"/>
                         <TextBlock Text="{DynamicResource SetHkToggle}" Style="{StaticResource FieldLabel}"/><controls:HotkeyCaptureBox Style="{StaticResource InputBox}" Text="{Binding HkToggle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" TextAlignment="Left" Margin="0,0,0,12"/>
                         <TextBlock Text="{DynamicResource SetHkQr}" Style="{StaticResource FieldLabel}"/><controls:HotkeyCaptureBox Style="{StaticResource InputBox}" Text="{Binding HkQr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" TextAlignment="Left" Margin="0,0,0,12"/>
                         <TextBlock Text="{DynamicResource SetHkEmergency}" Style="{StaticResource FieldLabel}"/><controls:HotkeyCaptureBox Style="{StaticResource InputBox}" Text="{Binding HkEmergency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight" TextAlignment="Left"/>

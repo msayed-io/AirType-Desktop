@@ -17,28 +17,43 @@ public interface ITextInjector
 /// </summary>
 public static class InputPlanBuilder
 {
-    private const int MaxInputsPerOp = 8000;
+    private const int MaxLogicalInputsPerOp = 8000;
+    private const int MaxNativeInputsPerOp = MaxLogicalInputsPerOp * 2;
 
     public static NativeInput.INPUT[] Build(int backspaceCount, string text)
     {
         var clean = StreamState.Sanitize(text);
-        var total = Math.Clamp(backspaceCount, 0, 2000) + clean.Length;
-        if (total == 0) return Array.Empty<NativeInput.INPUT>();
-        if (total > MaxInputsPerOp) total = MaxInputsPerOp;
+        var logicalCount = Math.Clamp(backspaceCount, 0, 2000) + clean.Length;
+        if (logicalCount == 0) return Array.Empty<NativeInput.INPUT>();
 
-        var plan = new List<NativeInput.INPUT>(total);
-        for (var i = 0; i < Math.Clamp(backspaceCount, 0, 2000) && plan.Count < MaxInputsPerOp; i++)
+        // Every keyboard action must have a matching key-up event. Leaving synthetic
+        // keys down makes Windows/app controls observe a stuck key and can trigger
+        // repeat/composition corruption. Keep the existing native-event safety cap.
+        var plan = new List<NativeInput.INPUT>(Math.Min(logicalCount * 2, MaxNativeInputsPerOp));
+        for (var i = 0; i < Math.Clamp(backspaceCount, 0, 2000) && plan.Count + 2 <= MaxNativeInputsPerOp; i++)
+        {
             plan.Add(NativeInput.Backspace());
+            plan.Add(NativeInput.Backspace(keyUp: true));
+        }
 
         foreach (var c in clean)
         {
-            if (plan.Count >= MaxInputsPerOp) break;
-            plan.Add(c switch
+            if (plan.Count + 2 > MaxNativeInputsPerOp) break;
+            switch (c)
             {
-                '\n' => NativeInput.VirtualKey(NativeInput.VK_RETURN),
-                '\t' => NativeInput.VirtualKey(NativeInput.VK_TAB),
-                _ => NativeInput.UnicodeChar(c),
-            });
+                case '\n':
+                    plan.Add(NativeInput.VirtualKey(NativeInput.VK_RETURN));
+                    plan.Add(NativeInput.VirtualKey(NativeInput.VK_RETURN, keyUp: true));
+                    break;
+                case '\t':
+                    plan.Add(NativeInput.VirtualKey(NativeInput.VK_TAB));
+                    plan.Add(NativeInput.VirtualKey(NativeInput.VK_TAB, keyUp: true));
+                    break;
+                default:
+                    plan.Add(NativeInput.UnicodeChar(c));
+                    plan.Add(NativeInput.UnicodeChar(c, keyUp: true));
+                    break;
+            }
         }
         return plan.ToArray();
     }
