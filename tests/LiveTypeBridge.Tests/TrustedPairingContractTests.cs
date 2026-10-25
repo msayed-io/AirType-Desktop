@@ -188,6 +188,85 @@ public sealed class TrustedPairingContractTests
         Assert.Equal("Device token is invalid or revoked", error?.ErrorMessage);
     }
 
+    [Fact]
+    public async Task Phone_without_protocol_version_pairs_and_receives_current_version()
+    {
+        // "old phone + new PC": the field is absent on the wire and must not matter.
+        var settings = new AppSettings();
+        var trusted = new TrustedDeviceStore(settings, () => { });
+        var sessions = new PairingSessionManager();
+        using var connections = new PhoneConnectionManager(
+            sessions, trusted, _ => new PumpCore(new NoOpInjector(), new NoOpPumpEvents()));
+        await using var server = new PhoneLinkServer();
+        Assert.True(await server.StartAsync(57417, connections, loopbackOnly: true));
+        var session = sessions.Create(TimeSpan.FromMinutes(5));
+
+        using var phone = new ClientWebSocket();
+        await phone.ConnectAsync(new Uri($"ws://127.0.0.1:{server.ActualPort}/livetype"), CancellationToken.None);
+        var legacyPairRequest = $"{{\"type\":\"pair_request\",\"sessionId\":\"{session.SessionId}\",\"pin\":\"{session.Pin}\",\"deviceName\":\"Old Phone\"}}";
+        Assert.DoesNotContain("protocolVersion", legacyPairRequest);
+        await phone.SendAsync(
+            Encoding.UTF8.GetBytes(legacyPairRequest), WebSocketMessageType.Text, true, CancellationToken.None);
+
+        var ready = await ReceiveAsync(phone);
+        Assert.Equal(Envelope.Types.SessionReady, ready?.Type);
+        Assert.True(ready?.Ok);
+        Assert.Equal(Envelope.ProtocolVersions.Current, ready?.ProtocolVersion);
+    }
+
+    [Fact]
+    public async Task Phone_with_current_protocol_version_pairs()
+    {
+        var settings = new AppSettings();
+        var trusted = new TrustedDeviceStore(settings, () => { });
+        var sessions = new PairingSessionManager();
+        using var connections = new PhoneConnectionManager(
+            sessions, trusted, _ => new PumpCore(new NoOpInjector(), new NoOpPumpEvents()));
+        await using var server = new PhoneLinkServer();
+        Assert.True(await server.StartAsync(57517, connections, loopbackOnly: true));
+        var session = sessions.Create(TimeSpan.FromMinutes(5));
+
+        using var phone = new ClientWebSocket();
+        await phone.ConnectAsync(new Uri($"ws://127.0.0.1:{server.ActualPort}/livetype"), CancellationToken.None);
+        await SendAsync(phone, new Envelope(
+            Type: Envelope.Types.PairRequest,
+            SessionId: session.SessionId,
+            Pin: session.Pin,
+            DeviceName: "Pixel",
+            ProtocolVersion: Envelope.ProtocolVersions.Current));
+
+        var ready = await ReceiveAsync(phone);
+        Assert.Equal(Envelope.Types.SessionReady, ready?.Type);
+        Assert.Equal(Envelope.ProtocolVersions.Current, ready?.ProtocolVersion);
+    }
+
+    [Fact]
+    public async Task Phone_asking_for_a_newer_protocol_is_refused_with_unsupported_version()
+    {
+        var settings = new AppSettings();
+        var trusted = new TrustedDeviceStore(settings, () => { });
+        var sessions = new PairingSessionManager();
+        using var connections = new PhoneConnectionManager(
+            sessions, trusted, _ => new PumpCore(new NoOpInjector(), new NoOpPumpEvents()));
+        await using var server = new PhoneLinkServer();
+        Assert.True(await server.StartAsync(57617, connections, loopbackOnly: true));
+        var session = sessions.Create(TimeSpan.FromMinutes(5));
+
+        using var phone = new ClientWebSocket();
+        await phone.ConnectAsync(new Uri($"ws://127.0.0.1:{server.ActualPort}/livetype"), CancellationToken.None);
+        await SendAsync(phone, new Envelope(
+            Type: Envelope.Types.PairRequest,
+            SessionId: session.SessionId,
+            Pin: session.Pin,
+            DeviceName: "Future Phone",
+            ProtocolVersion: Envelope.ProtocolVersions.Current + 1));
+
+        var error = await ReceiveAsync(phone);
+        Assert.Equal(Envelope.Types.Error, error?.Type);
+        Assert.Equal(Envelope.Errors.UnsupportedVersion, error?.ErrorCode);
+        Assert.Contains("protocol", error!.ErrorMessage, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static Task SendAsync(ClientWebSocket socket, Envelope envelope)
     {
         var bytes = Encoding.UTF8.GetBytes(ProtocolJson.Serialize(envelope));

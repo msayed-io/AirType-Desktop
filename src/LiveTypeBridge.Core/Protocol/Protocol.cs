@@ -32,8 +32,22 @@ public sealed record Envelope(
     bool? Applied = null,
     int? Backspaces = null,
     int? Inserts = null,
-    long? ReceivedAtUtc = null)
+    long? ReceivedAtUtc = null,
+    /// <summary>
+    /// Optional negotiation field. Missing on the wire means protocol 1, so clients
+    /// and servers that predate it keep working unchanged in both directions.
+    /// </summary>
+    int? ProtocolVersion = null)
 {
+    /// <summary>Highest wire protocol this build speaks. Bump only with a coordinated release.</summary>
+    public static class ProtocolVersions
+    {
+        public const int Current = 1;
+
+        /// <summary>A peer that never sends the field is protocol 1 by definition.</summary>
+        public const int Implicit = 1;
+    }
+
     public static class Types
     {
         public const string PairRequest = "pair_request";
@@ -58,6 +72,7 @@ public sealed record Envelope(
         public const string Malformed = "malformed_message";
         public const string TooLarge = "message_too_large";
         public const string ServerClosing = "server_closing";
+        public const string UnsupportedVersion = "unsupported_version";
     }
 
     public static class Reasons

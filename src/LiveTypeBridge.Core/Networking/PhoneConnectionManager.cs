@@ -121,6 +121,21 @@ public sealed class PhoneConnectionManager : IDisposable
 
     private async Task<PairingSession?> TryPairAsync(SocketState st, Envelope pairRequest)
     {
+        // Version negotiation is additive: a client that never sends the field is
+        // protocol 1, and a client asking for a newer protocol than this build speaks
+        // is refused explicitly instead of failing later with a confusing error.
+        var phoneProtocol = pairRequest.ProtocolVersion ?? Envelope.ProtocolVersions.Implicit;
+        if (phoneProtocol > Envelope.ProtocolVersions.Current)
+        {
+            ProtocolError?.Invoke(Envelope.Errors.UnsupportedVersion,
+                $"phone speaks v{phoneProtocol}, this build speaks v{Envelope.ProtocolVersions.Current}");
+            await SendErrorAndCloseAsync(
+                st,
+                Envelope.Errors.UnsupportedVersion,
+                $"This PC build supports protocol {Envelope.ProtocolVersions.Current} but the phone asked for {phoneProtocol}. Update AirType on the PC.");
+            return null;
+        }
+
         var session = _sessions.GetActive(pairRequest.SessionId);
         if (session is null)
         {
@@ -194,7 +209,8 @@ public sealed class PhoneConnectionManager : IDisposable
             Ok: true,
             Token: session.IssueAuthToken(),
             HeartbeatIntervalMs: HeartbeatIntervalMs,
-            ServerTimeUtc: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
+            ServerTimeUtc: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+            ProtocolVersion: Envelope.ProtocolVersions.Current));
         return session;
     }
 

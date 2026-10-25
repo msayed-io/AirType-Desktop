@@ -10,7 +10,8 @@
   "sessionId": "current-session-id-from-beacon",
   "pin": "123456",
   "deviceName": "Android · Samsung S24",
-  "clientId": "android_9a8b7c6d5e4f3a2b"
+  "clientId": "android_9a8b7c6d5e4f3a2b",
+  "protocolVersion": 1
 }
 ```
 
@@ -21,7 +22,8 @@ After the PIN is verified, Desktop creates a cryptographically random 256-bit de
   "type": "session_ready",
   "ok": true,
   "token": "64-character-lowercase-hex-device-token",
-  "heartbeatIntervalMs": 2500
+  "heartbeatIntervalMs": 2500,
+  "protocolVersion": 1
 }
 ```
 
@@ -37,7 +39,8 @@ After reading the current session ID from UDP discovery, Android sends:
   "sessionId": "current-session-id-from-beacon",
   "clientId": "android_9a8b7c6d5e4f3a2b",
   "token": "saved-device-token",
-  "deviceName": "Android · Samsung S24"
+  "deviceName": "Android · Samsung S24",
+  "protocolVersion": 1
 }
 ```
 
@@ -67,3 +70,20 @@ A request containing a token is always treated as trusted authentication; it nev
 Trusted records are held in `AppSettings.TrustedDevices` and contain `clientId`, display name, SHA-256 token hash, creation time, and last-seen time. Raw device tokens are never written to disk or logs. The list is de-duplicated, sanitized on load, and capped at 20 devices.
 
 The permanent bearer token travels over the existing local `ws://` transport. It should therefore be handled by Android as a secret and stored in platform secure storage. This mechanism provides persistent device trust and revocation; it does not claim the end-to-end cryptographic properties of WhatsApp Web.
+
+## Protocol version negotiation
+
+The wire protocol is versioned additively, so mixed builds keep working:
+
+- `Envelope.ProtocolVersions.Current` is `1`. A peer that does not send `protocolVersion`
+  is treated as version 1 (`Envelope.ProtocolVersions.Implicit`), which is exactly what
+  every build released before this field existed looks like on the wire.
+- The phone sends `protocolVersion` in `pair_request`; the desktop echoes its own value in
+  `session_ready`. Unknown fields are ignored by both sides, so a new phone with an old PC
+  build, and an old phone with a new PC build, behave exactly as before.
+- If the phone asks for a version higher than this build speaks, the desktop answers
+  `{"type":"error","errorCode":"unsupported_version", ...}` and closes the socket. The phone
+  treats that code as terminal, so it does not spin in a reconnect loop and instead tells
+  the user to update the app.
+- The QR payload carries `v`; a code whose `v` exceeds the phone's supported version is
+  refused by the phone with the same terminal meaning.

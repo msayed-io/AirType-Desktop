@@ -6,6 +6,53 @@ namespace LiveTypeBridge.Tests;
 public class ProtocolTests
 {
     [Fact]
+    public void ProtocolVersion_Is_Optional_AndMissingMeansOne()
+    {
+        // Exactly what a phone build that predates negotiation sends.
+        Assert.True(ProtocolJson.TryParse(
+            """{"type":"pair_request","sessionId":"s1","pin":"123456","deviceName":"Pixel"}""",
+            out var env));
+        Assert.Null(env!.ProtocolVersion);
+        Assert.Equal(1, env.ProtocolVersion ?? Envelope.ProtocolVersions.Implicit);
+        Assert.Equal(1, Envelope.ProtocolVersions.Current);
+    }
+
+    [Fact]
+    public void ProtocolVersion_RoundTrips_AsCamelCase()
+    {
+        var json = ProtocolJson.Serialize(new Envelope(
+            Type: Envelope.Types.SessionReady,
+            Ok: true,
+            ProtocolVersion: Envelope.ProtocolVersions.Current));
+        Assert.Contains("\"protocolVersion\":1", json);
+        Assert.True(ProtocolJson.TryParse(json, out var parsed));
+        Assert.Equal(1, parsed!.ProtocolVersion);
+    }
+
+    [Fact]
+    public void Unknown_Future_Fields_Are_Ignored()
+    {
+        // Guarantees an older PC build keeps working with a newer phone build.
+        Assert.True(ProtocolJson.TryParse(
+            """{"type":"pair_request","sessionId":"s1","protocolVersion":1,"someFutureField":{"a":[1,2,3]}}""",
+            out var env));
+        Assert.Equal("pair_request", env!.Type);
+        Assert.Equal("s1", env.SessionId);
+    }
+
+    [Fact]
+    public void UnsupportedVersion_ErrorCode_Is_Stable()
+    {
+        Assert.Equal("unsupported_version", Envelope.Errors.UnsupportedVersion);
+        var json = ProtocolJson.Serialize(new Envelope(
+            Type: Envelope.Types.Error,
+            ErrorCode: Envelope.Errors.UnsupportedVersion,
+            ErrorMessage: "newer"));
+        Assert.True(ProtocolJson.TryParse(json, out var parsed));
+        Assert.Equal(Envelope.Errors.UnsupportedVersion, parsed!.ErrorCode);
+    }
+
+    [Fact]
     public void Envelope_RoundTrips_AllFields()
     {
         var env = new Envelope(
