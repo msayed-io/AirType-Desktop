@@ -175,7 +175,9 @@ public sealed class PumpCore : IDisposable
             BaselineRevision: _state.LastRevision,
             AppliedLength: _state.AppliedLength,
             ReceivedAtUtc: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            Reason: "reset"));
+            // The phone rewrites its text from this length, so it must be the mirror we
+            // actually hold (StreamState.ResetTo never shrinks it to a stale belief).
+            Reason: Envelope.Reasons.Reset));
     }
 
     private async Task HandleEditInlineAsync(Envelope env)

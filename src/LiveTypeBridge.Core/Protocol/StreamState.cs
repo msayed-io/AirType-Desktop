@@ -61,14 +61,20 @@ public sealed class StreamState
     }
 
     /// <summary>
-    /// Adopt a phone-side reset: the phone restarts its op stream at
-    /// <paramref name="baselineRevision"/> and takes responsibility for reconciling the
-    /// already-typed text (it was told our appliedLength in the reset request).
+    /// Adopt a phone-side reset. The phone restarts its op stream at
+    /// <paramref name="baselineRevision"/> and reconciles the already-typed text from
+    /// the applied length we report back in the reset ack.
+    ///
+    /// The phone's <paramref name="claimedAppliedLength"/> is only a belief: it is the
+    /// text the phone thinks we typed, which lags behind reality whenever an ack was
+    /// lost on the way back. We typed those characters, so we take the larger of the
+    /// two — otherwise the phone would rewrite a suffix on top of text that is already
+    /// in the field, which is exactly the duplicated line the user reported.
     /// </summary>
     public void ResetTo(int baselineRevision, int appliedLength)
     {
         _lastRevision = Math.Max(0, baselineRevision);
-        _appliedLength = Math.Max(0, appliedLength);
+        _appliedLength = Math.Max(Math.Max(0, appliedLength), _appliedLength);
     }
 
     /// <summary>Normalize text for injection: \r\n -> \n, strip control chars except \n and \t.</summary>

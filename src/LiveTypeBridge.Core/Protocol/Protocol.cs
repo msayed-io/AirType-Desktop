@@ -77,6 +77,8 @@ public sealed record Envelope(
 
     public static class Reasons
     {
+        /// <summary>Ack of a reset_stream: carries the mirror the PC adopted.</summary>
+        public const string Reset = "reset";
         public const string Duplicate = "duplicate";
         public const string Old = "old";
         public const string Resync = "resync";
