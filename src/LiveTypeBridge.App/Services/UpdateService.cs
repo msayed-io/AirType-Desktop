@@ -9,7 +9,10 @@ namespace LiveTypeBridge.App.Services;
 /// </summary>
 public sealed class UpdateService
 {
-    public const string RepositoryUrl = "https://github.com/msayed-io/LiveTypeBridge";
+    // Must point at the repository that actually publishes the releases. The internal
+    // app id ("AirType", see the vpk pack id and <AssemblyName>) deliberately stays
+    // unchanged: renaming it would orphan every installed copy from its updates.
+    public const string RepositoryUrl = "https://github.com/msayed-io/AirType-Desktop";
 
     private readonly Action<string> _log;
     private UpdateManager? _manager;
