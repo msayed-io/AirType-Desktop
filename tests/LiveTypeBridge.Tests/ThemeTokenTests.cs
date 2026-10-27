@@ -95,7 +95,9 @@ public sealed class ThemeTokenTests
         // specular ring exactly on the border instead of outside it.
         Assert.Contains("Math.Min(RenderSize.Width, RenderSize.Height) / 2", source, StringComparison.Ordinal);
         Assert.Contains("rim / 2", source, StringComparison.Ordinal);
-        Assert.Contains("DrawRoundedRectangle(Fill, null, fillRect, fillRadius, fillRadius)", source, StringComparison.Ordinal);
+        Assert.Contains("DrawRoundedRectangle(fillBrush, null, fillRect, fillRadius, fillRadius)", source, StringComparison.Ordinal);
+        Assert.Contains("SystemParameters.HighContrast", source, StringComparison.Ordinal);
+        Assert.Contains("Color.FromRgb(0x2C, 0x2C, 0x2E)", source, StringComparison.Ordinal);
         Assert.Contains("LineJoin = PenLineJoin.Round", source, StringComparison.Ordinal);
     }
 
