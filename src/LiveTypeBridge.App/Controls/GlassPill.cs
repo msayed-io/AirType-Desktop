@@ -110,18 +110,25 @@ public sealed class GlassPill : Decorator
             Math.Min(RenderSize.Width, RenderSize.Height) / 2);
         var rect = new Rect(0, 0, RenderSize.Width, RenderSize.Height);
 
+        // Accessibility: the reference asks for a solid #2C2C2E surface when the user turns
+        // on higher contrast. WPF exposes that as SystemParameters.HighContrast, so the
+        // material degrades to the flat surface with a full white rim.
+        var highContrast = SystemParameters.HighContrast;
+        var fillBrush = highContrast ? new SolidColorBrush(Color.FromRgb(0x2C, 0x2C, 0x2E)) : Fill;
+        var rimBrush = highContrast ? new SolidColorBrush(Colors.White) : RimBrush;
+
         // Fill: inset by half the rim so the ring sits exactly on the edge.
-        var rim = Math.Max(0.5, RimThickness);
+        var rim = highContrast ? 1.0 : Math.Max(0.5, RimThickness);
         var fillRect = new Rect(rim / 2, rim / 2, Math.Max(0, rect.Width - rim), Math.Max(0, rect.Height - rim));
         var fillRadius = Math.Max(0, radius - rim / 2);
-        if (Fill is not null)
+        if (fillBrush is not null)
         {
-            drawingContext.DrawRoundedRectangle(Fill, null, fillRect, fillRadius, fillRadius);
+            drawingContext.DrawRoundedRectangle(fillBrush, null, fillRect, fillRadius, fillRadius);
         }
 
-        if (RimBrush is not null)
+        if (rimBrush is not null)
         {
-            var pen = new Pen(RimBrush, rim) { LineJoin = PenLineJoin.Round };
+            var pen = new Pen(rimBrush, rim) { LineJoin = PenLineJoin.Round };
             drawingContext.DrawRoundedRectangle(null, pen, fillRect, fillRadius, fillRadius);
         }
     }

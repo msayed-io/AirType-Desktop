@@ -683,7 +683,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     public bool IsStreamingNow => State == UiState.Streaming;
 
-    public bool PulseDot => State == UiState.Streaming;
+    /// <summary>Pulse only while streaming, and never when the user asked for less motion.</summary>
+    public bool PulseDot => State == UiState.Streaming && SystemParameters.ClientAreaAnimation;
 
     /// <summary>Home headline for the current state (display text only).</summary>
     public string HomeTitle => Loc.Get(State switch
