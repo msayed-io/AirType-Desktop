@@ -99,6 +99,13 @@
         <Setter Property="Effect" Value="{DynamicResource Elevation.Glass}"/>
     </Style>
 
+    <!-- Navigation container: solid dark surface, no fill gradient and no specular rim.
+         The pill shape and the selected-tab indicator stay exactly as they were. -->
+    <Style x:Key="NavSurfaceStyle" TargetType="controls:PillBorder">
+        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Navigation}"/>
+    </Style>
+
     <!-- Action button: 44 high, 26 side padding, 15/600, glass pill. -->
     <Style x:Key="GlassButton" TargetType="Button">
         <Setter Property="Cursor" Value="Hand"/>

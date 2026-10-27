@@ -37,28 +37,30 @@
                                 Height="{DynamicResource Size.CaptionHeight}" Padding="{DynamicResource Space.HeaderControls}"
                                 HorizontalAlignment="Left" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button x:Name="MinimizeButton" Style="{StaticResource TitleBarButton}" Click="Minimize_Click"
-                            ToolTip="{DynamicResource WinMin}" AutomationProperties.Name="{DynamicResource WinMin}">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Minimize}"
+                    <Button x:Name="CloseButton" Style="{StaticResource TitleBarButton}" Click="Close_Click" Margin="1,0"
+                            ToolTip="{DynamicResource WinClose}" AutomationProperties.Name="{DynamicResource WinClose}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Close}"
                               Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
                               Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                     </Button>
-                    <Button x:Name="MaximizeButton" Style="{StaticResource TitleBarButton}" Click="Maximize_Click"
+                    <Button x:Name="MaximizeButton" Style="{StaticResource TitleBarButton}" Click="Maximize_Click" Margin="1,0"
                             ToolTip="{DynamicResource WinMax}" AutomationProperties.Name="{DynamicResource WinMax}">
                         <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Maximize}"
                               Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
                               Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                     </Button>
-                    <Button x:Name="CloseButton" Style="{StaticResource TitleBarButton}" Click="Close_Click"
-                            ToolTip="{DynamicResource WinClose}" AutomationProperties.Name="{DynamicResource WinClose}">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Close}"
+                    <Button x:Name="MinimizeButton" Style="{StaticResource TitleBarButton}" Click="Minimize_Click" Margin="1,0"
+                            ToolTip="{DynamicResource WinMin}" AutomationProperties.Name="{DynamicResource WinMin}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Minimize}"
                               Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
                               Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                     </Button>
                 </StackPanel>
             </controls:GlassPill>
 
-            <TextBlock Grid.Column="2" Text="AirType" Style="{StaticResource Wordmark}"
+            <!-- The bar shows the application name on the home tab and the page title on
+                 the settings tab, in exactly the same slot with the same type. -->
+            <TextBlock Grid.Column="2" Text="{Binding HeaderTitle}" Style="{StaticResource Wordmark}"
                        HorizontalAlignment="Right" VerticalAlignment="Center" FlowDirection="LeftToRight"/>
         </Grid>
 
@@ -75,11 +77,12 @@
                        TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
         </controls:GlassPill>
 
-        <!-- ===== Floating tab bar: 60 high, 28 from the bottom, centred ===== -->
+        <!-- ===== Floating tab bar: 54 high, 28 from the bottom, centred, solid surface
+             (no glass: the bar is a container, not one of the six glass controls) ===== -->
         <Grid VerticalAlignment="Bottom" Margin="{DynamicResource Space.TabBarOffset}" HorizontalAlignment="Center"
               Panel.ZIndex="30" Height="{DynamicResource Size.NavHeight}" FlowDirection="RightToLeft">
-            <controls:GlassPill Style="{StaticResource GlassSurfaceStyle}" Height="{DynamicResource Size.NavHeight}"
-                                Padding="{DynamicResource Space.Nav}">
+            <controls:PillBorder Style="{StaticResource NavSurfaceStyle}" Height="{DynamicResource Size.NavHeight}"
+                                 Padding="{DynamicResource Space.Nav}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}"
                                  Command="{Binding NavCommand}" CommandParameter="home" GroupName="AirTypeNav">
@@ -100,7 +103,7 @@
                         </StackPanel>
                     </RadioButton>
                 </StackPanel>
-            </controls:GlassPill>
+            </controls:PillBorder>
         </Grid>
 
         <!-- ===== Hotkey warning + update banner (existing behaviour, restyled flat) ===== -->

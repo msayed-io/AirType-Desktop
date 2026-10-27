@@ -169,7 +169,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     public object CurrentPage
     {
         get => _currentPage;
-        private set { if (Set(ref _currentPage, value)) { Raise(nameof(IsHome)); Raise(nameof(IsSettings)); } }
+        private set { if (Set(ref _currentPage, value)) { Raise(nameof(IsHome)); Raise(nameof(IsSettings)); Raise(nameof(HeaderTitle)); } }
     }
 
     public bool IsHome => ReferenceEquals(_currentPage, this);
@@ -196,6 +196,9 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(HomeTitle));
             Raise(nameof(HomeSub));
             Raise(nameof(CapsuleText));
+            Raise(nameof(ShowPairActions));
+            Raise(nameof(ShowRefreshCode));
+            Raise(nameof(ShowPairPhone));
             Raise(nameof(StreamsPaused));
             Raise(nameof(StreamButtonLabelShort));
         }
@@ -447,6 +450,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(QrVm));
             Raise(nameof(HasQrCode));
             Raise(nameof(NoQrCode));
+            Raise(nameof(ShowRefreshCode));
+            Raise(nameof(ShowPairPhone));
             QrRequested?.Invoke(qrVm);
             SetState(UiState.ReadyToScan);
             _s.Log.Info($"Pairing session created for {ip.Address}:{_s.Server.ActualPort}");
@@ -671,6 +676,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         Raise(nameof(QrVm));
         Raise(nameof(HasQrCode));
         Raise(nameof(NoQrCode));
+        Raise(nameof(ShowRefreshCode));
+        Raise(nameof(ShowPairPhone));
     }
 
     /// <summary>True while a paired phone owns a live pump.</summary>
@@ -694,6 +701,18 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
     /// <summary>Status capsule label: "connected" while a pump exists, otherwise the pairing hint.</summary>
     public string CapsuleText => Loc.Get(ShowSessionCard ? "StatusCapsuleConnected" : "StatusCapsuleReady");
+
+    /// <summary>Window-bar title: the app name on the home tab, the page title on settings.</summary>
+    public string HeaderTitle => IsSettings ? Loc.Get("SetTitle") : "AirType";
+
+    /// <summary>The pairing capsule only exists while no phone owns a live pump.</summary>
+    public bool ShowPairActions => !ShowSessionCard;
+
+    /// <summary>"Refresh code" once a pairing session exists.</summary>
+    public bool ShowRefreshCode => ShowPairActions && HasQrCode;
+
+    /// <summary>"Pair phone" only when there is no session yet, and never while connected.</summary>
+    public bool ShowPairPhone => ShowPairActions && !HasQrCode;
 
     public bool StreamsPaused => State is UiState.PausedManual or UiState.PausedProtect
         or UiState.EmergencyStopped or UiState.Resync;

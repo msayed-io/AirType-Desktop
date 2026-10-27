@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Velopack;
+using LiveTypeBridge.App.Interop;
 using LiveTypeBridge.App.Localization;
 using LiveTypeBridge.App.Services;
 using LiveTypeBridge.App.ViewModels;
@@ -43,8 +45,14 @@ public partial class MainWindow : Window
 
         SourceInitialized += (_, _) =>
         {
-            var source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+            var handle = new WindowInteropHelper(this).Handle;
+            var source = HwndSource.FromHwnd(handle);
             _vm.AttachSource(source!);
+
+            // Rounded outer frame: the window manager rounds the real window corners, not
+            // an inner element, so drag, resize, maximise and the caption buttons keep
+            // their native behaviour.
+            WindowCorners.ApplyRounded(this);
         };
 
         Closing += (_, args) =>

@@ -3,16 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:LiveTypeBridge.App.Controls">
     <!-- Every existing setting is kept; only the material, spacing and colour change. -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
+    <!-- Scrollbar hidden on purpose (design): the content still scrolls with the wheel,
+         the touchpad, touch and the keyboard, and every setting stays reachable. -->
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
         <StackPanel MaxWidth="{DynamicResource Size.ContentMax}" HorizontalAlignment="Center" Margin="{DynamicResource Space.PageCompact}">
-            <Grid Margin="0,0,0,20">
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBlock Text="{DynamicResource SetTitle}" Style="{StaticResource H1}"/>
-                    <TextBlock Text="{DynamicResource SetIntro}" Style="{StaticResource Caption}" Margin="0,6,0,0" MaxWidth="440"/>
-                </StackPanel>
-                <Button Style="{StaticResource FlatButton}" Content="{DynamicResource SetApply}" Command="{Binding SaveCommand}"
-                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            </Grid>
+            <TextBlock Text="{DynamicResource SetIntro}" Style="{StaticResource Caption}" Margin="0,0,0,20" MaxWidth="440"/>
 
             <Border Style="{StaticResource Card}">
                 <StackPanel>
@@ -81,7 +76,12 @@
                 </StackPanel>
             </Border>
 
-            <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" HorizontalAlignment="Center" Margin="0,16,0,0" TextAlignment="Center"/>
+            <!-- Save lives after the content, never above it; the status text stays with it. -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,0">
+                <Button Style="{StaticResource FlatButton}" Content="{DynamicResource SetApply}" Command="{Binding SaveCommand}"/>
+            </StackPanel>
+            <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" HorizontalAlignment="Center"
+                       Margin="0,12,0,0" TextAlignment="Center"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

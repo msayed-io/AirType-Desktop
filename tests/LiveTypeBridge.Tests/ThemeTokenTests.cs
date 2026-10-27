@@ -161,8 +161,8 @@ public sealed class ThemeTokenTests
         Assert.Equal("9999", values["Radius.Pill"]);
 
         Assert.Equal("76", values["Size.HeaderHeight"]);
-        Assert.Equal("60", values["Size.NavHeight"]);
-        Assert.Equal("48", values["Size.TabHeight"]);
+        Assert.Equal("54", values["Size.NavHeight"]);
+        Assert.Equal("42", values["Size.TabHeight"]);
         Assert.Equal("44", values["Size.ControlHeight"]);
         Assert.Equal("32", values["Size.StatusPill"]);
         Assert.Equal("48", values["Size.DeviceTile"]);
@@ -215,7 +215,8 @@ public sealed class ThemeTokenTests
         // One capsule in the home screen (the status pill) and exactly three in the shell:
         // the window-button capsule, the toast and the floating tab bar.
         Assert.Single(Regex.Matches(statusPage, @"<controls:GlassPill[\s>]").Cast<Match>());
-        Assert.Equal(3, Regex.Matches(mainWindow, @"<controls:GlassPill[\s>]").Count);
+        // The window-button capsule and the error toast; the tab bar is a solid surface.
+        Assert.Equal(2, Regex.Matches(mainWindow, @"<controls:GlassPill[\s>]").Count);
 
         // Glass buttons exist only through the GlassButton template (the two action
         // capsules and the "refresh code" capsule of the not-connected state).
@@ -430,7 +431,7 @@ public sealed class ThemeTokenTests
         Assert.Equal("Auto", (string?)columns[2].Attribute("Width"));
 
         var wordmark = bar.Descendants(Presentation + "TextBlock")
-            .Single(text => (string?)text.Attribute("Text") == "AirType");
+            .Single(text => (string?)text.Attribute("Text") == "{Binding HeaderTitle}");
         Assert.Equal("2", (string?)wordmark.Attribute("Grid.Column"));
         Assert.Equal("Right", (string?)wordmark.Attribute("HorizontalAlignment"));
         Assert.Equal("LeftToRight", (string?)wordmark.Attribute("FlowDirection"));
@@ -469,6 +470,131 @@ public sealed class ThemeTokenTests
             Assert.Contains(strings.Root!.Elements(), element =>
                 (string?)element.Attribute(X + "Key") == "QrQuickPinHint");
         }
+    }
+
+    [Fact]
+    public void Caption_capsule_orders_close_maximize_minimize_from_left_to_right()
+    {
+        var appRoot = FindAppRoot();
+        var document = XDocument.Load(Path.Combine(appRoot, "MainWindow.xaml"));
+
+        var capsule = document.Descendants().Single(element => element.Name.LocalName == "GlassPill");
+        Assert.Equal("{DynamicResource Size.CaptionHeight}", (string?)capsule.Attribute("Height"));
+
+        var buttons = capsule.Descendants(Presentation + "Button").ToArray();
+        Assert.Equal(new[] { "CloseButton", "MaximizeButton", "MinimizeButton" },
+            buttons.Select(button => (string?)button.Attribute(X + "Name")).ToArray());
+
+        // Same look and same hit area for the three buttons: only the order changed.
+        Assert.All(buttons, button => Assert.Equal("{StaticResource TitleBarButton}", (string?)button.Attribute("Style")));
+        Assert.All(buttons, button => Assert.Equal("{DynamicResource Size.IconSmall}",
+            (string?)button.Descendants(Presentation + "Path").Single().Attribute("Width")));
+    }
+
+    [Fact]
+    public void Header_title_follows_the_active_tab()
+    {
+        var appRoot = FindAppRoot();
+        var source = File.ReadAllText(Path.Combine(appRoot, "ViewModels", "MainViewModel.cs"));
+
+        Assert.Contains("public string HeaderTitle => IsSettings ? Loc.Get(\"SetTitle\") : \"AirType\";", source,
+            StringComparison.Ordinal);
+        Assert.Contains("Raise(nameof(HeaderTitle));", source, StringComparison.Ordinal);
+
+        var bar = File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml"));
+        Assert.Contains("Text=\"{Binding HeaderTitle}\"", bar, StringComparison.Ordinal);
+        Assert.DoesNotContain("Text=\"AirType\"", bar, StringComparison.Ordinal);
+        Assert.Contains("SetTitle", File.ReadAllText(Path.Combine(appRoot, "Localization", "Strings.ar.xaml")),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Pairing_action_is_hidden_whenever_a_phone_is_attached()
+    {
+        var appRoot = FindAppRoot();
+        var page = File.ReadAllText(Path.Combine(appRoot, "Views", "StatusPage.xaml"));
+        var source = File.ReadAllText(Path.Combine(appRoot, "ViewModels", "MainViewModel.cs"));
+
+        Assert.Contains("public bool ShowPairActions => !ShowSessionCard;", source, StringComparison.Ordinal);
+        Assert.Contains("public bool ShowRefreshCode => ShowPairActions && HasQrCode;", source, StringComparison.Ordinal);
+        Assert.Contains("public bool ShowPairPhone => ShowPairActions && !HasQrCode;", source, StringComparison.Ordinal);
+
+        foreach (var button in Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline).Cast<Match>())
+            Assert.Contains("ShowPair", button.Value, StringComparison.Ordinal);
+
+        // The disconnect action is untouched and still bound to the same command.
+        Assert.Contains("DisconnectCommand", page, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Settings_page_hides_its_scrollbar_and_saves_at_the_bottom()
+    {
+        var appRoot = FindAppRoot();
+        var document = XDocument.Load(Path.Combine(appRoot, "Views", "SettingsPage.xaml"));
+        var text = File.ReadAllText(Path.Combine(appRoot, "Views", "SettingsPage.xaml"));
+
+        var scroller = document.Descendants(Presentation + "ScrollViewer").First();
+        Assert.Equal("Hidden", (string?)scroller.Attribute("VerticalScrollBarVisibility"));
+        Assert.Equal("VerticalOnly", (string?)scroller.Attribute("PanningMode"));
+
+        // The save button is the last interactive element of the page and no title block
+        // remains above the first card (the window bar carries the page title).
+        var buttons = document.Descendants(Presentation + "Button").ToArray();
+        Assert.Contains("SetApply", text, StringComparison.Ordinal);
+        var save = buttons.Last(button => ((string?)button.Attribute("Content"))?.Contains("SetApply", StringComparison.Ordinal) == true);
+        Assert.Same(buttons[^1], save);
+        Assert.DoesNotContain("SetTitle", text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Navigation_bar_is_smaller_and_solid()
+    {
+        var appRoot = FindAppRoot();
+        var window = File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml"));
+        var styles = File.ReadAllText(Path.Combine(appRoot, "Themes", "Styles.xaml"));
+
+        var start = window.IndexOf("<controls:PillBorder Style=\"{StaticResource NavSurfaceStyle}\"", StringComparison.Ordinal);
+        Assert.True(start > 0);
+        var end = window.IndexOf("</controls:PillBorder>", start, StringComparison.Ordinal);
+        var bar = window[start..end];
+        Assert.DoesNotContain("GlassPill", bar, StringComparison.Ordinal);
+        Assert.DoesNotContain("Glass", bar, StringComparison.Ordinal);
+        Assert.Equal(2, Regex.Matches(bar, "<RadioButton").Count);
+
+        var tokens = ReadTokenValues(Path.Combine(appRoot, "Themes", "DesignTokens.xaml"));
+        Assert.Equal("54", tokens["Size.NavHeight"]);
+        Assert.Equal("42", tokens["Size.TabHeight"]);
+        Assert.Contains("x:Key=\"NavSurfaceStyle\" TargetType=\"controls:PillBorder\"", styles, StringComparison.Ordinal);
+        Assert.Contains("<Setter Property=\"Background\" Value=\"{DynamicResource CardBrush}\"/>",
+            styles[(styles.IndexOf("NavSurfaceStyle", StringComparison.Ordinal))..], StringComparison.Ordinal);
+        var navStyleStart = styles.IndexOf("x:Key=\"NavSurfaceStyle\"", StringComparison.Ordinal);
+        var navStyleEnd = styles.IndexOf("</Style>", navStyleStart, StringComparison.Ordinal);
+        Assert.DoesNotContain("Glass", styles[navStyleStart..navStyleEnd], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Window_frame_asks_the_system_for_rounded_corners()
+    {
+        var appRoot = FindAppRoot();
+        var helper = File.ReadAllText(Path.Combine(appRoot, "Interop", "WindowCorners.cs"));
+
+        // The system mechanism, not an inner rounded rectangle.
+        Assert.Contains("DwmSetWindowAttribute", helper, StringComparison.Ordinal);
+        Assert.Contains("DwmWindowCornerPreference = 33", helper, StringComparison.Ordinal);
+        Assert.Contains("DwmWindowCornerRound = 2", helper, StringComparison.Ordinal);
+        Assert.Contains("Environment.OSVersion.Version.Build < 22000", helper, StringComparison.Ordinal);
+
+        foreach (var window in new[] { "MainWindow.xaml.cs", Path.Combine("Views", "QrWindow.xaml.cs") })
+            Assert.Contains("WindowCorners.ApplyRounded(this)",
+                File.ReadAllText(Path.Combine(appRoot, window)), StringComparison.Ordinal);
+
+        // Drag, caption buttons and resizing are untouched.
+        var main = File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml.cs"));
+        Assert.Contains("DragMove();", main, StringComparison.Ordinal);
+        Assert.Contains("Maximize_Click", main, StringComparison.Ordinal);
+        Assert.Contains("Minimize_Click", main, StringComparison.Ordinal);
+        Assert.Contains("ResizeBorderThickness=\"6\"", File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml")),
+            StringComparison.Ordinal);
     }
 
     private static Dictionary<string, string> ReadStrings(string path) =>

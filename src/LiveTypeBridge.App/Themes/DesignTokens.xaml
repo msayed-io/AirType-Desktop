@@ -92,8 +92,8 @@
     <sys:Double x:Key="Size.HeaderHeight">76</sys:Double>
     <sys:Double x:Key="Size.CaptionHeight">44</sys:Double>
     <sys:Double x:Key="Size.CaptionButton">36</sys:Double>
-    <sys:Double x:Key="Size.NavHeight">60</sys:Double>
-    <sys:Double x:Key="Size.TabHeight">48</sys:Double>
+    <sys:Double x:Key="Size.NavHeight">54</sys:Double>
+    <sys:Double x:Key="Size.TabHeight">42</sys:Double>
     <sys:Double x:Key="Size.NavBottom">28</sys:Double>
     <sys:Double x:Key="Size.ContentMax">640</sys:Double>
     <sys:Double x:Key="Size.DeviceTile">48</sys:Double>
