@@ -213,12 +213,12 @@ public sealed class ThemeTokenTests
 
         // One capsule in the home screen (the status pill) and exactly three in the shell:
         // the window-button capsule, the toast and the floating tab bar.
-        Assert.Equal(1, Regex.Matches(statusPage, "<controls:GlassPill[\s>]").Count);
-        Assert.Equal(3, Regex.Matches(mainWindow, "<controls:GlassPill[\s>]").Count);
+        Assert.Equal(1, Regex.Matches(statusPage, @"<controls:GlassPill[\s>]").Count);
+        Assert.Equal(3, Regex.Matches(mainWindow, @"<controls:GlassPill[\s>]").Count);
 
         // Glass buttons exist only through the GlassButton template (the two action
         // capsules and the "refresh code" capsule of the not-connected state).
-        Assert.Equal(1, Regex.Matches(styles, "<controls:GlassPill[\s>]").Count);
+        Assert.Equal(1, Regex.Matches(styles, @"<controls:GlassPill[\s>]").Count);
         Assert.DoesNotContain("GlassPill", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("GlassPill", diagnostics, StringComparison.Ordinal);
 
