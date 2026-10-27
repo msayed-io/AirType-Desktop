@@ -314,10 +314,11 @@ public sealed class ThemeTokenTests
             Assert.Contains(binding, page, StringComparison.Ordinal);
 
         // The pairing action must never appear while a phone is attached: both pairing
-        // buttons are gated on the pairing card, and the session buttons on the session card.
+        // buttons are gated on the derived pairing flags, and the session buttons on the
+        // session card. (The flags themselves are covered by their own test.)
         foreach (var button in Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline).Cast<Match>())
-            Assert.True(button.Value.Contains("HasQrCode", StringComparison.Ordinal) ||
-                        button.Value.Contains("NoQrCode", StringComparison.Ordinal), button.Value);
+            Assert.True(button.Value.Contains("ShowRefreshCode", StringComparison.Ordinal) ||
+                        button.Value.Contains("ShowPairPhone", StringComparison.Ordinal), button.Value);
         Assert.All(Regex.Matches(page, @"<Button[^>]*ShowSessionCard[^>]*>", RegexOptions.Singleline).Cast<Match>(),
             match => Assert.DoesNotContain("PairPhoneCommand", match.Value, StringComparison.Ordinal));
     }
