@@ -431,13 +431,13 @@ public sealed class ThemeTokenTests
 
         var wordmark = bar.Descendants(Presentation + "TextBlock")
             .Single(text => (string?)text.Attribute("Text") == "AirType");
-        Assert.Equal("2", (string?)wordmark.Attribute(Presentation + "Grid.Column"));
+        Assert.Equal("2", (string?)wordmark.Attribute("Grid.Column"));
         Assert.Equal("Right", (string?)wordmark.Attribute("HorizontalAlignment"));
         Assert.Equal("LeftToRight", (string?)wordmark.Attribute("FlowDirection"));
 
         var capsule = bar.Descendants().Single(element =>
             element.Name.LocalName == "GlassPill");
-        Assert.Equal("0", (string?)capsule.Attribute(Presentation + "Grid.Column"));
+        Assert.Equal("0", (string?)capsule.Attribute("Grid.Column"));
         Assert.Equal("Left", (string?)capsule.Attribute("HorizontalAlignment"));
     }
 
