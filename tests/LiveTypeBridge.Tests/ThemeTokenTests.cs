@@ -213,12 +213,12 @@ public sealed class ThemeTokenTests
 
         // One capsule in the home screen (the status pill) and exactly three in the shell:
         // the window-button capsule, the toast and the floating tab bar.
-        Assert.Equal(1, Regex.Matches(statusPage, @"<controls:GlassPill[\s>]").Count);
+        Assert.Single(Regex.Matches(statusPage, @"<controls:GlassPill[\s>]").Cast<Match>());
         Assert.Equal(3, Regex.Matches(mainWindow, @"<controls:GlassPill[\s>]").Count);
 
         // Glass buttons exist only through the GlassButton template (the two action
         // capsules and the "refresh code" capsule of the not-connected state).
-        Assert.Equal(1, Regex.Matches(styles, @"<controls:GlassPill[\s>]").Count);
+        Assert.Single(Regex.Matches(styles, @"<controls:GlassPill[\s>]").Cast<Match>());
         Assert.DoesNotContain("GlassPill", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("GlassPill", diagnostics, StringComparison.Ordinal);
 
@@ -320,10 +320,10 @@ public sealed class ThemeTokenTests
 
         // The pairing action must never appear while a phone is attached: both pairing
         // buttons are gated on the pairing card, and the session buttons on the session card.
-        foreach (var button in Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline))
+        foreach (var button in Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline).Cast<Match>())
             Assert.True(button.Value.Contains("HasQrCode", StringComparison.Ordinal) ||
                         button.Value.Contains("NoQrCode", StringComparison.Ordinal), button.Value);
-        Assert.All(Regex.Matches(page, @"<Button[^>]*ShowSessionCard[^>]*>", RegexOptions.Singleline),
+        Assert.All(Regex.Matches(page, @"<Button[^>]*ShowSessionCard[^>]*>", RegexOptions.Singleline).Cast<Match>(),
             match => Assert.DoesNotContain("PairPhoneCommand", match.Value, StringComparison.Ordinal));
     }
 
