@@ -87,6 +87,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             SettingsVm.NotifyTrustedDevicesChanged();
             Raise(nameof(ShowElevatedCard));
             QrDismissed?.Invoke();
+            ClearQr();
             SetState(UiState.Streaming);
             _s.Log.Info($"Phone paired: {name}");
         });
@@ -107,6 +108,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             if (rtt is int r) _lastRttMs = r;
             Raise(nameof(LatencyText));
             Raise(nameof(LastReceiveText));
+            RaiseStaticCells();
         });
 
         _s.Connections.ProtocolError += (code, detail) => RunOnUi(() =>
@@ -121,6 +123,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         {
             _lastStats = stats;
             StatsText = Loc.Format("StatsFmt", stats.OpsApplied, stats.CharsTyped, stats.Backspaces, stats.LastInjectMs);
+            RaiseStaticCells();
         });
         _s.Hub.InjectorWarning += code => RunOnUi(() =>
         {
@@ -138,11 +141,13 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         _clock.Tick += (_, _) =>
         {
             Raise(nameof(LastReceiveText));
+            RaiseStaticCells();
             if (_pendingSession is { } ps && ps.IsExpired && _state == UiState.ReadyToScan)
             {
                 _pendingSession = null;
                 _suppressTrustedReconnect = false;
                 QrDismissed?.Invoke();
+                ClearQr();
                 SetState(UiState.NotConnected);
                 _ = RestartTrustedDiscoveryAsync();
             }
@@ -189,6 +194,14 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Raise(nameof(StreamButtonEnabled));
             Raise(nameof(DisconnectEnabled));
             Raise(nameof(PhoneDisplay));
+            Raise(nameof(ShowSessionCard));
+            Raise(nameof(IsStreamingNow));
+            Raise(nameof(PulseDot));
+            Raise(nameof(HomeTitle));
+            Raise(nameof(HomeSub));
+            Raise(nameof(CapsuleText));
+            Raise(nameof(StreamsPaused));
+            Raise(nameof(StreamButtonLabelShort));
         }
     }
 
@@ -222,9 +235,10 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         {
             var key = State switch
             {
-                UiState.ReadyToScan => "AccentBrush",
+                // Design contract: green only while streaming, amber while waiting to pair,
+                // grey while the stream is paused, red for the two fault states.
                 UiState.Streaming => "SuccessBrush",
-                UiState.PausedManual or UiState.PausedProtect or UiState.Resync => "WarnBrush",
+                UiState.ReadyToScan or UiState.NotConnected => "WarnBrush",
                 UiState.EmergencyStopped or UiState.Error => "DangerBrush",
                 _ => "IdleBrush",
             };
@@ -429,9 +443,14 @@ public sealed class MainViewModel : ObservableObject, IDisposable
                 _pendingSession = null;
                 _suppressTrustedReconnect = false;
                 QrDismissed?.Invoke();
+                ClearQr();
                 SetState(UiState.NotConnected);
                 _ = RestartTrustedDiscoveryAsync();
             });
+            QrVm = qrVm;
+            Raise(nameof(QrVm));
+            Raise(nameof(HasQrCode));
+            Raise(nameof(NoQrCode));
             QrRequested?.Invoke(qrVm);
             SetState(UiState.ReadyToScan);
             _s.Log.Info($"Pairing session created for {ip.Address}:{_s.Server.ActualPort}");
@@ -459,6 +478,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     {
         _suppressTrustedReconnect = true;
         QrDismissed?.Invoke();
+        ClearQr();
         _pendingSession = null;
         await StopDiscoveryAsync();
         await _s.Connections.DisconnectAllAsync();
@@ -632,6 +652,101 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             "diag" => DiagVm,
             _ => this,
         };
+    }
+
+    // ---- Display-only members for the redesigned surface -------------------------
+    // Pure getters over state that already exists (no new logic, no new data source).
+    // They exist because the reference shows three short metric values and one status
+    // capsule, while the old screen showed one long concatenated sentence.
+
+    /// <summary>The live pairing code shown inside the home card (same object as the QR window).</summary>
+    public QrViewModel? QrVm { get; private set; }
+
+    public bool HasQrCode => QrVm is not null;
+
+    /// <summary>Inverse of <see cref="HasQrCode"/> so the pairing action can stay on screen
+    /// when no session exists yet (for example right after a disconnect).</summary>
+    public bool NoQrCode => QrVm is null;
+
+    /// <summary>Drops the display reference only; the session lifetime is owned elsewhere.</summary>
+    private void ClearQr()
+    {
+        if (QrVm is null) return;
+        QrVm = null;
+        Raise(nameof(QrVm));
+        Raise(nameof(HasQrCode));
+        Raise(nameof(NoQrCode));
+    }
+
+    /// <summary>True while a paired phone owns a live pump.</summary>
+    public bool ShowSessionCard => _activePump is not null;
+
+    public bool IsStreamingNow => State == UiState.Streaming;
+
+    public bool PulseDot => State == UiState.Streaming;
+
+    /// <summary>Home headline for the current state (display text only).</summary>
+    public string HomeTitle => Loc.Get(State switch
+    {
+        UiState.Streaming => "HeroStreaming",
+        UiState.PausedManual or UiState.PausedProtect or UiState.Resync or UiState.EmergencyStopped => "HeroPaused",
+        _ => "HeroReady",
+    });
+
+    /// <summary>Home subtitle for the current state (display text only).</summary>
+    public string HomeSub => Loc.Get(ShowSessionCard ? "SubConnected" : "SubScanPrompt");
+
+    /// <summary>Status capsule label: "connected" while a pump exists, otherwise the pairing hint.</summary>
+    public string CapsuleText => Loc.Get(ShowSessionCard ? "StatusCapsuleConnected" : "StatusCapsuleReady");
+
+    public bool StreamsPaused => State is UiState.PausedManual or UiState.PausedProtect
+        or UiState.EmergencyStopped or UiState.Resync;
+
+    /// <summary>Compact label for the action capsule (stop / resume).</summary>
+    public string StreamButtonLabelShort => Loc.Get(IsStreamActive ? "BtnStopStream" : "BtnResumeStream");
+
+    public string LatencyCellText =>
+        _lastLagMs > 0 ? _lastLagMs.ToString("0", System.Globalization.CultureInfo.InvariantCulture) : "—";
+
+    public string RttCellText =>
+        _lastRttMs is int rtt ? rtt.ToString("0", System.Globalization.CultureInfo.InvariantCulture) : "—";
+
+    public string CharsCellText =>
+        _lastStats is null ? "—" : _lastStats.CharsTyped.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+
+    public string OpsCellText =>
+        _lastStats is null ? "—" : _lastStats.OpsApplied.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+
+    public string BackspacesCellText =>
+        _lastStats is null ? "—" : _lastStats.Backspaces.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+
+    public string InjectCellText =>
+        _lastStats is null ? "—" : _lastStats.LastInjectMs.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    public string LastMessageCellText =>
+        _lastLagMs > 0 ? _lastLagMs.ToString("0", System.Globalization.CultureInfo.InvariantCulture) : "—";
+
+    /// <summary>"الآن" while the last message is fresher than five seconds, otherwise the same relative text as before.</summary>
+    public string LastReceiveCellText
+    {
+        get
+        {
+            var utc = _s.Connections.LastReceiveUtc;
+            if (utc is not { } received) return Loc.Get("LastReceiveNever");
+            return (DateTime.UtcNow - received).TotalSeconds < 5 ? Loc.Get("Now") : LastReceiveText;
+        }
+    }
+
+    private void RaiseStaticCells()
+    {
+        Raise(nameof(LatencyCellText));
+        Raise(nameof(RttCellText));
+        Raise(nameof(CharsCellText));
+        Raise(nameof(OpsCellText));
+        Raise(nameof(BackspacesCellText));
+        Raise(nameof(InjectCellText));
+        Raise(nameof(LastMessageCellText));
+        Raise(nameof(LastReceiveCellText));
     }
 
     public void Dispose()

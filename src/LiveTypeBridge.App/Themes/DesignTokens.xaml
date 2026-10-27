@@ -1,10 +1,20 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--
+        Numeric tokens taken from airtype-desktop.html / airtype-desktop-design.md.
+        Sizes are DIPs: WPF works at 96 DPI = CSS px, so the reference numbers are used
+        unchanged. Nothing here is a guess.
+    -->
     <!-- Typography -->
-    <FontFamily x:Key="Font.Latin">Segoe UI Variable Text, Segoe UI</FontFamily>
-    <FontFamily x:Key="Font.Arabic">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Arabic">SF Arabic, Segoe UI Variable Text, Segoe UI, Noto Sans Arabic, Tahoma</FontFamily>
+    <FontFamily x:Key="Font.Latin">Segoe UI Variable Text, Segoe UI, system-ui, Tahoma</FontFamily>
     <FontFamily x:Key="Font.Mono">Cascadia Mono, Consolas</FontFamily>
+    <sys:Double x:Key="Type.Hero">34</sys:Double>
+    <sys:Double x:Key="Type.Metric">28</sys:Double>
+    <sys:Double x:Key="Type.Sub">17</sys:Double>
+    <sys:Double x:Key="Type.Button">15</sys:Double>
+    <sys:Double x:Key="Type.Wordmark">20</sys:Double>
     <sys:Double x:Key="Type.Display">30</sys:Double>
     <sys:Double x:Key="Type.Title">24</sys:Double>
     <sys:Double x:Key="Type.Heading">16</sys:Double>
@@ -15,7 +25,7 @@
     <sys:Double x:Key="Type.Pin">38</sys:Double>
     <sys:Double x:Key="Type.Watermark">64</sys:Double>
 
-    <!-- 8 px spacing rhythm with optical half steps -->
+    <!-- Spacing -->
     <sys:Double x:Key="Space.XXS">4</sys:Double>
     <sys:Double x:Key="Space.XS">8</sys:Double>
     <sys:Double x:Key="Space.S">12</sys:Double>
@@ -24,23 +34,29 @@
     <sys:Double x:Key="Space.XL">24</sys:Double>
     <sys:Double x:Key="Space.XXL">32</sys:Double>
     <sys:Double x:Key="Space.XXXL">40</sys:Double>
-    <Thickness x:Key="Space.Page">32,84,32,104</Thickness>
-    <Thickness x:Key="Space.PageCompact">28,84,28,104</Thickness>
+    <Thickness x:Key="Space.Header">28,12,28,0</Thickness>
+    <Thickness x:Key="Space.Main">28,0,28,112</Thickness>
+    <!-- Scrollable tabs: 28 gutter, 28 under the 76 bar, 112 clear of the tab bar. -->
+    <Thickness x:Key="Space.PageCompact">28,28,28,112</Thickness>
+    <Thickness x:Key="Space.Page">28,28,28,112</Thickness>
     <Thickness x:Key="Space.InsetXXS">4</Thickness>
     <Thickness x:Key="Space.InsetS">12</Thickness>
     <Thickness x:Key="Space.InsetXL">24</Thickness>
-    <Thickness x:Key="Space.Card">20</Thickness>
-    <Thickness x:Key="Space.CardCompact">16</Thickness>
-    <Thickness x:Key="Space.Button">18,10</Thickness>
+    <Thickness x:Key="Space.Card">20,18,20,18</Thickness>
+    <Thickness x:Key="Space.CardCompact">20</Thickness>
+    <Thickness x:Key="Space.Button">26,0,26,0</Thickness>
     <Thickness x:Key="Space.Input">12,9</Thickness>
-    <Thickness x:Key="Space.Header">24,16,24,0</Thickness>
     <Thickness x:Key="Space.ShellInset">16</Thickness>
-    <Thickness x:Key="Space.ContentHorizontal">32,0</Thickness>
-    <Thickness x:Key="Space.HeaderBrand">18,0</Thickness>
-    <Thickness x:Key="Space.HeaderControls">6,0</Thickness>
-    <Thickness x:Key="Space.Nav">8</Thickness>
-    <Thickness x:Key="Space.Banner">32,0,32,96</Thickness>
-    <Thickness x:Key="Space.UpdateBanner">32,80,32,0</Thickness>
+    <Thickness x:Key="Space.ContentHorizontal">28,0</Thickness>
+    <Thickness x:Key="Space.HeaderBrand">8,0,8,0</Thickness>
+    <Thickness x:Key="Space.HeaderControls">6,0,6,0</Thickness>
+    <Thickness x:Key="Space.Nav">6</Thickness>
+    <Thickness x:Key="Space.Banner">28,0,28,104</Thickness>
+    <Thickness x:Key="Space.UpdateBanner">28,84,28,0</Thickness>
+    <Thickness x:Key="Space.StatusPill">14,0,14,0</Thickness>
+    <Thickness x:Key="Space.Tab">22,0,22,0</Thickness>
+    <Thickness x:Key="Space.TabBarOffset">0,0,0,28</Thickness>
+    <Thickness x:Key="Space.HeaderRow">0,0,0,76</Thickness>
     <Thickness x:Key="Space.Zero">0</Thickness>
 
     <!-- Radius -->
@@ -49,17 +65,17 @@
     <CornerRadius x:Key="Radius.S">12</CornerRadius>
     <CornerRadius x:Key="Radius.M">16</CornerRadius>
     <CornerRadius x:Key="Radius.L">20</CornerRadius>
+    <CornerRadius x:Key="Radius.Card">28</CornerRadius>
     <CornerRadius x:Key="Radius.XL">28</CornerRadius>
-    <!-- Oversized pill radius: PillBorder clamps this to half the actual shorter side. -->
     <CornerRadius x:Key="Radius.Pill">9999</CornerRadius>
-    <!-- Rounded rectangles that must remain distinct from pills. -->
-    <CornerRadius x:Key="Radius.Navigation">24</CornerRadius>
+    <CornerRadius x:Key="Radius.Navigation">9999</CornerRadius>
     <CornerRadius x:Key="Radius.Input">12</CornerRadius>
 
     <!-- Stroke and opacity -->
     <Thickness x:Key="Stroke.None">0</Thickness>
-    <Thickness x:Key="Stroke.Hairline">1</Thickness>
+    <Thickness x:Key="Stroke.Hairline">0.5</Thickness>
     <Thickness x:Key="Stroke.Focus">2</Thickness>
+    <sys:Double x:Key="Stroke.Rim">0.75</sys:Double>
     <sys:Double x:Key="Opacity.Disabled">0.42</sys:Double>
     <sys:Double x:Key="Opacity.Hover">0.92</sys:Double>
     <sys:Double x:Key="Opacity.Pressed">0.76</sys:Double>
@@ -69,39 +85,49 @@
     <sys:Double x:Key="Size.ControlHeight">44</sys:Double>
     <sys:Double x:Key="Size.TouchTarget">48</sys:Double>
     <sys:Double x:Key="Size.Icon">20</sys:Double>
+    <sys:Double x:Key="Size.IconSmall">16</sys:Double>
     <sys:Double x:Key="Size.IconContainer">40</sys:Double>
-    <sys:Double x:Key="Size.NavHeight">56</sys:Double>
-    <sys:Double x:Key="Size.HeroMinHeight">184</sys:Double>
-    <sys:Double x:Key="Size.TitleButton">40</sys:Double>
-    <sys:Double x:Key="Size.Qr">230</sys:Double>
+    <sys:Double x:Key="Size.HeaderHeight">76</sys:Double>
+    <sys:Double x:Key="Size.CaptionHeight">44</sys:Double>
+    <sys:Double x:Key="Size.CaptionButton">36</sys:Double>
+    <sys:Double x:Key="Size.NavHeight">60</sys:Double>
+    <sys:Double x:Key="Size.TabHeight">48</sys:Double>
+    <sys:Double x:Key="Size.NavBottom">28</sys:Double>
+    <sys:Double x:Key="Size.ContentMax">640</sys:Double>
+    <sys:Double x:Key="Size.DeviceTile">48</sys:Double>
+    <sys:Double x:Key="Size.StatusPill">32</sys:Double>
+    <sys:Double x:Key="Size.Qr">200</sys:Double>
     <sys:Double x:Key="Size.QrWindow">620</sys:Double>
+    <sys:Double x:Key="Size.HeroMinHeight">0</sys:Double>
+    <sys:Double x:Key="Size.TitleButton">36</sys:Double>
     <sys:Double x:Key="Size.IndicatorWidth">52</sys:Double>
     <sys:Double x:Key="Size.IndicatorHeight">38</sys:Double>
     <sys:Double x:Key="Size.IndicatorBodyWidth">48</sys:Double>
     <sys:Double x:Key="Size.IndicatorBodyHeight">34</sys:Double>
-    <sys:Double x:Key="Size.WindowWidth">980</sys:Double>
-    <sys:Double x:Key="Size.WindowHeight">700</sys:Double>
-    <sys:Double x:Key="Size.WindowMinWidth">760</sys:Double>
-    <sys:Double x:Key="Size.WindowMinHeight">560</sys:Double>
-    <sys:Double x:Key="Size.HeaderHeight">48</sys:Double>
-    <sys:Double x:Key="Size.FooterHeight">80</sys:Double>
+    <sys:Double x:Key="Size.WindowWidth">1225</sys:Double>
+    <sys:Double x:Key="Size.WindowHeight">875</sys:Double>
+    <sys:Double x:Key="Size.WindowMinWidth">900</sys:Double>
+    <sys:Double x:Key="Size.WindowMinHeight">620</sys:Double>
+    <sys:Double x:Key="Size.FooterHeight">88</sys:Double>
     <sys:Double x:Key="Size.LanguageButton">72</sys:Double>
     <sys:Double x:Key="Size.NavMaxWidth">640</sys:Double>
-    <sys:Double x:Key="Size.BannerMaxWidth">680</sys:Double>
+    <sys:Double x:Key="Size.BannerMaxWidth">640</sys:Double>
     <sys:Double x:Key="Size.SettingsSaveWidth">140</sys:Double>
     <sys:Double x:Key="Size.ActionMinWidth">112</sys:Double>
     <sys:Double x:Key="Size.SelfTestWidth">152</sys:Double>
     <sys:Double x:Key="Size.ConsoleHeight">176</sys:Double>
 
-    <!-- Elevation recipes -->
+    <!-- Elevation: one recipe, taken from the glass box-shadow. -->
+    <DropShadowEffect x:Key="Elevation.Glass" BlurRadius="22" ShadowDepth="8" Direction="270" Opacity="0.6" Color="#000000"/>
     <DropShadowEffect x:Key="Elevation.Level1" BlurRadius="10" ShadowDepth="2" Direction="270" Opacity="0.07" Color="#000000"/>
     <DropShadowEffect x:Key="Elevation.Level2" BlurRadius="18" ShadowDepth="5" Direction="270" Opacity="0.12" Color="#000000"/>
     <DropShadowEffect x:Key="Elevation.Level3" BlurRadius="34" ShadowDepth="12" Direction="270" Opacity="0.20" Color="#000000"/>
     <DropShadowEffect x:Key="Elevation.Indicator" BlurRadius="14" ShadowDepth="3" Direction="270" Opacity="0.38" Color="#000000"/>
 
-    <!-- Motion tokens (consumed by any future/templated timelines) -->
-    <Duration x:Key="Motion.Fast">0:0:0.14</Duration>
-    <Duration x:Key="Motion.Base">0:0:0.22</Duration>
-    <Duration x:Key="Motion.Slow">0:0:0.30</Duration>
-    <CubicEase x:Key="Motion.EaseOut" EasingMode="EaseOut"/>
+    <!-- Motion tokens: durations are plain doubles so any animation can consume them.
+         Easing is a Penner curve (PowerEase with exponent 3) because WPF has no cubic ease. -->
+    <sys:Double x:Key="Motion.Fast">0.14</sys:Double>
+    <sys:Double x:Key="Motion.Base">0.25</sys:Double>
+    <sys:Double x:Key="Motion.Slow">0.30</sys:Double>
+    <PowerEase x:Key="Motion.EaseOut" EasingMode="EaseOut" Power="3"/>
 </ResourceDictionary>

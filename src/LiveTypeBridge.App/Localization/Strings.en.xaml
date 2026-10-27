@@ -139,4 +139,23 @@
     <sys:String x:Key="DiagRunTest">Run self test</sys:String>
     <sys:String x:Key="DiagRunning">Testing…</sys:String>
     <sys:String x:Key="DiagRefresh">Refresh</sys:String>
+    <sys:String x:Key="HeroStreaming">Streaming</sys:String>
+    <sys:String x:Key="HeroPaused">Stream paused</sys:String>
+    <sys:String x:Key="HeroReady">Ready to pair</sys:String>
+    <sys:String x:Key="SubConnected">What you type on the phone appears in the active field instantly.</sys:String>
+    <sys:String x:Key="SubScanPrompt">Scan the code from the AirType app on your phone.</sys:String>
+    <sys:String x:Key="StatusCapsuleConnected">Connected</sys:String>
+    <sys:String x:Key="StatusCapsuleReady">Ready to pair</sys:String>
+    <sys:String x:Key="ViaWifi">Connected over Wi‑Fi</sys:String>
+    <sys:String x:Key="HomeLabelLatency">Response time</sys:String>
+    <sys:String x:Key="HomeLabelChars">Characters typed</sys:String>
+    <sys:String x:Key="UnitMs">ms</sys:String>
+    <sys:String x:Key="RefreshCode">Refresh code</sys:String>
+    <sys:String x:Key="WinMax">Maximize</sys:String>
+    <sys:String x:Key="LabelOps">Operations applied</sys:String>
+    <sys:String x:Key="LabelChars">Characters</sys:String>
+    <sys:String x:Key="LabelBackspaces">Deletions</sys:String>
+    <sys:String x:Key="LabelInjectMs">Injection time</sys:String>
+    <sys:String x:Key="LabelLastMessage">Last message</sys:String>
+    <sys:String x:Key="LabelRtt">RTT ping</sys:String>
 </ResourceDictionary>

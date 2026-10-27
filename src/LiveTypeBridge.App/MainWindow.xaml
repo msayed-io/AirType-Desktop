@@ -5,60 +5,134 @@
         Title="AirType"
         Width="{DynamicResource Size.WindowWidth}" Height="{DynamicResource Size.WindowHeight}"
         MinWidth="{DynamicResource Size.WindowMinWidth}" MinHeight="{DynamicResource Size.WindowMinHeight}"
-        WindowStartupLocation="CenterScreen" Background="{DynamicResource BgBrush}"
+        WindowStartupLocation="CenterScreen"
         FlowDirection="RightToLeft" UseLayoutRounding="True" SnapsToDevicePixels="True">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="{StaticResource Radius.XL}" UseAeroCaptionButtons="False" GlassFrameThickness="0"/>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" UseAeroCaptionButtons="False" GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    <Border Background="{DynamicResource BgBrush}" CornerRadius="{DynamicResource Radius.XL}">
-        <Grid>
-            <Grid Height="{DynamicResource Size.HeaderHeight}" Margin="{DynamicResource Space.Header}"
-                  VerticalAlignment="Top" Panel.ZIndex="30" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-                <controls:PillBorder Style="{StaticResource ChromeCapsule}" CornerRadius="{DynamicResource Radius.Pill}" Height="{DynamicResource Size.HeaderHeight}"
-                        HorizontalAlignment="Left" VerticalAlignment="Center" Padding="{DynamicResource Space.HeaderBrand}">
-                    <TextBlock Text="AirType" FontSize="{DynamicResource Type.Heading}" FontWeight="Bold" VerticalAlignment="Center"/>
-                </controls:PillBorder>
+    <!-- Background: the only gradient in the app - a very soft lift from the top centre. -->
+    <Window.Background>
+        <RadialGradientBrush GradientOrigin="0.5,0" Center="0.5,0" RadiusX="0.9" RadiusY="0.55">
+            <GradientStop Color="#FF161618" Offset="0"/>
+            <GradientStop Color="#FF000000" Offset="1"/>
+        </RadialGradientBrush>
+    </Window.Background>
 
-                <controls:PillBorder Style="{StaticResource ChromeCapsule}" CornerRadius="{DynamicResource Radius.Pill}" Height="{DynamicResource Size.HeaderHeight}"
-                        HorizontalAlignment="Right" VerticalAlignment="Center" Padding="{DynamicResource Space.HeaderControls}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse Width="8" Height="8" Fill="{DynamicResource AccentBrush}" Margin="8,0"/>
-                        <Button Style="{StaticResource TitleBarButton}" Content="◉" Click="FloatingToggle_Click" ToolTip="{DynamicResource FloatingToggleHint}"/>
-                        <Button Style="{StaticResource TitleBarButton}" Content="—" Click="Minimize_Click" ToolTip="{DynamicResource WinMin}"/>
-                        <Button Style="{StaticResource TitleBarButton}" Content="✕" Click="Close_Click" ToolTip="{DynamicResource WinClose}"/>
-                    </StackPanel>
-                </controls:PillBorder>
-            </Grid>
+    <Grid>
+        <!-- ===== Top bar: 76 high, drag surface, caption capsule on the opposite edge ===== -->
+        <Grid Height="{DynamicResource Size.HeaderHeight}" VerticalAlignment="Top" Panel.ZIndex="30"
+              Margin="28,0,28,0" Background="Transparent"
+              MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-            <Border Margin="{DynamicResource Space.ContentHorizontal}" Background="Transparent" FlowDirection="RightToLeft" Panel.ZIndex="0">
-                <ContentControl Content="{Binding CurrentPage}"/>
-            </Border>
+            <TextBlock Grid.Column="0" Text="AirType" Style="{StaticResource Wordmark}"
+                       VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
-            <Border Margin="{DynamicResource Space.Banner}" Padding="{DynamicResource Space.CardCompact}"
-                    VerticalAlignment="Bottom" HorizontalAlignment="Center" MaxWidth="{DynamicResource Size.BannerMaxWidth}"
-                    Style="{StaticResource WarnCard}" Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}" Panel.ZIndex="20">
-                <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}" Foreground="{DynamicResource WarnBrush}" TextAlignment="Center"/>
-            </Border>
-
-            <Grid Height="{DynamicResource Size.FooterHeight}" VerticalAlignment="Bottom" Panel.ZIndex="30">
-                <Border Style="{StaticResource NavContainer}" Height="{DynamicResource Size.NavHeight}" CornerRadius="{DynamicResource Radius.Navigation}"
-                        HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="{DynamicResource Size.NavMaxWidth}" Padding="{DynamicResource Space.Nav}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="home" Content="{DynamicResource NavHome}"/>
-                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="settings" Content="{DynamicResource NavSettings}"/>
-                        <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}" Command="{Binding NavCommand}" CommandParameter="diag" Content="{DynamicResource NavDiagnostics}"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <Border x:Name="UpdateBanner" Margin="{DynamicResource Space.UpdateBanner}" VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                    Style="{StaticResource WarnCard}" Visibility="Collapsed" Panel.ZIndex="40">
-                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="0,0,16,0"><TextBlock Text="{DynamicResource UpdateTitle}" Style="{StaticResource H2}" Margin="0,0,0,4"/><TextBlock x:Name="UpdateMessage" Style="{StaticResource Caption}"/></StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button x:Name="UpdateInstallButton" Style="{StaticResource PrimaryButton}" Content="{DynamicResource UpdateInstall}" Click="UpdateInstall_Click" Margin="0,0,8,0"/><Button Content="{DynamicResource UpdateLater}" Click="UpdateLater_Click"/></StackPanel>
-                </Grid>
-            </Border>
+            <controls:GlassPill Grid.Column="1" Style="{StaticResource GlassSurfaceStyle}"
+                                Height="{DynamicResource Size.CaptionHeight}" Padding="{DynamicResource Space.HeaderControls}"
+                                HorizontalAlignment="Left" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="MinimizeButton" Style="{StaticResource TitleBarButton}" Click="Minimize_Click"
+                            ToolTip="{DynamicResource WinMin}" AutomationProperties.Name="{DynamicResource WinMin}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Minimize}"
+                              Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </Button>
+                    <Button x:Name="MaximizeButton" Style="{StaticResource TitleBarButton}" Click="Maximize_Click"
+                            ToolTip="{DynamicResource WinMax}" AutomationProperties.Name="{DynamicResource WinMax}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Maximize}"
+                              Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Style="{StaticResource TitleBarButton}" Click="Close_Click"
+                            ToolTip="{DynamicResource WinClose}" AutomationProperties.Name="{DynamicResource WinClose}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Close}"
+                              Width="{DynamicResource Size.IconSmall}" Height="{DynamicResource Size.IconSmall}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </Button>
+                </StackPanel>
+            </controls:GlassPill>
         </Grid>
-    </Border>
+
+        <!-- ===== Page area ===== -->
+        <ContentControl Content="{Binding CurrentPage}" Margin="0,76,0,0" Panel.ZIndex="0"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+
+        <!-- ===== Error toast: glass capsule just above the tab bar ===== -->
+        <controls:GlassPill x:Name="ErrorToast" Style="{StaticResource GlassSurfaceStyle}" Visibility="Collapsed"
+                            HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="28,0,28,104"
+                            Height="{DynamicResource Size.ControlHeight}" Padding="{DynamicResource Space.Button}"
+                            MaxWidth="{DynamicResource Size.ContentMax}" Panel.ZIndex="40">
+            <TextBlock x:Name="ErrorToastText" Style="{StaticResource Caption}" Foreground="{DynamicResource TextBrush}"
+                       TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        </controls:GlassPill>
+
+        <!-- ===== Floating tab bar: 60 high, 28 from the bottom, centred ===== -->
+        <Grid VerticalAlignment="Bottom" Margin="{DynamicResource Space.TabBarOffset}" HorizontalAlignment="Center"
+              Panel.ZIndex="30" Height="{DynamicResource Size.NavHeight}" FlowDirection="RightToLeft">
+            <controls:GlassPill Style="{StaticResource GlassSurfaceStyle}" Height="{DynamicResource Size.NavHeight}"
+                                Padding="{DynamicResource Space.Nav}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsHome, Mode=OneWay}"
+                                 Command="{Binding NavCommand}" CommandParameter="home" GroupName="AirTypeNav">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Home}" Margin="0,0,8,0"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                            <TextBlock Text="{DynamicResource NavHome}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                       FontSize="{DynamicResource Type.Button}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsSettings, Mode=OneWay}"
+                                 Command="{Binding NavCommand}" CommandParameter="settings" GroupName="AirTypeNav">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Sliders}" Margin="0,0,8,0"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                            <TextBlock Text="{DynamicResource NavSettings}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                       FontSize="{DynamicResource Type.Button}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}"
+                                 Command="{Binding NavCommand}" CommandParameter="diag" GroupName="AirTypeNav">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Pulse}" Margin="0,0,8,0"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+                            <TextBlock Text="{DynamicResource NavDiagnostics}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                       FontSize="{DynamicResource Type.Button}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </controls:GlassPill>
+        </Grid>
+
+        <!-- ===== Hotkey warning + update banner (existing behaviour, restyled flat) ===== -->
+        <Border Margin="28,84,28,0" Padding="20,14" VerticalAlignment="Top" HorizontalAlignment="Center"
+                MaxWidth="{DynamicResource Size.BannerMaxWidth}" Style="{StaticResource WarnCard}"
+                Visibility="{Binding HasHotkeyWarning, Converter={StaticResource BoolToVis}}" Panel.ZIndex="20"
+                BorderBrush="{DynamicResource WarnBrush}" BorderThickness="0.5">
+            <TextBlock Text="{Binding HotkeyWarning}" Style="{StaticResource Caption}"
+                       Foreground="{DynamicResource WarnBrush}" TextAlignment="Center"/>
+        </Border>
+
+        <Border x:Name="UpdateBanner" Margin="{DynamicResource Space.UpdateBanner}" VerticalAlignment="Top"
+                HorizontalAlignment="Center" MaxWidth="{DynamicResource Size.ContentMax}"
+                Style="{StaticResource Card}" BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0.5"
+                Visibility="Collapsed" Panel.ZIndex="40">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                    <TextBlock Text="{DynamicResource UpdateTitle}" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="UpdateMessage" Style="{StaticResource Caption}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="UpdateInstallButton" Style="{StaticResource PrimaryButton}" Content="{DynamicResource UpdateInstall}"
+                            Click="UpdateInstall_Click" Margin="0,0,8,0"/>
+                    <Button Style="{StaticResource FlatButton}" Content="{DynamicResource UpdateLater}" Click="UpdateLater_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

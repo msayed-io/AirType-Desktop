@@ -24,6 +24,14 @@ public sealed class DiagnosticsViewModel : ObservableObject
         RefreshCommand = new RelayCommand(_ => _ = RefreshAsync());
         RunSelfTestCommand = new RelayCommand(_ => _ = RunSelfTestAsync(), _ => !IsTesting);
         Loc.LanguageChanged += () => Raise(string.Empty);
+        // The session metrics live on the main view model; re-raise them here whenever the
+        // pump publishes new numbers so this tab never shows stale values.
+        _main.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is null or "" or nameof(MainViewModel.StatsText)
+                or nameof(MainViewModel.LatencyText) or nameof(MainViewModel.LastReceiveText))
+                Raise(string.Empty);
+        };
         _ = RefreshAsync();
     }
 
@@ -39,6 +47,18 @@ public sealed class DiagnosticsViewModel : ObservableObject
     public string LastErrorText =>
         string.IsNullOrWhiteSpace(_main.LastErrorText) ? Loc.Get("DiagNoErr") : _main.LastErrorText;
 
+    // Read-only projection of the session metrics that already live on the main view
+    // model, so the diagnostics list shows the same numbers as the home card.
+    public string OpsCellText => _main.OpsCellText;
+    public string CharsCellText => _main.CharsCellText;
+    public string BackspacesCellText => _main.BackspacesCellText;
+    public string InjectCellText => _main.InjectCellText;
+    public string LastMessageCellText => _main.LastMessageCellText;
+    public string RttCellText => _main.RttCellText;
+    public string LastReceiveCellText => _main.LastReceiveCellText;
+
+    public bool HasSelfTestOutput => !string.IsNullOrWhiteSpace(SelfTestOutput);
+
     public bool IsTesting
     {
         get => _isTesting;
@@ -48,7 +68,7 @@ public sealed class DiagnosticsViewModel : ObservableObject
     public string SelfTestOutput
     {
         get => _selfTestOutput;
-        private set => Set(ref _selfTestOutput, value);
+        private set { if (Set(ref _selfTestOutput, value)) Raise(nameof(HasSelfTestOutput)); }
     }
 
     public void NotifyError() => Raise(nameof(LastErrorText));

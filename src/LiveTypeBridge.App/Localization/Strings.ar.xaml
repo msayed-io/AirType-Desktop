@@ -144,4 +144,23 @@
     <sys:String x:Key="DiagRunTest">تشغيل الفحص الذاتي</sys:String>
     <sys:String x:Key="DiagRunning">جاري الفحص…</sys:String>
     <sys:String x:Key="DiagRefresh">تحديث</sys:String>
+    <sys:String x:Key="HeroStreaming">البث جارٍ</sys:String>
+    <sys:String x:Key="HeroPaused">البث متوقف</sys:String>
+    <sys:String x:Key="HeroReady">جاهز للربط</sys:String>
+    <sys:String x:Key="SubConnected">ما تكتبه على الهاتف يظهر في الخانة النشطة فورًا.</sys:String>
+    <sys:String x:Key="SubScanPrompt">امسح الرمز من تطبيق AirType على هاتفك.</sys:String>
+    <sys:String x:Key="StatusCapsuleConnected">متصل</sys:String>
+    <sys:String x:Key="StatusCapsuleReady">جاهز للربط</sys:String>
+    <sys:String x:Key="ViaWifi">متصل عبر Wi‑Fi</sys:String>
+    <sys:String x:Key="HomeLabelLatency">زمن الاستجابة</sys:String>
+    <sys:String x:Key="HomeLabelChars">الأحرف المكتوبة</sys:String>
+    <sys:String x:Key="UnitMs">م.ث</sys:String>
+    <sys:String x:Key="RefreshCode">تحديث الرمز</sys:String>
+    <sys:String x:Key="WinMax">تكبير</sys:String>
+    <sys:String x:Key="LabelOps">العمليات المطبّقة</sys:String>
+    <sys:String x:Key="LabelChars">الأحرف</sys:String>
+    <sys:String x:Key="LabelBackspaces">عمليات المسح</sys:String>
+    <sys:String x:Key="LabelInjectMs">زمن الإدخال</sys:String>
+    <sys:String x:Key="LabelLastMessage">آخر رسالة</sys:String>
+    <sys:String x:Key="LabelRtt">نبضة RTT</sys:String>
 </ResourceDictionary>

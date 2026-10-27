@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using Velopack;
 using LiveTypeBridge.App.Localization;
 using LiveTypeBridge.App.Services;
@@ -18,6 +19,7 @@ public partial class MainWindow : Window
     private UpdateInfo? _availableUpdate;
     private UpdateService? _updateService;
     private bool _shutdownRequested;
+    private readonly DispatcherTimer _toastTimer;
 
     public MainWindow(AppServices services)
     {
@@ -25,6 +27,11 @@ public partial class MainWindow : Window
         _services = services;
         _vm = new MainViewModel(services);
         DataContext = _vm;
+
+        // The error toast reuses the existing error state; it never introduces a second
+        // error pipeline, it only shows LastErrorText for four seconds.
+        _toastTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(4) };
+        _toastTimer.Tick += (_, _) => { _toastTimer.Stop(); ErrorToast.Visibility = Visibility.Collapsed; };
 
         _indicator = new FloatingIndicatorWindow();
         _indicator.Clicked += RestoreFromIndicator;
@@ -62,6 +69,19 @@ public partial class MainWindow : Window
 
     private void VmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(MainViewModel.LastErrorText) or null or "")
+        {
+            var message = _vm.LastErrorText;
+            if (!string.IsNullOrWhiteSpace(message))
+                Dispatcher.BeginInvoke(() =>
+                {
+                    ErrorToastText.Text = message;
+                    ErrorToast.Visibility = Visibility.Visible;
+                    _toastTimer.Stop();
+                    _toastTimer.Start();
+                });
+        }
+
         if (e.PropertyName == nameof(MainViewModel.StatsText))
         {
             Dispatcher.BeginInvoke(_indicator.PulseActivity);
@@ -84,6 +104,8 @@ public partial class MainWindow : Window
         _indicator.Show();
         Hide();
     }
+
+    private void FloatingToggle_Click(object sender, RoutedEventArgs e) => HideToIndicator();
 
     private void RestoreFromIndicator()
     {
@@ -127,6 +149,17 @@ public partial class MainWindow : Window
     private void ShowQr(QrViewModel qrVm)
     {
         CloseQr();
+        // The home page now carries the pairing QR itself, so while the window is on
+        // screen there is nothing to duplicate: the same view model feeds that card.
+        if (IsVisible && WindowState != WindowState.Minimized)
+        {
+            // Bring the home tab forward (the QR card lives there) instead of opening a
+            // second window that shows the same view model.
+            _vm.NavCommand.Execute("home");
+            RestoreFromIndicator();
+            return;
+        }
+
         var window = new QrWindow(qrVm) { Owner = this };
         window.Closed += (_, _) => _vm.PairingWindowClosed(qrVm.SessionIdText);
         _qrWindow = window;
@@ -157,7 +190,11 @@ public partial class MainWindow : Window
         Application.Current.Shutdown();
     }
 
-    private void FloatingToggle_Click(object sender, RoutedEventArgs e) => HideToIndicator();
-    private void Minimize_Click(object sender, RoutedEventArgs e) => HideToIndicator();
+    private void Minimize_Click(object sender, RoutedEventArgs e) =>
+        WindowState = WindowState.Minimized;
+
+    private void Maximize_Click(object sender, RoutedEventArgs e) =>
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+
     private void Close_Click(object sender, RoutedEventArgs e) => RequestShutdown();
 }
