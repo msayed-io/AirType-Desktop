@@ -305,7 +305,7 @@ public sealed class ThemeTokenTests
 
         foreach (var binding in new[]
                  {
-                     "HasQrCode", "NoQrCode", "ShowSessionCard", "IsStreamingNow", "PulseDot", "StateBrush",
+                     "ShowRefreshCode", "ShowPairPhone", "ShowSessionCard", "IsStreamingNow", "PulseDot", "StateBrush",
                      "HomeTitle", "HomeSub", "CapsuleText",
                      "PhoneDisplay", "LatencyCellText", "CharsCellText", "LastReceiveCellText",
                      "{Binding PairPhoneCommand}", "{Binding ToggleStreamCommand}", "{Binding DisconnectCommand}",
@@ -478,8 +478,9 @@ public sealed class ThemeTokenTests
         var appRoot = FindAppRoot();
         var document = XDocument.Load(Path.Combine(appRoot, "MainWindow.xaml"));
 
-        var capsule = document.Descendants().Single(element => element.Name.LocalName == "GlassPill");
-        Assert.Equal("{DynamicResource Size.CaptionHeight}", (string?)capsule.Attribute("Height"));
+        var capsule = document.Descendants()
+            .Single(element => element.Name.LocalName == "GlassPill"
+                               && (string?)element.Attribute("Height") == "{DynamicResource Size.CaptionHeight}");
 
         var buttons = capsule.Descendants(Presentation + "Button").ToArray();
         Assert.Equal(new[] { "CloseButton", "MaximizeButton", "MinimizeButton" },
@@ -519,8 +520,12 @@ public sealed class ThemeTokenTests
         Assert.Contains("public bool ShowRefreshCode => ShowPairActions && HasQrCode;", source, StringComparison.Ordinal);
         Assert.Contains("public bool ShowPairPhone => ShowPairActions && !HasQrCode;", source, StringComparison.Ordinal);
 
-        foreach (var button in Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline).Cast<Match>())
-            Assert.Contains("ShowPair", button.Value, StringComparison.Ordinal);
+        var pairButtons = Regex.Matches(page, @"<Button[^>]*PairPhoneCommand[^>]*/>", RegexOptions.Singleline).Cast<Match>().ToList();
+        Assert.Equal(2, pairButtons.Count);
+        Assert.All(pairButtons, button => Assert.True(
+            button.Value.Contains("ShowRefreshCode", StringComparison.Ordinal) ||
+            button.Value.Contains("ShowPairPhone", StringComparison.Ordinal),
+            button.Value));
 
         // The disconnect action is untouched and still bound to the same command.
         Assert.Contains("DisconnectCommand", page, StringComparison.Ordinal);
