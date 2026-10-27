@@ -123,27 +123,6 @@
     <sys:String x:Key="SetRestartDone">أُعيد تشغيل الخادم على المنفذ {0}</sys:String>
 
     <!-- Diagnostics -->
-    <sys:String x:Key="DiagTitle">التشخيص</sys:String>
-    <sys:String x:Key="DiagIntro">نظرة مباشرة على الاتصال المحلي وحالة الحماية ونتيجة الفحص الذاتي.</sys:String>
-    <sys:String x:Key="DiagNetwork">الشبكة المحلية</sys:String>
-    <sys:String x:Key="DiagProtection">الحماية والأخطاء</sys:String>
-    <sys:String x:Key="DiagIp">عنوان IP لهذا الجهاز</sys:String>
-    <sys:String x:Key="DiagPort">المنفذ</sys:String>
-    <sys:String x:Key="DiagWs">حالة الخادم</sys:String>
-    <sys:String x:Key="DiagUptime">مدة التشغيل</sys:String>
-    <sys:String x:Key="DiagErr">آخر خطأ</sys:String>
-    <sys:String x:Key="DiagNoErr">لا أخطاء مسجلة</sys:String>
-    <sys:String x:Key="DiagFw">جدار الحماية</sys:String>
-    <sys:String x:Key="WsRunning">يعمل — يستقبل اتصالات الهاتف</sys:String>
-    <sys:String x:Key="WsStopped">متوقف — يبدأ عند «ربط هاتف»</sys:String>
-    <sys:String x:Key="FwAllowed">مسموح — توجد قاعدة لبرنامج AirType</sys:String>
-    <sys:String x:Key="FwNoRule">لا توجد قاعدة بعد — سيظهر سؤال «السماح» من ويندوز عند أول تشغيل للخادم، اختر السماح للشبكات الخاصة</sys:String>
-    <sys:String x:Key="FwUnknown">تعذّر الاستعلام عن حالة جدار الحماية (غير حرج)</sys:String>
-    <sys:String x:Key="DiagSelfTest">الفحص الذاتي</sys:String>
-    <sys:String x:Key="DiagTestHint">يفحص الخادم والاقتران وتسلسل الرسائل عبر اتصال محلي حقيقي، دون كتابة أي حرف في تطبيقاتك. تأكد ألا يكون هاتف مقترن أثناء الفحص.</sys:String>
-    <sys:String x:Key="DiagRunTest">تشغيل الفحص الذاتي</sys:String>
-    <sys:String x:Key="DiagRunning">جاري الفحص…</sys:String>
-    <sys:String x:Key="DiagRefresh">تحديث</sys:String>
     <sys:String x:Key="HeroStreaming">البث جارٍ</sys:String>
     <sys:String x:Key="HeroPaused">البث متوقف</sys:String>
     <sys:String x:Key="HeroReady">جاهز للربط</sys:String>
@@ -157,10 +136,4 @@
     <sys:String x:Key="UnitMs">م.ث</sys:String>
     <sys:String x:Key="RefreshCode">تحديث الرمز</sys:String>
     <sys:String x:Key="WinMax">تكبير</sys:String>
-    <sys:String x:Key="LabelOps">العمليات المطبّقة</sys:String>
-    <sys:String x:Key="LabelChars">الأحرف</sys:String>
-    <sys:String x:Key="LabelBackspaces">عمليات المسح</sys:String>
-    <sys:String x:Key="LabelInjectMs">زمن الإدخال</sys:String>
-    <sys:String x:Key="LabelLastMessage">آخر رسالة</sys:String>
-    <sys:String x:Key="LabelRtt">نبضة RTT</sys:String>
 </ResourceDictionary>

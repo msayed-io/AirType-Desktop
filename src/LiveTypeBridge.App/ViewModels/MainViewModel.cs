@@ -66,7 +66,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         _currentPage = this;
         _statsText = Loc.Get("StatsEmpty");
         SettingsVm = new SettingsViewModel(services, this);
-        DiagVm = new DiagnosticsViewModel(services, this);
 
         PairPhoneCommand = new RelayCommand(_ => _ = PairPhoneAsync(), _ => !_busy);
         ToggleStreamCommand = new RelayCommand(_ => ToggleStream(), _ => _activePump is not null);
@@ -114,7 +113,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         _s.Connections.ProtocolError += (code, detail) => RunOnUi(() =>
         {
             LastErrorText = DescribeError(code);
-            DiagVm.NotifyError();
             _s.Log.Warn($"protocol error {code}: {detail}");
         });
 
@@ -159,7 +157,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     // ---- Bound properties --------------------------------------------------
 
     public SettingsViewModel SettingsVm { get; }
-    public DiagnosticsViewModel DiagVm { get; }
 
     public ICommand PairPhoneCommand { get; }
     public ICommand ToggleStreamCommand { get; }
@@ -172,12 +169,11 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     public object CurrentPage
     {
         get => _currentPage;
-        private set { if (Set(ref _currentPage, value)) { Raise(nameof(IsHome)); Raise(nameof(IsSettings)); Raise(nameof(IsDiagnostics)); } }
+        private set { if (Set(ref _currentPage, value)) { Raise(nameof(IsHome)); Raise(nameof(IsSettings)); } }
     }
 
     public bool IsHome => ReferenceEquals(_currentPage, this);
     public bool IsSettings => ReferenceEquals(_currentPage, SettingsVm);
-    public bool IsDiagnostics => ReferenceEquals(_currentPage, DiagVm);
 
     public UiState State
     {
@@ -649,7 +645,6 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         CurrentPage = page switch
         {
             "settings" => SettingsVm,
-            "diag" => DiagVm,
             _ => this,
         };
     }

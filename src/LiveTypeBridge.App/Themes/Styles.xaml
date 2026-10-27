@@ -123,9 +123,9 @@
                             </controls:GlassPill.RenderTransform>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </controls:GlassPill>
-                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
-                                BorderBrush="{DynamicResource FocusRingBrush}" BorderThickness="2"
-                                Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        <controls:PillBorder x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
+                                             BorderBrush="{DynamicResource FocusRingBrush}" BorderThickness="2"
+                                             Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -173,15 +173,15 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid Background="Transparent">
-                        <Border x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}"
-                                Background="{DynamicResource SurfaceMutedBrush}" Padding="{TemplateBinding Padding}"
-                                RenderTransformOrigin="0.5,0.5">
-                            <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+                        <controls:PillBorder x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}"
+                                             Background="{DynamicResource SurfaceMutedBrush}" Padding="{TemplateBinding Padding}"
+                                             RenderTransformOrigin="0.5,0.5">
+                            <controls:PillBorder.RenderTransform><ScaleTransform/></controls:PillBorder.RenderTransform>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
-                                BorderBrush="{DynamicResource FocusRingBrush}" BorderThickness="2"
-                                Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        </controls:PillBorder>
+                        <controls:PillBorder x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
+                                             BorderBrush="{DynamicResource FocusRingBrush}" BorderThickness="2"
+                                             Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -266,12 +266,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid Background="Transparent">
-                        <Border x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}" Background="Transparent"
-                                Padding="{TemplateBinding Padding}">
+                        <controls:PillBorder x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}" Background="Transparent"
+                                             Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}" BorderBrush="{DynamicResource FocusRingBrush}"
-                                BorderThickness="2" Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        </controls:PillBorder>
+                        <controls:PillBorder x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
+                                             BorderBrush="{DynamicResource FocusRingBrush}"
+                                             BorderThickness="2" Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -301,12 +302,14 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid Background="Transparent">
-                        <Border x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}" Background="{DynamicResource SurfaceMutedBrush}"
-                                Padding="{TemplateBinding Padding}">
+                        <controls:PillBorder x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}"
+                                             Background="{DynamicResource SurfaceMutedBrush}"
+                                             Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}" BorderBrush="{DynamicResource FocusRingBrush}"
-                                BorderThickness="2" Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        </controls:PillBorder>
+                        <controls:PillBorder x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}"
+                                             BorderBrush="{DynamicResource FocusRingBrush}"
+                                             BorderThickness="2" Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
@@ -339,11 +342,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Grid>
-                        <Border x:Name="Surface" CornerRadius="{DynamicResource Radius.Pill}" Background="{TemplateBinding Background}"
+                        <Border x:Name="Surface" CornerRadius="{DynamicResource Radius.Input}"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
                         </Border>
-                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Pill}" BorderBrush="{DynamicResource FocusRingBrush}"
+                        <Border x:Name="FocusRing" CornerRadius="{DynamicResource Radius.Input}" BorderBrush="{DynamicResource FocusRingBrush}"
                                 BorderThickness="2" Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Grid>
                     <ControlTemplate.Triggers>

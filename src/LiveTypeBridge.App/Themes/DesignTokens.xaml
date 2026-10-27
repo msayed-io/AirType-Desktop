@@ -35,6 +35,8 @@
     <sys:Double x:Key="Space.XXL">32</sys:Double>
     <sys:Double x:Key="Space.XXXL">40</sys:Double>
     <Thickness x:Key="Space.Header">28,12,28,0</Thickness>
+    <!-- Left/right gutters of the 76 bar; the bar itself centres its two ends vertically. -->
+    <Thickness x:Key="Space.HeaderBar">28,0,28,0</Thickness>
     <Thickness x:Key="Space.Main">28,0,28,112</Thickness>
     <!-- Scrollable tabs: 28 gutter, 28 under the 76 bar, 112 clear of the tab bar. -->
     <Thickness x:Key="Space.PageCompact">28,28,28,112</Thickness>

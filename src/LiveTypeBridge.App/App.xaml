@@ -23,9 +23,6 @@
             <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
                 <views:SettingsPage/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:DiagnosticsViewModel}">
-                <views:DiagnosticsPage/>
-            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

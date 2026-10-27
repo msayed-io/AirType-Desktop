@@ -20,19 +20,20 @@
     </Window.Background>
 
     <Grid>
-        <!-- ===== Top bar: 76 high, drag surface, caption capsule on the opposite edge ===== -->
+        <!-- ===== Top bar: 76 high, drag surface, wordmark pinned to the physical right
+             edge and the caption capsule pinned to the physical left edge. The bar is laid
+             out left-to-right so neither element can drift towards the other; the wordmark
+             itself stays LTR (Latin name) inside an RTL application. ===== -->
         <Grid Height="{DynamicResource Size.HeaderHeight}" VerticalAlignment="Top" Panel.ZIndex="30"
-              Margin="28,0,28,0" Background="Transparent"
+              Margin="{DynamicResource Space.HeaderBar}" Background="Transparent" FlowDirection="LeftToRight"
               MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="AirType" Style="{StaticResource Wordmark}"
-                       VerticalAlignment="Center" HorizontalAlignment="Right"/>
-
-            <controls:GlassPill Grid.Column="1" Style="{StaticResource GlassSurfaceStyle}"
+            <controls:GlassPill Grid.Column="0" Style="{StaticResource GlassSurfaceStyle}"
                                 Height="{DynamicResource Size.CaptionHeight}" Padding="{DynamicResource Space.HeaderControls}"
                                 HorizontalAlignment="Left" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -56,6 +57,9 @@
                     </Button>
                 </StackPanel>
             </controls:GlassPill>
+
+            <TextBlock Grid.Column="2" Text="AirType" Style="{StaticResource Wordmark}"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" FlowDirection="LeftToRight"/>
         </Grid>
 
         <!-- ===== Page area ===== -->
@@ -92,15 +96,6 @@
                             <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Sliders}" Margin="0,0,8,0"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
                             <TextBlock Text="{DynamicResource NavSettings}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                       FontSize="{DynamicResource Type.Button}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton Style="{StaticResource BottomNavItem}" IsChecked="{Binding IsDiagnostics, Mode=OneWay}"
-                                 Command="{Binding NavCommand}" CommandParameter="diag" GroupName="AirTypeNav">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Style="{StaticResource Icon}" Data="{StaticResource Ico.Pulse}" Margin="0,0,8,0"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
-                            <TextBlock Text="{DynamicResource NavDiagnostics}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
                                        FontSize="{DynamicResource Type.Button}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton>

@@ -118,27 +118,6 @@
     <sys:String x:Key="SetHotkeyBad">Invalid hotkey format: {0}</sys:String>
     <sys:String x:Key="SetRestartDone">Server restarted on port {0}</sys:String>
 
-    <sys:String x:Key="DiagTitle">Diagnostics</sys:String>
-    <sys:String x:Key="DiagIntro">A direct view of local connectivity, protection status, and self-test results.</sys:String>
-    <sys:String x:Key="DiagNetwork">Local network</sys:String>
-    <sys:String x:Key="DiagProtection">Protection &amp; errors</sys:String>
-    <sys:String x:Key="DiagIp">This PC's IP address</sys:String>
-    <sys:String x:Key="DiagPort">Port</sys:String>
-    <sys:String x:Key="DiagWs">Server status</sys:String>
-    <sys:String x:Key="DiagUptime">Uptime</sys:String>
-    <sys:String x:Key="DiagErr">Last error</sys:String>
-    <sys:String x:Key="DiagNoErr">No errors recorded</sys:String>
-    <sys:String x:Key="DiagFw">Firewall</sys:String>
-    <sys:String x:Key="WsRunning">Running — accepting phone connections</sys:String>
-    <sys:String x:Key="WsStopped">Stopped — starts when you click “Pair phone”</sys:String>
-    <sys:String x:Key="FwAllowed">Allowed — a rule exists for AirType</sys:String>
-    <sys:String x:Key="FwNoRule">No rule yet — Windows will ask to allow on first server start; choose Allow for private networks</sys:String>
-    <sys:String x:Key="FwUnknown">Could not query the firewall state (not critical)</sys:String>
-    <sys:String x:Key="DiagSelfTest">Self test</sys:String>
-    <sys:String x:Key="DiagTestHint">Checks the server, pairing and message ordering over a real local connection, without typing into your apps. Make sure no phone is paired while it runs.</sys:String>
-    <sys:String x:Key="DiagRunTest">Run self test</sys:String>
-    <sys:String x:Key="DiagRunning">Testing…</sys:String>
-    <sys:String x:Key="DiagRefresh">Refresh</sys:String>
     <sys:String x:Key="HeroStreaming">Streaming</sys:String>
     <sys:String x:Key="HeroPaused">Stream paused</sys:String>
     <sys:String x:Key="HeroReady">Ready to pair</sys:String>
@@ -152,10 +131,4 @@
     <sys:String x:Key="UnitMs">ms</sys:String>
     <sys:String x:Key="RefreshCode">Refresh code</sys:String>
     <sys:String x:Key="WinMax">Maximize</sys:String>
-    <sys:String x:Key="LabelOps">Operations applied</sys:String>
-    <sys:String x:Key="LabelChars">Characters</sys:String>
-    <sys:String x:Key="LabelBackspaces">Deletions</sys:String>
-    <sys:String x:Key="LabelInjectMs">Injection time</sys:String>
-    <sys:String x:Key="LabelLastMessage">Last message</sys:String>
-    <sys:String x:Key="LabelRtt">RTT ping</sys:String>
 </ResourceDictionary>

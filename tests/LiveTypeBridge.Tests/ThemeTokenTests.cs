@@ -211,7 +211,6 @@ public sealed class ThemeTokenTests
         var mainWindow = File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml"));
         var styles = File.ReadAllText(Path.Combine(appRoot, "Themes", "Styles.xaml"));
         var settings = File.ReadAllText(Path.Combine(appRoot, "Views", "SettingsPage.xaml"));
-        var diagnostics = File.ReadAllText(Path.Combine(appRoot, "Views", "DiagnosticsPage.xaml"));
 
         // One capsule in the home screen (the status pill) and exactly three in the shell:
         // the window-button capsule, the toast and the floating tab bar.
@@ -222,7 +221,6 @@ public sealed class ThemeTokenTests
         // capsules and the "refresh code" capsule of the not-connected state).
         Assert.Single(Regex.Matches(styles, @"<controls:GlassPill[\s>]").Cast<Match>());
         Assert.DoesNotContain("GlassPill", settings, StringComparison.Ordinal);
-        Assert.DoesNotContain("GlassPill", diagnostics, StringComparison.Ordinal);
 
         // Cards are flat: the Card style has no Effect setter, and no page puts a glass
         // material or a shadow on a card.
@@ -235,7 +233,7 @@ public sealed class ThemeTokenTests
             (string?)setter.Attribute("Property") == "Background" &&
             (string?)setter.Attribute("Value") == "{DynamicResource CardBrush}");
 
-        foreach (var page in new[] { statusPage, settings, diagnostics })
+        foreach (var page in new[] { statusPage, settings })
             Assert.DoesNotContain("Elevation.Glass", page, StringComparison.Ordinal);
     }
 
@@ -289,12 +287,6 @@ public sealed class ThemeTokenTests
             ["LabelLastReceive"] = "آخر استقبال",
             ["UnitMs"] = "م.ث",
             ["RefreshCode"] = "تحديث الرمز",
-            ["LabelOps"] = "العمليات المطبّقة",
-            ["LabelChars"] = "الأحرف",
-            ["LabelBackspaces"] = "عمليات المسح",
-            ["LabelInjectMs"] = "زمن الإدخال",
-            ["LabelLastMessage"] = "آخر رسالة",
-            ["LabelRtt"] = "نبضة RTT",
         };
 
         foreach (var (key, value) in expected)
@@ -346,32 +338,107 @@ public sealed class ThemeTokenTests
     }
 
     [Fact]
-    public void Diagnostics_page_lists_the_seven_reference_rows_with_technical_details()
+    public void Diagnostics_page_is_removed_from_the_ui()
     {
         var appRoot = FindAppRoot();
-        var page = File.ReadAllText(Path.Combine(appRoot, "Views", "DiagnosticsPage.xaml"));
 
-        // Reference rows: applied operations, characters, deletions, injection time,
-        // last message, RTT ping, last received. Technical details stay on this tab only.
-        foreach (var key in new[]
-                 {
-                     "LabelOps", "LabelChars", "LabelBackspaces", "LabelInjectMs",
-                     "LabelLastMessage", "LabelRtt", "LabelLastReceive",
-                 })
-            Assert.Contains("{DynamicResource " + key + "}", page, StringComparison.Ordinal);
+        // No page, no view model, no template, no navigation entry.
+        Assert.False(File.Exists(Path.Combine(appRoot, "Views", "DiagnosticsPage.xaml")));
+        Assert.False(File.Exists(Path.Combine(appRoot, "Views", "DiagnosticsPage.xaml.cs")));
+        Assert.False(File.Exists(Path.Combine(appRoot, "ViewModels", "DiagnosticsViewModel.cs")));
 
-        foreach (var binding in new[]
-                 {
-                     "OpsCellText", "CharsCellText", "BackspacesCellText", "InjectCellText",
-                     "LastMessageCellText", "RttCellText", "LastReceiveCellText",
-                 })
-            Assert.Contains(binding, page, StringComparison.Ordinal);
+        var app = File.ReadAllText(Path.Combine(appRoot, "App.xaml"));
+        Assert.DoesNotContain("DiagnosticsPage", app, StringComparison.Ordinal);
+        Assert.DoesNotContain("DiagnosticsViewModel", app, StringComparison.Ordinal);
 
-        Assert.Contains("DiagTitle", page, StringComparison.Ordinal);
+        var mainWindow = File.ReadAllText(Path.Combine(appRoot, "MainWindow.xaml"));
+        Assert.DoesNotContain("\"diag\"", mainWindow, StringComparison.Ordinal);
+        Assert.DoesNotContain("IsDiagnostics", mainWindow, StringComparison.Ordinal);
 
-        var statusPage = File.ReadAllText(Path.Combine(appRoot, "Views", "StatusPage.xaml"));
-        Assert.DoesNotContain("RttCellText", statusPage, StringComparison.Ordinal);
-        Assert.DoesNotContain("BackspacesCellText", statusPage, StringComparison.Ordinal);
+        // The floating tab bar keeps exactly two working tabs.
+        Assert.Equal(2, Regex.Matches(mainWindow, "<RadioButton Style=\"{StaticResource BottomNavItem}\"",
+            RegexOptions.Singleline).Count);
+        Assert.Contains("CommandParameter=\"home\"", mainWindow, StringComparison.Ordinal);
+        Assert.Contains("CommandParameter=\"settings\"", mainWindow, StringComparison.Ordinal);
+
+        var mainViewModel = File.ReadAllText(Path.Combine(appRoot, "ViewModels", "MainViewModel.cs"));
+        Assert.DoesNotContain("DiagVm", mainViewModel, StringComparison.Ordinal);
+        Assert.DoesNotContain("IsDiagnostics", mainViewModel, StringComparison.Ordinal);
+
+        // The operational diagnostics stay in place: only the screen was removed.
+        Assert.True(File.Exists(Path.Combine(FindCoreRoot(), "Diagnostics", "SelfTestRunner.cs")));
+        Assert.True(File.Exists(Path.Combine(FindCoreRoot(), "Diagnostics", "FirewallChecker.cs")));
+        Assert.Contains("SelfTest", File.ReadAllText(Path.Combine(appRoot, "Services", "AppServices.cs")),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Pill_surfaces_never_use_a_native_border_radius_that_would_ovalise()
+    {
+        var appRoot = FindAppRoot();
+        var offenders = new List<string>();
+
+        foreach (var path in Directory.EnumerateFiles(appRoot, "*.xaml", SearchOption.AllDirectories))
+        {
+            var document = XDocument.Load(path);
+            foreach (var element in document.Descendants(Presentation + "Border"))
+            {
+                if ((string?)element.Attribute("CornerRadius") != "{DynamicResource Radius.Pill}") continue;
+                offenders.Add($"{Path.GetFileName(path)}: native Border with Radius.Pill");
+            }
+        }
+
+        // WPF Border clamps corner radii per axis, so 9999 on a wide, short element draws an
+        // ellipse. Pill surfaces must use PillBorder (or GlassPill), which clamps both axes
+        // to a single circular radius.
+        Assert.True(offenders.Count == 0, string.Join(Environment.NewLine, offenders));
+
+        var styles = XDocument.Load(Path.Combine(appRoot, "Themes", "Styles.xaml"));
+        var textBox = styles.Root!.Elements(Presentation + "Style")
+            .Single(style => (string?)style.Attribute("TargetType") == "TextBox"
+                             && style.Attribute(X + "Key") is null);
+        Assert.Contains(textBox.Descendants(Presentation + "Border"), border =>
+            (string?)border.Attribute("CornerRadius") == "{DynamicResource Radius.Input}");
+        Assert.DoesNotContain("Radius.Pill", textBox.ToString(SaveOptions.DisableFormatting), StringComparison.Ordinal);
+
+        foreach (var key in new[] { "FlatButton", "BottomNavItem", "ChoicePill", "GlassButton" })
+        {
+            var style = styles.Root!.Elements(Presentation + "Style")
+                .Single(element => (string?)element.Attribute(X + "Key") == key);
+            var source = style.ToString(SaveOptions.DisableFormatting);
+            Assert.Contains("PillBorder", source, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void Top_bar_pins_the_wordmark_right_and_the_caption_capsule_left()
+    {
+        var appRoot = FindAppRoot();
+        var document = XDocument.Load(Path.Combine(appRoot, "MainWindow.xaml"));
+
+        var bar = document.Descendants(Presentation + "Grid").FirstOrDefault(grid =>
+            (string?)grid.Attribute("Height") == "{DynamicResource Size.HeaderHeight}");
+        Assert.NotNull(bar);
+        Assert.Equal("LeftToRight", (string?)bar!.Attribute("FlowDirection"));
+        Assert.Equal("TitleBar_MouseLeftButtonDown", (string?)bar.Attribute("MouseLeftButtonDown"));
+
+        var columns = bar.Elements(Presentation + "Grid.ColumnDefinitions")
+            .Single().Elements(Presentation + "ColumnDefinition").ToArray();
+        Assert.Equal(3, columns.Length);
+        Assert.Equal("Auto", (string?)columns[0].Attribute("Width"));
+        Assert.Equal("*", (string?)columns[1].Attribute("Width"));
+        Assert.Equal("Auto", (string?)columns[2].Attribute("Width"));
+
+        var wordmark = bar.Descendants(Presentation + "TextBlock")
+            .Single(text => (string?)text.Attribute("Text") == "AirType");
+        Assert.Equal("2", (string?)wordmark.Attribute(Presentation + "Grid.Column"));
+        Assert.Equal("Right", (string?)wordmark.Attribute("HorizontalAlignment"));
+        Assert.Equal("LeftToRight", (string?)wordmark.Attribute("FlowDirection"));
+
+        var capsule = bar.Descendants().Single(element =>
+            element.Name.LocalName == "GlassPill");
+        Assert.Equal("0", (string?)capsule.Attribute(Presentation + "Grid.Column"));
+        Assert.Equal("Left", (string?)capsule.Attribute("HorizontalAlignment"));
     }
 
     [Fact]
@@ -427,6 +494,13 @@ public sealed class ThemeTokenTests
                 element => element.Attribute(X + "Key")!.Value,
                 element => element.Value.Trim(),
                 StringComparer.Ordinal);
+
+    private static string FindCoreRoot([CallerFilePath] string testSource = "")
+    {
+        var testsDirectory = Directory.GetParent(testSource)!.Parent!;
+        return Path.GetFullPath(Path.Combine(
+            testsDirectory.FullName, "..", "src", "LiveTypeBridge.Core"));
+    }
 
     private static string FindAppRoot([CallerFilePath] string testSource = "")
     {
